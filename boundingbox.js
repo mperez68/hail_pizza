@@ -45,31 +45,8 @@ class Point {
 	}
 }
 
-
-// Pedestrian, Buildings, Finish Lines, etc.
+// Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {
-    constructor(x, y, width, height) {
-        Object.assign(this, { x, y, width, height });
-
-        this.left = x;
-        this.top = y;
-        this.right = this.left + this.width;
-        this.bottom = this.top + this.height;
-    };
-
-    collide(oth) {
-		if (oth instanceof Point) {
-			if (this.right > oth.x && this.left < oth.x && this.top < oth.y && this.bottom > oth.y) return true;
-		} else {
-			if (this.right > oth.left && this.left < oth.right && this.top < oth.bottom && this.bottom > oth.top) return true;
-		}
-        return false;
-    };
-};
-
-
-// Vehicles
-class AngleBoundingBox {
     constructor(x, y, width, height, direction) {
         Object.assign(this, { x, y, width, height });
 		
@@ -101,28 +78,18 @@ class AngleBoundingBox {
 
     collide(oth) {
 		if (oth instanceof AngleBoundingBox) {
-			//console.log(oth.left.y > this.getY(this.top, this.right, oth.left.x));
-			//if (this.cornerCollisionAngle(oth)) console.log("collides");
 			if (this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top)) return true;
 		} else if (oth instanceof Point) {
 			if (this.right > oth.x && this.left < oth.x && this.top < oth.y && this.bottom > oth.y) return true;
 		} else {
-			//if (this.cornerCollision(oth)) console.log("Collide");
 			return this.cornerCollision(oth);
-			//if (this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top)) return true;
         }
 		return false;
 	};
     
-	
 	cornerCollision(oth) {
 		// Broad collision
 		if (this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top)) {
-			/*
-			// Edge case, this object is not angled oddly.
-			//if (this.direction % 90 < 15) return true;
-			*/
-			
 			// Narrow detection
 			if (this.x > oth.x) {
 				// other object is colliding from the RIGHT...
@@ -141,7 +108,6 @@ class AngleBoundingBox {
 				} else if (this.y < oth.y){
 					// other object is colliding from BOTTOM LEFT
 					if ( oth.right >= this.getX(this.left, this.bottom, oth.top) ) return true;
-					//if ( oth.right.y <= this.getY(this.bottom, this.left, oth.right.x) ) return true;
 				}
 			}
 			
@@ -176,7 +142,6 @@ class AngleBoundingBox {
 				} else if (this.y < oth.y){
 					// other object is colliding from BOTTOM LEFT
 					if ( oth.right.x >= this.getX(this.left, this.bottom, oth.top.y) ) return true;
-					//if ( oth.right.y <= this.getY(this.bottom, this.left, oth.right.x) ) return true;
 				}
 			}
 		}

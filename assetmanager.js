@@ -7,7 +7,7 @@ class AssetManager {
     };
 
     queueDownload(path) {
-        console.log("Queueing " + path);
+        if (PARAMS.DEBUG) console.log("Queueing " + path);
         this.downloadQueue.push(path);
     };
 
@@ -23,18 +23,18 @@ class AssetManager {
             var that = this;
 
             var path = this.downloadQueue[i];
-            console.log(path);
+            if (PARAMS.DEBUG) console.log(path);
             var ext = path.substring(path.length - 3);
 
             if (ext === 'png' || ext === 'PNG') {
                 img.addEventListener("load", function () {
-                    console.log("Loaded " + this.src);
+                    if (PARAMS.DEBUG) console.log("Loaded " + this.src);
                     that.successCount++;
                     if (that.isDone()) callback();
                 });
 
                 img.addEventListener("error", function () {
-                    console.log("Error loading " + this.src);
+                    if (PARAMS.DEBUG) console.log("Error loading " + this.src);
                     that.errorCount++;
                     if (that.isDone()) callback();
                 });
@@ -45,13 +45,13 @@ class AssetManager {
 
             if (ext === 'mp3') {
                 aud.addEventListener("loadeddata", function () {
-                    console.log("Loaded " + this.src);
+                    if (PARAMS.DEBUG) console.log("Loaded " + this.src);
                     that.successCount++;
                     if (that.isDone()) callback();
                 });
 
                 aud.addEventListener("error", function () {
-                    console.log("Error loading " + this.src);
+                    if (PARAMS.DEBUG) console.log("Error loading " + this.src);
                     that.errorCount++;
                     if (that.isDone()) callback();
                 });

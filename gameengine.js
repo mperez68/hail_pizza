@@ -4,7 +4,6 @@ class GameEngine {
     constructor() {
 		this.background = [];
         this.entities = [];
-        this.showOutlines = false;
         this.ctx = null;
 		/*
 		// Mouse Controls
@@ -22,12 +21,6 @@ class GameEngine {
         this.surfaceWidth = null;
         this.surfaceHeight = null;
 		this.blockExit = false;
-
-        this.theScore = 0;
-
-        // if (this.keyE) {
-        //     ASSET_MANAGER.playAsset("./music/driving.mp3");
-        // }
     };
 
     init(ctx) {
@@ -36,17 +29,7 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
-        this.score = 0;
-        this.displayScore = document.getElementById('score');
     };
-
-    getScore() {
-        return this.theScore;
-    }
-
-    incrementScore() {
-        this.theScore++;
-    }
 
     start() {
 		var that = this;
@@ -55,13 +38,6 @@ class GameEngine {
             requestAnimFrame(gameLoop, that.ctx.canvas);
         })();
     };
-
-    // reset() {
-    //     this.entities = [];
-    //     this.score = 0;
-    //     this.displayScore.innerHTML = 0;
-    //     this.timer = new Timer();
-    // };
 
     startInput() {
         var that = this;
@@ -123,10 +99,6 @@ class GameEngine {
 					break;
 				case "KeyE":
 					that.keyE = true;
-                    // if (that.keyE) {
-                    //     ASSET_MANAGER.pauseAsset("./music/driving.mp3");
-                    // }
-                    //ASSET_MANAGER.playAsset("./music/DoorClose.mp3");
 					break;
 			}
 		}, false);
@@ -155,11 +127,9 @@ class GameEngine {
 					break;
 				case "KeyE":
 					that.keyE = false;
-                    ASSET_MANAGER.playAsset("./music/DoorClose.mp3");
 					break;
 			}
 		}, false);
-		
 		
     };
 
@@ -176,24 +146,22 @@ class GameEngine {
         for (var i = 0; i < this.background.length; i++) {
 			// Draw flag used to only load sprites within the viewport for performance.
 			let drawFlag = true;
-			if (Math.abs(this.player.x - this.background[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			if (Math.abs(this.player.y - this.background[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
+			//if (Math.abs(this.player.x - this.background[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
+			//if (Math.abs(this.player.y - this.background[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
 			if (drawFlag) { this.background[i].draw(this.ctx); };
         }
         for (var i = 0; i < this.entities.length; i++) {
 			// Draw flag used to only load sprites within the viewport for performance.
 			let drawFlag = true;
-			if (Math.abs(this.player.x - this.entities[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			if (Math.abs(this.player.y - this.entities[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
-			if (this.entities[i] instanceof GoalPost) drawFlag = true;	// Edge case, goalpost controls it's own arrows
-			if (this.entities[i] instanceof Driver) drawFlag = true;				// edge case, player
+			//if (Math.abs(this.player.x - this.entities[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
+			//if (Math.abs(this.player.y - this.entities[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
+			//if (this.entities[i] instanceof Driver) drawFlag = true;				// edge case, player
 			if (drawFlag) { this.entities[i].draw(this.ctx); };
         }
 		this.camera.draw(this.ctx);
     };
 
     update() {
-
 		if (document.getElementById("myDebug").checked) {
 			PARAMS.DEBUG = true;
 		} else {
@@ -201,7 +169,7 @@ class GameEngine {
 		}
 		
         var entitiesCount = this.entities.length;
-		if (!this.camera.title) {
+		//if (!this.camera.title) {
 			for (var i = 0; i < entitiesCount; i++) {
 				var entity = this.entities[i];
 
@@ -215,9 +183,8 @@ class GameEngine {
 					this.entities.splice(i, 1);
 				}
 			}
-		}
+		//}
 		this.camera.update();
-		this.audio.update();
     };
 
     loop() {

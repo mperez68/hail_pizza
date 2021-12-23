@@ -25,8 +25,10 @@ window.requestAnimFrame = (function () {
         };
 })();
 
-// Collision Sub-Fuctions
-function vehicleToBuilding(vehicle, building) {
+// ----- ----- ----- Collision helper fuctions ----- ----- ----- //
+
+// Vehicle colliding with a building, fence, etc.
+function vehicleToTerrain(vehicle, building) {
 	let buffer = 4;
 	let angle = 0;
 	let top = false, left = false, bottom = false, right = false;
@@ -104,6 +106,12 @@ function vehicleToBuilding(vehicle, building) {
 	vehicle.driftSpeed = 0;
 }
 
+// Vehicle colliding with a pedestrian; NOTE: this occurs when a moving vehicle strikes a pedestrian at sufficient speed to do damage.
+function vehicleToPedestrian(vehicle, oth) {
+	// TODO
+}
+
+// Vehicle colliding with another vehicle
 function vehicleToVehicle(vehicle, oth) {
 	// Calculate center to center angle
 		let angle = Math.atan( Math.abs(oth.y - vehicle.y) / Math.abs(oth.x - vehicle.x) ) * (180 / Math.PI);
@@ -124,16 +132,28 @@ function vehicleToVehicle(vehicle, oth) {
 		oth.spinSpeed = spin;
 }
 
-// global parameters
+// Pedestrian colliding with a building, fence, etc.
+function pedestrianToTerrain (pedestrian, oth) {
+	// TODO
+}
+
+// Pedestrian colliding with another pedestrian
+function pedestrianToPedestrian (pedestrian, oth) {
+	// TODO
+}
+
+// Pedestrian colliding with a vehicle; NOTE: this occurs when a pedestrian approaches a stationary or slow moving vehicle and does not result in damage.
+function pedestrianToVehicle (pedestrian, oth) {
+	// TODO
+}
+
+// ----- ----- ----- global parameters ----- ----- ----- //
 const PARAMS = {
-	DEBUG: true,
-	AUDIO: true,
-	PAGE_WIDTH: 1024,
-	PAGE_HEIGHT: 768,
-	TILE_WIDTH: 1280,
+	DEBUG: false,
+	MUSIC: true,
 	MAP_WIDTH: 6400,
 	MAP_HEIGHT: 6400,
-	X_AXIS: 0,
-	Y_AXIS: 270,
-	GRID_WIDTH: 64
+	GRID_WIDTH: 64,
+	GRID_HEIGHT: 64,
+	SCALE: 1
 };
