@@ -10,9 +10,17 @@ class SceneManager {
 	
 	loadMap() {
 		this.game.addEntity(new Entity(this.game, 100, 500, 0));
-		this.game.addEntity(new Entity(this.game, 300, 500, 45));
-		this.game.addEntity(new Entity(this.game, 300, 600, 60));
 		this.game.addEntity(new Entity(this.game, 100, 600, 90));
+		this.game.addEntity(new Entity(this.game, 200, 500, 94));
+		this.game.addEntity(new Entity(this.game, 232, 600, 140));
+		this.game.addEntity(new Entity(this.game, 300, 600, 60));
+		this.game.addEntity(new Entity(this.game, 300, 510, 90));
+		this.game.addEntity(new Entity(this.game, 400, 600, 60));
+		this.game.addEntity(new Entity(this.game, 400, 535, 90));
+		this.game.addEntity(new Entity(this.game, 500, 600, 45));
+		this.game.addEntity(new Entity(this.game, 500, 560, 90));
+		this.game.addEntity(new Entity(this.game, 600, 600, 45));
+		this.game.addEntity(new Entity(this.game, 600, 600, 90));
 	};
 	
 	update() {

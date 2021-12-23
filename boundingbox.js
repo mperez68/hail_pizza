@@ -77,7 +77,7 @@ class BoundingBox {
     };
 
     collide(oth) {
-		if (oth instanceof AngleBoundingBox) {
+		if (oth instanceof BoundingBox) {
 			if (this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top)) return true;
 		} else if (oth instanceof Point) {
 			if (this.right > oth.x && this.left < oth.x && this.top < oth.y && this.bottom > oth.y) return true;
