@@ -19,11 +19,20 @@ class Entity {
 	};
 	
 	update() {
+
 		// TODO
+		if (this.game.right) {
+			this.direction+= 0.2;
+		}
+		if (this.game.left) {
+			this.direction-= 0.2;
+		}
+		this.direction = this.direction % 360;
 
 		// Collision
 		var that = this;
 
+		this.isColliding = false;
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
@@ -37,15 +46,17 @@ class Entity {
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
 				if (entity instanceof Entity) {	// collision example
 					that.isColliding = true;
-					// if (entity.BB.top < that.BB.bottom && entity.BB.top > that.y) that.y = entity.BB.top - that.WIDTH / 2;
-					// if (entity.BB.bottom > that.BB.top && entity.BB.bottom < that.y) that.y = entity.BB.bottom + that.WIDTH / 2;
-					// if (entity.BB.left < that.BB.right && entity.BB.left > that.x) that.x = entity.BB.left - that.WIDTH / 2;
-					// if (entity.BB.right > that.BB.left && entity.BB.right < that.x) that.x = entity.BB.right + that.WIDTH / 2;
-				} else {
-					that.isColliding = false;
 				}
 			}
 		});
+
+		// add new points
+		for (var i = 0; i < this.BB.newPoints.length; i++){
+			this.game.addEntity(this.BB.newPoints[i]);
+		}
+		this.BB.newPoints = [];
+		
+		this.updateBB();
 	};
 	
 	updateBB(){
@@ -71,22 +82,30 @@ class Entity {
 				ctx.lineTo(this.BB.points[j].x - this.game.camera.x, this.BB.points[j].y - this.game.camera.y);
 				ctx.stroke();
 			}
-			ctx.strokeStyle = 'Blue';
-			ctx.beginPath();
-			ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-			ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-			ctx.stroke();
-			if (this.isApproaching == true) {
-				ctx.strokeStyle = 'Red';
-				ctx.beginPath();
-				ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-				ctx.lineTo(this.nextBB.points[2].x - this.game.camera.x, this.nextBB.points[2].y - this.game.camera.y);
-				ctx.stroke();
-				ctx.beginPath();
-				ctx.moveTo(this.nextBB.points[1].x - this.game.camera.x, this.nextBB.points[1].y - this.game.camera.y);
-				ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-				ctx.stroke();
-			}
+			// nextBB
+			// ctx.strokeStyle = 'Blue';
+			// ctx.beginPath();
+			// ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
+			// ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
+			// ctx.stroke();
+			// if (this.isApproaching == true) {
+			// 	ctx.strokeStyle = 'Red';
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
+			// 	ctx.lineTo(this.nextBB.points[2].x - this.game.camera.x, this.nextBB.points[2].y - this.game.camera.y);
+			// 	ctx.stroke();
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(this.nextBB.points[1].x - this.game.camera.x, this.nextBB.points[1].y - this.game.camera.y);
+			// 	ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
+			// 	ctx.stroke();
+			// }
+			ctx.font = "12px Arial";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText("L", this.BB.left.x, this.BB.left.y);
+			ctx.fillText("T", this.BB.top.x, this.BB.top.y);
+			ctx.fillText("R", this.BB.right.x, this.BB.right.y);
+			ctx.fillText("B", this.BB.bottom.x, this.BB.bottom.y);
 		}
 	};
 };

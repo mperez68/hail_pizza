@@ -167,6 +167,11 @@ class GameEngine {
 		} else {
 			PARAMS.DEBUG = false;
 		}
+		if (document.getElementById("myMusic").checked) {
+			PARAMS.MUSIC = true;
+		} else {
+			PARAMS.MUSIC = false;
+		}
 		
         var entitiesCount = this.entities.length;
 		//if (!this.camera.title) {

@@ -9,18 +9,44 @@ class SceneManager {
 	};
 	
 	loadMap() {
-		this.game.addEntity(new Entity(this.game, 100, 500, 0));
-		this.game.addEntity(new Entity(this.game, 100, 600, 90));
-		this.game.addEntity(new Entity(this.game, 200, 500, 94));
-		this.game.addEntity(new Entity(this.game, 232, 600, 140));
-		this.game.addEntity(new Entity(this.game, 300, 600, 60));
-		this.game.addEntity(new Entity(this.game, 300, 510, 90));
-		this.game.addEntity(new Entity(this.game, 400, 600, 60));
-		this.game.addEntity(new Entity(this.game, 400, 535, 90));
-		this.game.addEntity(new Entity(this.game, 500, 600, 45));
-		this.game.addEntity(new Entity(this.game, 500, 560, 90));
-		this.game.addEntity(new Entity(this.game, 600, 600, 45));
-		this.game.addEntity(new Entity(this.game, 600, 600, 90));
+		this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) - 28, 0));
+		this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) + 28, 0));
+
+		// this.game.addEntity(new Entity(this.game, 100, 500, 0));
+		// this.game.addEntity(new Entity(this.game, 100, 600, 90));
+
+		// this.game.addEntity(new Entity(this.game, 200, 500, 90));
+		// this.game.addEntity(new Entity(this.game, 232, 600, 140));
+
+		// this.game.addEntity(new Entity(this.game, 300, 600, 60));
+		// this.game.addEntity(new Entity(this.game, 300, 510, 90));
+
+		// this.game.addEntity(new Entity(this.game, 400, 600, 60));
+		// this.game.addEntity(new Entity(this.game, 400, 535, 90));
+
+		// this.game.addEntity(new Entity(this.game, 500, 600, 45));
+		// this.game.addEntity(new Entity(this.game, 500, 560, 90));
+
+		// this.game.addEntity(new Entity(this.game, 600, 600, 45));
+		// this.game.addEntity(new Entity(this.game, 600, 600, 90));
+
+		// this.game.addEntity(new Entity(this.game, 800, 600, 0));
+		// this.game.addEntity(new Entity(this.game, 756, 644, 135));
+		// this.game.addEntity(new Entity(this.game, 756, 558, 225));
+		// this.game.addEntity(new Entity(this.game, 842, 644, 45));
+		// this.game.addEntity(new Entity(this.game, 842, 558, 315));
+
+		// this.game.addEntity(new Entity(this.game, 800, 300, 0));
+		// this.game.addEntity(new Entity(this.game, 764, 336, 135));
+		// this.game.addEntity(new Entity(this.game, 764, 264, 225));
+		// this.game.addEntity(new Entity(this.game, 836, 336, 45));
+		// this.game.addEntity(new Entity(this.game, 836, 264, 315));
+
+		// this.game.addEntity(new Entity(this.game, 500, 300, 45));
+		// this.game.addEntity(new Entity(this.game, 464, 336, 90));
+		// this.game.addEntity(new Entity(this.game, 464, 264, 180));
+		// this.game.addEntity(new Entity(this.game, 536, 336, 0));
+		// this.game.addEntity(new Entity(this.game, 536, 264, 270));
 	};
 	
 	update() {
