@@ -22,12 +22,13 @@ class Entity {
 
 		// TODO
 		if (this.game.right) {
-			this.direction+= 0.2;
+			this.direction+= 1;
 		}
 		if (this.game.left) {
-			this.direction-= 0.2;
+			this.direction-= 1;
 		}
-		this.direction = this.direction % 360;
+		if (this.direction < 0) this.direction += 360;
+		if (this.direction >= 360) this.direction -= 360;
 
 		// Collision
 		var that = this;

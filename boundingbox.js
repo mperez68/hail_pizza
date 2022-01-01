@@ -35,13 +35,13 @@ class Point {
 	}
 
 	draw(ctx){
-		// if (PARAMS.DEBUG && !this.isDrawn) {
-		// 	this.isDrawn = true;
-		// 	ctx.strokeStyle = this.color;
-		// 	ctx.beginPath();
-		// 	ctx.arc(this.x, this.y, 6, 0, 2 * Math.PI);
-		// 	ctx.stroke();
-		// }
+		if (PARAMS.DEBUG && !this.isDrawn) {
+			this.isDrawn = true;
+			ctx.strokeStyle = this.color;
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, 6, 0, 2 * Math.PI);
+			ctx.stroke();
+		}
 	}
 }
 
@@ -87,11 +87,10 @@ class BoundingBox {
 				return true;
 			} 
 			// Midpoints
-			else if (this.narrowDetection(this.getMidpoint(oth.left, oth.top) || (this.getMidpoint(oth.top, oth.right))
-						|| (this.getMidpoint(oth.left, oth.bottom)) || (this.getMidpoint(oth.bottom, oth.right)))) {
+			else if (this.narrowDetection(this.getMidpoint(oth.left, oth.top)) || this.narrowDetection(this.getMidpoint(oth.top, oth.right))
+						|| this.narrowDetection(this.getMidpoint(oth.left, oth.bottom)) || this.narrowDetection(this.getMidpoint(oth.bottom, oth.right))) {
 				return true;
 			}
-
 		}
 		return false;
 	};
@@ -106,39 +105,43 @@ class BoundingBox {
 		let intersect = this.x;
 		let pt1 = new Point(oth.x, oth.y);
 		// IF TOP LEFT
-		if (oth.y < this.left.y && oth.x < this.top.x) {
+		if (oth.y <= this.left.y && oth.x <= this.top.x) {
 			intersect = this.getX(this.left, this.top, oth.y);
 			let pt2 = new Point(intersect, oth.y);
-			if (oth.x > intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
 			this.newPoints.push(pt2);
-			return oth.x > intersect;
+			return oth.x >= intersect;
 		}
 		// IF TOP RIGHT
-		if (oth.y < this.right.y & oth.x > this.top.x) {
+		else if (oth.y <= this.right.y && oth.x >= this.top.x) {
 			intersect = this.getX(this.top, this.right, oth.y);
 			this.newPoints.push(pt1);
 			let pt2 = new Point(intersect, oth.y);
-			if (oth.x > intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
 			this.newPoints.push(pt2);
-			return oth.x < intersect;
+			return oth.x <= intersect;
 		}
 		// IF BOT LEFT
-		if (oth.y > this.left.y && oth.x < this.bottom.x) {
+		else if (oth.y >= this.left.y && oth.x <= this.bottom.x) {
 			intersect = this.getX(this.left, this.bottom, oth.y);
 			this.newPoints.push(pt1);
 			let pt2 = new Point(intersect, oth.y);
-			if (oth.x > intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
 			this.newPoints.push(pt2);
-			return oth.x > intersect;
+			return oth.x >= intersect;
 		}
 		// IF BOT RIGHT
-		if (oth.y > this.right.y && oth.x > this.bottom.x) {
+		else if (oth.y >= this.right.y && oth.x >= this.bottom.x) {
 			intersect = this.getX(this.bottom, this.right, oth.y);
 			this.newPoints.push(pt1);
 			let pt2 = new Point(intersect, oth.y);
-			if (oth.x < intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
 			this.newPoints.push(pt2);
-			return oth.x < intersect;
+			return oth.x <= intersect;
+		}
+		// If in dead zone
+		else {
+			return true;
 		}
 	}
 

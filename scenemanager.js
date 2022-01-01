@@ -9,8 +9,8 @@ class SceneManager {
 	};
 	
 	loadMap() {
-		this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) - 28, 0));
-		this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) + 28, 0));
+		// this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) - 28, 0));
+		// this.game.addEntity(new Entity(this.game, 1024 / 2, (768 / 2) + 28, 0));
 
 		// this.game.addEntity(new Entity(this.game, 100, 500, 0));
 		// this.game.addEntity(new Entity(this.game, 100, 600, 90));
