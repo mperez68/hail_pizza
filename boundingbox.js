@@ -78,7 +78,8 @@ class BoundingBox {
 
 		this.newPoints = [];
     };
-
+	
+	// Collision checking function
     collide(oth) {
 		// Broad Detection
 		if (this.broadDetection(oth)) {
@@ -152,7 +153,6 @@ class BoundingBox {
 	}
 
 	// HELPER FUNCTIONS
-	
 	getX(l, r, y) {
 		let m = (r.y - l.y) / (r.x - l.x);
 		let b = l.y - (m * l.x);
