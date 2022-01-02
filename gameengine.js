@@ -5,12 +5,12 @@ class GameEngine {
 		this.background = [];
         this.entities = [];
         this.ctx = null;
-		/*
+		
 		// Mouse Controls
         this.click = null;
         this.mouse = null;
-        this.wheel = null;
-		*/
+        //this.wheel = null;
+		
 		// Keyboard Controls
 		this.forward = false;
 		this.backward = false;
@@ -42,7 +42,6 @@ class GameEngine {
     startInput() {
         var that = this;
 
-		/*
 		// Mouse Controls
         var getXandY = function (e) {
             var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
@@ -60,19 +59,19 @@ class GameEngine {
             that.click = getXandY(e);
         }, false);
 
-        this.ctx.canvas.addEventListener("wheel", function (e) {
-            //console.log(getXandY(e));
-            that.wheel = e;
-            //       console.log(e.wheelDelta);
-            e.preventDefault();
-        }, false);
+        // this.ctx.canvas.addEventListener("wheel", function (e) {
+        //     //console.log(getXandY(e));
+        //     that.wheel = e;
+        //     //       console.log(e.wheelDelta);
+        //     e.preventDefault();
+        // }, false);
 
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
             //console.log(getXandY(e));
             that.rightclick = getXandY(e);
             e.preventDefault();
         }, false);
-		*/
+		
 		// Keyboard Controls
 		this.ctx.canvas.addEventListener("keydown", function (e) {
 			//console.log("KeyDown");
@@ -94,7 +93,6 @@ class GameEngine {
 					that.right = true;
 					break;
 				case "Space":
-					event.preventDefault();
 					that.space = true;
 					break;
 				case "KeyE":

@@ -1,39 +1,25 @@
 // Generic Entity Stub.
 class Entity {
-	constructor(game, x, y, direction, scale) {
+	constructor(game, x, y, direction, scale, width, height, spritesheet) {
 		// Parameters
-		Object.assign(this, { game, x, y, direction, scale });
-		this.width = PARAMS.GRID_WIDTH;
-		this.height = PARAMS.GRID_HEIGHT;
-
-		this.initialDirection = direction;
+		Object.assign(this, { game, x, y, direction, scale, width, height, spritesheet });
 		
 		this.isColliding = false;
 		this.isApproaching = false;
 		
 		// Animations/Bounding Box
-		this.spritesheet = ASSET_MANAGER.getAsset("./sprites/default.png");
+		// this.spritesheet = ASSET_MANAGER.getAsset("./sprites/default.png");
 		// (spritesheet, xStart, yStart,
 		//		width, height, frameCount, frameDuration, framePadding, angleStart, reverse, loop)
-		this.spritesheet = new Animator(this.spritesheet, 0, 0,
-			this.width, this.height, 1, 1, 0, direction, false, true);
+		// this.spritesheet = new Animator(this.spritesheet, 0, 0,
+		// 	this.width, this.height, 1, 1, 0, direction, false, true);
 		this.updateBB();
 	};
 	
 	update() {
-
-		// TODO remove after bounding box testing
-		if (this.game.right) {
-			this.direction+= 1;
-		}
-		if (this.game.left) {
-			this.direction-= 1;
-		}
-		if (this.game.space) {
-			this.direction = this.initialDirection;
-		}
-		if (this.direction < 0) this.direction += 360;
-		if (this.direction >= 360) this.direction -= 360;
+		// Equalize direction
+		while (this.direction < 0) this.direction += 360;
+		this.direction = this.direction % 360;
 
 		// Collision
 		var that = this;
