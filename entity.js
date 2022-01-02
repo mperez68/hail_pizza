@@ -5,6 +5,8 @@ class Entity {
 		Object.assign(this, { game, x, y, direction, scale });
 		this.width = PARAMS.GRID_WIDTH;
 		this.height = PARAMS.GRID_HEIGHT;
+
+		this.initialDirection = direction;
 		
 		this.isColliding = false;
 		this.isApproaching = false;
@@ -20,33 +22,33 @@ class Entity {
 	
 	update() {
 
-		// TODO
+		// TODO remove after bounding box testing
 		if (this.game.right) {
 			this.direction+= 1;
 		}
 		if (this.game.left) {
 			this.direction-= 1;
 		}
+		if (this.game.space) {
+			this.direction = this.initialDirection;
+		}
 		if (this.direction < 0) this.direction += 360;
 		if (this.direction >= 360) this.direction -= 360;
 
 		// Collision
 		var that = this;
-
-		this.isColliding = false;
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
 				if (entity instanceof Entity) {	// collision example
 					that.isApproaching = true;
-				} else {
-					that.isApproaching = false;
 				}
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
 				if (entity instanceof Entity) {	// collision example
 					that.isColliding = true;
+					entity.isColliding = true;
 				}
 			}
 		});
@@ -84,22 +86,22 @@ class Entity {
 				ctx.stroke();
 			}
 			// nextBB
-			// ctx.strokeStyle = 'Blue';
-			// ctx.beginPath();
-			// ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-			// ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-			// ctx.stroke();
-			// if (this.isApproaching == true) {
-			// 	ctx.strokeStyle = 'Red';
-			// 	ctx.beginPath();
-			// 	ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-			// 	ctx.lineTo(this.nextBB.points[2].x - this.game.camera.x, this.nextBB.points[2].y - this.game.camera.y);
-			// 	ctx.stroke();
-			// 	ctx.beginPath();
-			// 	ctx.moveTo(this.nextBB.points[1].x - this.game.camera.x, this.nextBB.points[1].y - this.game.camera.y);
-			// 	ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-			// 	ctx.stroke();
-			// }
+			ctx.strokeStyle = 'Blue';
+			ctx.beginPath();
+			ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
+			ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
+			ctx.stroke();
+			if (this.isApproaching == true) {
+				ctx.strokeStyle = 'Red';
+				ctx.beginPath();
+				ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
+				ctx.lineTo(this.nextBB.points[2].x - this.game.camera.x, this.nextBB.points[2].y - this.game.camera.y);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.moveTo(this.nextBB.points[1].x - this.game.camera.x, this.nextBB.points[1].y - this.game.camera.y);
+				ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
+				ctx.stroke();
+			}
 			ctx.font = "12px Arial";
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
@@ -108,5 +110,7 @@ class Entity {
 			ctx.fillText("R", this.BB.right.x, this.BB.right.y);
 			ctx.fillText("B", this.BB.bottom.x, this.BB.bottom.y);
 		}
+		this.isApproaching = false;
+		this.isColliding = false;
 	};
 };

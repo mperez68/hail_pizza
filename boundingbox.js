@@ -4,6 +4,7 @@ class Point {
 		this.y = y;
 		this.isDrawn = false;
 		this.color = 'Red';
+		this.removeFromWorld = false;
 	}
 	
 	isLeft(oth) {
@@ -31,17 +32,17 @@ class Point {
 	}
 
 	update(){
-		//
+		if (this.isDrawn) this.removeFromWorld = true;
 	}
 
 	draw(ctx){
-		if (PARAMS.DEBUG && !this.isDrawn) {
-			this.isDrawn = true;
+		if (PARAMS.DEBUG) {
 			ctx.strokeStyle = this.color;
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, 6, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
+		this.isDrawn = true;
 	}
 }
 
@@ -49,15 +50,15 @@ class Point {
 class BoundingBox {
     constructor(x, y, width, height, direction) {
         Object.assign(this, { x, y, width, height });
-		
-		this.direction = direction;
+
+		this.direction = direction + 0.000001;
 		
 		this.radians = [ (this.direction) * (Math.PI / 180) + Math.atan(this.width / this.height ),
 						(this.direction) * (Math.PI / 180) - Math.atan(this.width / this.height ),
 						(this.direction - 180) * (Math.PI / 180) + Math.atan(this.width / this.height ),
 						(this.direction - 180) * (Math.PI / 180) - Math.atan(this.width / this.height ) ];
 			
-		this.distance = Math.sqrt( Math.pow( this.width / 2 , 2) + Math.pow( this.height / 2 , 2)  );
+		this.distance = Math.sqrt( Math.pow( this.width / 2 , 2) + Math.pow( this.height / 2 , 2) );
 		
         this.left = new Point (x, y);
         this.top = new Point (x, y);
@@ -83,14 +84,14 @@ class BoundingBox {
 		if (this.broadDetection(oth)) {
 			// Narrow Detection
 			// Corners
-			if (this.narrowDetection(oth.left) || this.narrowDetection(oth.top) || this.narrowDetection(oth.right) || this.narrowDetection(oth.bottom)){
+			if (this.narrowDetection(oth) || this.narrowDetection(oth.left) || this.narrowDetection(oth.top) || this.narrowDetection(oth.right) || this.narrowDetection(oth.bottom)){
 				return true;
 			} 
 			// Midpoints
-			else if (this.narrowDetection(this.getMidpoint(oth.left, oth.top)) || this.narrowDetection(this.getMidpoint(oth.top, oth.right))
-						|| this.narrowDetection(this.getMidpoint(oth.left, oth.bottom)) || this.narrowDetection(this.getMidpoint(oth.bottom, oth.right))) {
-				return true;
-			}
+			// else if (this.narrowDetection(this.getMidpoint(oth.left, oth.top)) || this.narrowDetection(this.getMidpoint(oth.top, oth.right))
+			// 			|| this.narrowDetection(this.getMidpoint(oth.left, oth.bottom)) || this.narrowDetection(this.getMidpoint(oth.bottom, oth.right))) {
+			// 	return true;
+			// }
 		}
 		return false;
 	};
@@ -107,36 +108,41 @@ class BoundingBox {
 		// IF TOP LEFT
 		if (oth.y <= this.left.y && oth.x <= this.top.x) {
 			intersect = this.getX(this.left, this.top, oth.y);
-			let pt2 = new Point(intersect, oth.y);
-			if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			this.newPoints.push(pt2);
+			if (oth.x >= intersect) pt1.color = 'Green';
+			this.newPoints.push(pt1);
+			// let pt2 = new Point(intersect, oth.y);
+			// if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			// this.newPoints.push(pt2);
 			return oth.x >= intersect;
 		}
 		// IF TOP RIGHT
 		else if (oth.y <= this.right.y && oth.x >= this.top.x) {
 			intersect = this.getX(this.top, this.right, oth.y);
+			if (oth.x <= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			let pt2 = new Point(intersect, oth.y);
-			if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			this.newPoints.push(pt2);
+			// let pt2 = new Point(intersect, oth.y);
+			// if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			// this.newPoints.push(pt2);
 			return oth.x <= intersect;
 		}
 		// IF BOT LEFT
 		else if (oth.y >= this.left.y && oth.x <= this.bottom.x) {
 			intersect = this.getX(this.left, this.bottom, oth.y);
+			if (oth.x >= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			let pt2 = new Point(intersect, oth.y);
-			if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			this.newPoints.push(pt2);
+			// let pt2 = new Point(intersect, oth.y);
+			// if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			// this.newPoints.push(pt2);
 			return oth.x >= intersect;
 		}
 		// IF BOT RIGHT
 		else if (oth.y >= this.right.y && oth.x >= this.bottom.x) {
 			intersect = this.getX(this.bottom, this.right, oth.y);
+			if (oth.x <= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			let pt2 = new Point(intersect, oth.y);
-			if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			this.newPoints.push(pt2);
+			// let pt2 = new Point(intersect, oth.y);
+			// if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
+			// this.newPoints.push(pt2);
 			return oth.x <= intersect;
 		}
 		// If in dead zone
