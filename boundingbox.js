@@ -107,116 +107,49 @@ class BoundingBox {
 		let pt1 = new Point(oth.x, oth.y);
 		// IF TOP LEFT
 		if (oth.y <= this.left.y && oth.x <= this.top.x) {
+			// Determine point on interesection line given the y of the point being passed in for comparison.
 			intersect = this.getX(this.left, this.top, oth.y);
+			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			// let pt2 = new Point(intersect, oth.y);
-			// if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			// this.newPoints.push(pt2);
+			// Returns true if past the intersection point.
 			return oth.x >= intersect;
 		}
 		// IF TOP RIGHT
 		else if (oth.y <= this.right.y && oth.x >= this.top.x) {
+			// Determine point on interesection line given the y of the point being passed in for comparison.
 			intersect = this.getX(this.top, this.right, oth.y);
+			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			// let pt2 = new Point(intersect, oth.y);
-			// if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			// this.newPoints.push(pt2);
+			// Returns true if past the intersection point.
 			return oth.x <= intersect;
 		}
 		// IF BOT LEFT
 		else if (oth.y >= this.left.y && oth.x <= this.bottom.x) {
+			// Determine point on interesection line given the y of the point being passed in for comparison.
 			intersect = this.getX(this.left, this.bottom, oth.y);
+			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			// let pt2 = new Point(intersect, oth.y);
-			// if (oth.x >= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			// this.newPoints.push(pt2);
+			// Returns true if past the intersection point.
 			return oth.x >= intersect;
 		}
 		// IF BOT RIGHT
 		else if (oth.y >= this.right.y && oth.x >= this.bottom.x) {
+			// Determine point on interesection line given the y of the point being passed in for comparison.
 			intersect = this.getX(this.bottom, this.right, oth.y);
+			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
 			this.newPoints.push(pt1);
-			// let pt2 = new Point(intersect, oth.y);
-			// if (oth.x <= intersect) pt2.color = 'Green'; else pt2.color = 'Blue';
-			// this.newPoints.push(pt2);
+			// Returns true if past the intersection point.
 			return oth.x <= intersect;
 		}
-		// If in dead zone
+		// If in dead zone, point is in the center of the entity so we can assume this is true.
 		else {
 			return true;
 		}
 	}
-
-	// narrowDetection(oth) {
-	// 	// Find quadrant, create point
-	// 	let intersect1 = this.left.x;
-	// 	let intersect2 = this.right.x;
-	// 	// IF TOP LEFT
-	// 	if (oth.y < this.left.y & oth.x < this.top.x) {
-	// 		intersect1 = this.getX(this.left, this.top, oth.y);
-	// 		intersect2 = this.getX(this.top, this.right, oth.y);
-	// 	}
-	// 	// IF TOP RIGHT
-	// 	else if (oth.y < this.right.y & oth.x > this.top.x) {
-	// 		intersect1 = this.getX(this.left, this.top, oth.y);
-	// 		intersect2 = this.getX(this.top, this.right, oth.y);
-	// 	}
-	// 	// IF BOT LEFT
-	// 	else if (oth.y > this.left.y & oth.x < this.bottom.x) {
-	// 		intersect1 = this.getX(this.left, this.bottom, oth.y);
-	// 		intersect2 = this.getX(this.bottom, this.right, oth.y);
-	// 	}
-	// 	// IF BOT RIGHT
-	// 	else if (oth.y > this.right.y & oth.x > this.bottom.x) {
-	// 		intersect1 = this.getX(this.left, this.bottom, oth.y);
-	// 		intersect2 = this.getX(this.bottom, this.right, oth.y);
-	// 	} else {
-	// 		this.newPoints.push(new Point(oth.x, oth.y));
-	// 		return true;
-	// 	}
-		
-	// 	if (oth.x > intersect1 && oth.x < intersect2) {
-	// 		let pt = new Point(oth.x, oth.y);
-	// 		pt.color = 'Green';
-	// 		this.newPoints.push(pt);
-	// 	}
-	// 	this.newPoints.push(new Point(intersect1, oth.y));
-	// 	this.newPoints.push(new Point(intersect2, oth.y));
-
-	// 	// Return if it's between two intersects.
-	// 	return (oth.x > intersect1 && oth.x < intersect2);
-	// }
-    
-	// cornerCollision(oth) {
-	// 	// Broad collision
-	// 	if (this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top)) {
-	// 		// Narrow detection
-	// 		if (this.x < oth.x) {
-	// 			// other object is colliding from the RIGHT...
-	// 			if (this.y > oth.y) {
-	// 				// other object is colliding from TOP RIGHT
-	// 				if ( oth.left <= this.getX(this.top, this.right, oth.bottom) ) return true;
-	// 			} else {// if (this.y < oth.y){
-	// 				// other object is colliding from BOTTOM RIGHT
-	// 				if ( oth.left <= this.getX(this.bottom, this.right, oth.top) ) return true;
-	// 			}
-	// 		}else {//if (this.x < oth.x) {
-	// 			// other object is colliding from the LEFT...
-	// 			if (this.y > oth.y) {
-	// 				// other object is colliding from TOP LEFT
-	// 				if ( oth.right >= this.getX(this.left, this.top, oth.bottom) ) return true;
-	// 			} else {// if (this.y < oth.y){
-	// 				// other object is colliding from BOTTOM LEFT
-	// 				if ( oth.right >= this.getX(this.left, this.bottom, oth.top) ) return true;
-	// 			}
-	// 		}
-	// 	}
-	// 	return false;
-	// }
 
 	// HELPER FUNCTIONS
 	
