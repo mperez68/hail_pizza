@@ -1,5 +1,5 @@
-// Player as a pedestrian object
-class PlayerPed {
+// Player as a vehicle object
+class PlayerVehicle {
 	constructor(game, x, y, direction, width, height) {
         // Constants
         this.RUN_SPEED = 4;
@@ -7,30 +7,30 @@ class PlayerPed {
 
 		// Assign Object Variables
 		Object.assign(this, { game });
-		let spritesheet = ASSET_MANAGER.getAsset("./sprites/driver.png");
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 
 		// Animations
-		this.standing = new Animator(spritesheet, 0, height,
-			width, height, 5, 0.2, 1, direction, false, true);	// Standing
+		this.standing = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// Standing
 		this.walking = new Animator(spritesheet, 0, 0,
-			width, height, 12, 0.06, 1, direction, false, true);	// Walking
+			width, height, 1, 1, 1, direction, false, true);	// Walking
 
-        this.pedestrian = new Pedestrian(game, x, y, direction, width, height, this.standing);
+        this.vehicle = new Vehicle(game, x, y, direction, width, height, this.standing);
     }
 
-	setHP(hp) {this.pedestrian.setHP(hp); };
-	getHP(){ return this.pedestrian.getHP(); };
+	setHP(hp) {this.vehicle.setHP(hp); };
+	getHP(){ return this.vehicle.getHP(); };
 
-	damage(dmg) { return this.pedestrian.damage(dmg) };
+	damage(dmg) { return this.vehicle.damage(dmg) };
 	push(a, d) {
-		this.pedestrian.push(a,d);
+		this.vehicle.push(a,d);
 	}
 
 	setup() {
-		this.pedestrian.entity.animation = this.standing;
+		this.vehicle.entity.animation = this.standing;
 
 		// parent setup
-		this.pedestrian.setup();
+		this.vehicle.setup();
 	}
 
     update() {
@@ -41,7 +41,7 @@ class PlayerPed {
 		this.updateCollision();
 
 		// Parent update
-        this.pedestrian.update();
+        this.vehicle.update();
 	};
 
 	updateCollision(){
@@ -54,18 +54,18 @@ class PlayerPed {
 		this.setNextBB(this.nextBB);
 
 		// parent updateCollision
-		this.pedestrian.updateCollision();
+		this.vehicle.updateCollision();
 	}
 
-	getBB() { return this.pedestrian.getBB(); };
-	getNextBB() { return this.pedestrian.getNextBB(); };
+	getBB() { return this.vehicle.getBB(); };
+	getNextBB() { return this.vehicle.getNextBB(); };
 
-	setBB(bb) { this.pedestrian.setBB(bb); }
-	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
+	setBB(bb) { this.vehicle.setBB(bb); }
+	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	controls() {
         // temp for entity
-        let ent = this.pedestrian.entity;
+        let ent = this.vehicle.entity;
 
 		// Forward OR Backward, forward taking precedent.
 		if (this.game.forward) {
@@ -87,6 +87,6 @@ class PlayerPed {
 	}
 
     draw(ctx) {
-        this.pedestrian.draw(ctx);
+        this.vehicle.draw(ctx);
     }
 };

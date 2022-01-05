@@ -1,11 +1,11 @@
-// Player as a pedestrian object
-class NeutralPed {
+// NPC vehicle object
+class NeutralVehicle {
 	constructor(game, x, y, direction, width, height) {
 		// Constants
-		this.VERSION_COUNT = 2;
+		this.VERSION_COUNT = 1;
 		// Assign Object Variables
 		Object.assign(this, { game });
-		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 
 		this.version = randomInt(this.VERSION_COUNT);
 		this.dead = false;
@@ -21,31 +21,31 @@ class NeutralPed {
 		this.goalList.push(new Point(141,525));
 		
 		// Animations
-		this.standing = new Animator(spritesheet, 0, height * this.version,
-			width, height, 12, 0.2, 0, direction, false, true);	// Standing
-		this.walking = new Animator(spritesheet, 228, height * this.version,
-			width, height, 8, 0.08, 0, direction, false, true);	// Walking
+		this.standing = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// Standing
+		this.walking = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// Walking
 		
 		// Initialize 'parent' object
-		this.pedestrian = new Pedestrian(game, x, y, direction, width, height, this.standing);
+		this.vehicle = new Vehicle(game, x, y, direction, width, height, this.standing);
 		
-		this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
+		this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
     }
 
-	setHP(hp) {this.pedestrian.setHP(hp); };
-	getHP(){ return this.pedestrian.getHP(); };
+	setHP(hp) {this.vehicle.setHP(hp); };
+	getHP(){ return this.vehicle.getHP(); };
 
-	damage(dmg) { return this.pedestrian.damage(dmg) };
+	damage(dmg) { return this.vehicle.damage(dmg) };
 	push(a, d) {
-		this.pedestrian.push(a,d);
+		this.vehicle.push(a,d);
 	}
 
 	setup() {
 		// Reset walking flag
-		this.pedestrian.isWalking = false;
+		this.vehicle.isWalking = false;
 
 		// parent setup
-		this.pedestrian.setup();
+		this.vehicle.setup();
 	}
 
     update() {
@@ -57,8 +57,8 @@ class NeutralPed {
 			this.game.camera.dudeCount--;
 			this.game.camera.deathCount++;
 			// Create Corpse
-			this.game.addBackground(new Corpse(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
-					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height, this.version))
+			this.game.addBackground(new Corpse(this.game, this.vehicle.entity.x, this.vehicle.entity.y,
+					this.vehicle.entity.direction, this.vehicle.entity.width, this.vehicle.entity.height, this.version))
 			// Delete this object
 			this.removeFromWorld = true;
 		} else {
@@ -68,7 +68,7 @@ class NeutralPed {
 
 		if (this.getHP() <= 0) this.dead = true;
 		// Parent update
-        this.pedestrian.update();
+        this.vehicle.update();
 	};
 
 	updateCollision(){
@@ -81,7 +81,7 @@ class NeutralPed {
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	
+				if (entity instanceof NeutralVehicle && !entity.dead) {	
 					that.isApproaching = true;
 
 					if (entity.damage(1)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
@@ -89,7 +89,7 @@ class NeutralPed {
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	
+				if (entity instanceof NeutralVehicle && !entity.dead) {	
 
 					that.isColliding = true;
 					entity.isColliding = true;
@@ -102,27 +102,27 @@ class NeutralPed {
 		this.setNextBB(this.nextBB);
 
 		// parent updateCollision
-		this.pedestrian.updateCollision();
+		this.vehicle.updateCollision();
 	}
 
-	getBB() { return this.pedestrian.getBB(); };
-	getNextBB() { return this.pedestrian.getNextBB(); };
+	getBB() { return this.vehicle.getBB(); };
+	getNextBB() { return this.vehicle.getNextBB(); };
 
-	setBB(bb) { this.pedestrian.setBB(bb); }
-	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
+	setBB(bb) { this.vehicle.setBB(bb); }
+	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	intent() {
-		// if (this.game.forward) this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
-		// if (this.game.backward) delete this.pedestrian.goal;
+		// if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
+		// if (this.game.backward) delete this.vehicle.goal;
 
 		// Assign goal
-        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width ) {
+        if (this.vehicle.getDistanceToGoal() <= this.vehicle.entity.width ) {
 			let ptr = 0;
 			for (var i = 0; i < this.goalList.length; i++){
-				if ( (this.goalList[i].x == this.pedestrian.goal.x) && (this.goalList[i].y == this.pedestrian.goal.y) ) ptr = i;
+				if ( (this.goalList[i].x == this.vehicle.goal.x) && (this.goalList[i].y == this.vehicle.goal.y) ) ptr = i;
 			}
 			ptr = (ptr + 1) % this.goalList.length;
-			this.pedestrian.goal = this.goalList[ptr];
+			this.vehicle.goal = this.goalList[ptr];
 		}
 
 		// if (this.game.click) {
@@ -132,9 +132,9 @@ class NeutralPed {
 	}
 
     draw(ctx) {
-		if (this.pedestrian.isWalking) this.pedestrian.entity.animation = this.walking;
-		else if (!this.dead) this.pedestrian.entity.animation = this.standing;
+		if (this.vehicle.isWalking) this.vehicle.entity.animation = this.walking;
+		else if (!this.dead) this.vehicle.entity.animation = this.standing;
 
-        this.pedestrian.draw(ctx);
+        this.vehicle.draw(ctx);
     }
 };
