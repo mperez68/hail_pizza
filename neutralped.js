@@ -57,8 +57,8 @@ class NeutralPed {
 			this.game.camera.dudeCount--;
 			this.game.camera.deathCount++;
 			// Create Corpse
-			this.game.addBackground(new Spray(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
-					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height))
+			this.game.addBackground(new Corpse(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
+					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height, this.version))
 			// Delete this object
 			this.removeFromWorld = true;
 		} else {

@@ -25,10 +25,11 @@ class SceneManager {
 		this.deathCount = 0;
 		this.corpseCount = 0;
 
-		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
+		// this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
 		this.game.addBackground(new Road(this.game, 416, 384, 0));
+		this.game.addEntity(new Building(this.game, 544, 384, 0));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";

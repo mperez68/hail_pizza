@@ -3,7 +3,6 @@ class Background {
     constructor(game, x, y, direction, scale, width, height, animation) {
         // Parameters
         Object.assign(this, { game, x, y, direction, scale, width, height, animation })
-
     }
 
     setup() {

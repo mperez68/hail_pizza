@@ -15,7 +15,11 @@ class Pedestrian {
 	setHP(hp) {this.entity.setHP(hp); };
 	getHP(){ return this.entity.getHP(); };
 
-	damage(dmg) { return this.entity.damage(dmg) };
+	damage(dmg) {
+		let result = this.entity.damage(dmg);
+		if (result) this.game.addBackground(new Splatter(this.game, this.entity.x, this.entity.y, this.entity.direction, 34, 34, 0));
+		return result;
+	}
 	push(a, d) {
 		this.entity.push(a,d);
 	}

@@ -11,6 +11,7 @@ ASSET_MANAGER.queueDownload("./sprites/npcs.png");
 // Background Tiles
 ASSET_MANAGER.queueDownload("./sprites/ground.png");
 ASSET_MANAGER.queueDownload("./sprites/road/00-00.png");
+ASSET_MANAGER.queueDownload("./sprites/bloodsmear.png");
 // Buildings
 ASSET_MANAGER.queueDownload("./sprites/roof/00-00.png");
 

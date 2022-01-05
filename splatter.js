@@ -1,19 +1,14 @@
 // Spray background
-class Spray {
-	constructor(game, x, y, direction, width, height) {
-		// Constants
-		this.VERSION_COUNT = 2;
+class Splatter {
+	constructor(game, x, y, direction, width, height, version) {
 		// Assign Object Variables
-        Object.assign(this, { game });
-        this.game.camera.corpseCount++;
-        this.rotTime = 1000;
+        Object.assign(this, { game, version });
+        this.rotTime = 100;
 
-        let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
+        let spritesheet = ASSET_MANAGER.getAsset("./sprites/bloodsmear.png");
         
-		this.version = Math.floor(randomInt(this.VERSION_COUNT));
-        
-		let animation = new Animator(spritesheet, 380, height * this.version,
-			width, height, 1, 1, 0, direction, false, true);	// Dead
+		let animation = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 0, direction, false, true);
 
         // Initialize 'parent' object
         this.background = new Background(game, x, y, direction, 1, width, height, animation);
@@ -28,7 +23,6 @@ class Spray {
         this.rotTime--;
         if (this.rotTime <= 0) {
             this.removeFromWorld = true;
-            this.game.camera.corpseCount--;
         }
 
         // Parent update
