@@ -31,6 +31,10 @@ class Point {
 		return returnFlag;
 	}
 
+	setup() {
+		//
+	}
+
 	update(){
 		if (this.isDrawn) this.removeFromWorld = true;
 	}

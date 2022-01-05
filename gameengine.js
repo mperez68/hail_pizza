@@ -3,7 +3,9 @@
 class GameEngine {
     constructor() {
 		this.background = [];
+		this.terrain = [];
         this.entities = [];
+		this.effects = [];
         this.ctx = null;
 		
 		// Mouse Controls
@@ -55,7 +57,7 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
-            //console.log(getXandY(e));
+            console.log(getXandY(e));
             that.click = getXandY(e);
         }, false);
 
@@ -131,35 +133,43 @@ class GameEngine {
 		
     };
 
-    addEntity(entity) {
-        this.entities.push(entity);
+    addBackground(item) {
+        this.background.push(item);
+    }
+
+    addTerrain(item) {
+        this.terrain.push(item);
     };
 
-    addBackground(entity) {
-        this.background.push(entity);
+    addEntity(item) {
+        this.entities.push(item);
     };
 
-    draw() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        for (var i = 0; i < this.background.length; i++) {
-			// Draw flag used to only load sprites within the viewport for performance.
-			let drawFlag = true;
-			//if (Math.abs(this.player.x - this.background[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			//if (Math.abs(this.player.y - this.background[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
-			if (drawFlag) { this.background[i].draw(this.ctx); };
-        }
-        for (var i = 0; i < this.entities.length; i++) {
-			// Draw flag used to only load sprites within the viewport for performance.
-			let drawFlag = true;
-			//if (Math.abs(this.player.x - this.entities[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			//if (Math.abs(this.player.y - this.entities[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
-			//if (this.entities[i] instanceof Driver) drawFlag = true;				// edge case, player
-			if (drawFlag) { this.entities[i].draw(this.ctx); };
-        }
-		this.camera.draw(this.ctx);
+    addEffects(item) {
+        this.effects.push(item);
     };
+
+	setup() {
+		// Setup items in order by layer
+		this.setupIterator(this.background);
+		this.setupIterator(this.terrain);
+		this.setupIterator(this.entities);
+		this.setupIterator(this.effects);
+	}
+
+	setupIterator(items) {
+        var count = items.length;
+		for (var i = 0; i < count; i++) {
+
+			var item = items[i];
+			if (!item.removeFromWorld) {
+				item.setup();
+			}
+		}
+	}
 
     update() {
+		// Check HTML elements
 		if (document.getElementById("myDebug").checked) {
 			PARAMS.DEBUG = true;
 		} else {
@@ -171,27 +181,59 @@ class GameEngine {
 			PARAMS.MUSIC = false;
 		}
 		
-        var entitiesCount = this.entities.length;
+		// Update items in order by layer
 		//if (!this.camera.title) {
-			for (var i = 0; i < entitiesCount; i++) {
-				var entity = this.entities[i];
-
-				if (!entity.removeFromWorld) {
-					entity.update();
-				}
-			}
-
-			for (var i = this.entities.length - 1; i >= 0; --i) {
-				if (this.entities[i].removeFromWorld) {
-					this.entities.splice(i, 1);
-				}
-			}
+			this.updateIterator(this.background);
+			this.updateIterator(this.terrain);
+			this.updateIterator(this.entities);
+			this.updateIterator(this.effects);
 		//}
+
 		this.camera.update();
     };
 
+	updateIterator(items) {
+		// updates
+		var count = items.length;
+		for (var i = 0; i < count; i++) {
+			var item = items[i];
+
+			if (!item.removeFromWorld) {
+				item.update();
+			}
+		}
+		// removals
+		for (var i = items.length - 1; i >= 0; --i) {
+			if (items[i].removeFromWorld) {
+				items.splice(i, 1);
+			}
+		}
+	}
+
+    draw() {
+		// Draw items in order by layer
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+		this.drawIterator(this.background);
+		this.drawIterator(this.terrain);
+		this.drawIterator(this.entities);
+		this.drawIterator(this.effects);
+		this.camera.draw(this.ctx);
+    };
+
+	drawIterator(items) {
+        for (var i = 0; i < items.length; i++) {
+			// Draw flag used to only load sprites within the viewport for performance.
+			let drawFlag = true;
+			//if (Math.abs(this.player.x - items[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
+			//if (Math.abs(this.player.y - items[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
+			//if (items[i] instanceof Driver) drawFlag = true;				// edge case, player
+			if (drawFlag) { items[i].draw(this.ctx); };
+        }
+	}
+
     loop() {
         this.clockTick = this.timer.tick();
+		this.setup();
         this.update();
         this.draw();
     };

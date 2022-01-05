@@ -14,15 +14,30 @@ class SceneManager {
 	loadMap() {
 		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
 
-		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 768 / 4, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 3 * 768 / 4, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 3 * 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 509, 753, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 760, 56, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 139, 554, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 828, 569, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 267, 27, 0, 19, 19));
+		
+		this.game.addEntity(new NeutralPed(this.game, 0, 0, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1024, 0, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 0, 768, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1024, 768, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 512, 384, 0, 19, 19));
+		
+		this.game.addEntity(new NeutralPed(this.game, 512, 0, 0, 19, 19));		// TOP
+		this.game.addEntity(new NeutralPed(this.game, 1024, 384, 0, 19, 19));	// RIGHT
+		this.game.addEntity(new NeutralPed(this.game, 512, 768, 0, 19, 19));	// BOTTOM
+		this.game.addEntity(new NeutralPed(this.game, 0, 384, 0, 19, 19));		// LEFT
 
-		this.game.addEntity(new NeutralPed(this.game, 1024 / 2, 768 / 4, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 768 / 2, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1024 / 2, 3 * 768 / 4, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 768 / 2, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, -100, -100, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 512, -100, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1124, -100, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1124, 384, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, -100, 868, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, -100, 384, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1124, 868, 0, 19, 19));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
@@ -30,12 +45,16 @@ class SceneManager {
 	};
 	
 	update() {
-		// TODO remove after testing
-		this.centerText = this.collideCount;
+		// Reset
+		if (this.game.space) {
+			this.clearEntities();
+			this.loadMap();
+		}
 	};
 	
 	draw(ctx) {
 		// HUD //
+		this.centerText = this.collideCount;
 		
 		// LEFT ALIGN TEXT //
 		ctx.textAlign  = "left";

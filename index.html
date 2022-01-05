@@ -3,25 +3,46 @@
 <head>
     <meta charset="utf-8">
     <title>HAIL PIZZA</title>
-  
+    <!-- Utility -->
     <script type="text/javascript" src="./util.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
-	<script type="text/javascript" src="./animator.js"></script>
-    <script type="text/javascript" src="./boundingbox.js"></script>
+    <!-- Engine -->
+	<script type="text/javascript" src="./scenemanager.js"></script>
 	<script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
-	<script type="text/javascript" src="./scenemanager.js"></script>
+    <!-- Entity Utilities -->
+	<script type="text/javascript" src="./animator.js"></script>
+    <script type="text/javascript" src="./boundingbox.js"></script>
+    <!-- Entity -->
 	<script type="text/javascript" src="./entity.js"></script>
+    <!-- Pedestrian -->
 	<script type="text/javascript" src="./pedestrian.js"></script>
 	<script type="text/javascript" src="./playerped.js"></script>
 	<script type="text/javascript" src="./neutralped.js"></script>
-    <!--
-	<script type="text/javascript" src="./vehicle.js"></script>
+	<!-- <script type="text/javascript" src="./hostileped.js"></script> -->
+    <!-- Vehicle -->
+    <!-- <script type="text/javascript" src="./vehicle.js"></script> -->
+    <!-- <script type="text/javascript" src="./playercar.js"></script> -->
+    <!-- <script type="text/javascript" src="./neutralcar.js"></script> -->
+    <!-- <script type="text/javascript" src="./hostilecar.js"></script> -->
+    <!-- Marker -->
+    <!-- <script type="text/javascript" src="./marker.js"></script> -->
+    <!-- <script type="text/javascript" src="./mission.js"></script> -->
+    <!-- <script type="text/javascript" src="./target.js"></script> -->
+    <!-- Terrain -->
+	<!-- <script type="text/javascript" src="./terrain.js"></script> -->
+    <!-- Terrain Children -->
+	<!-- <script type="text/javascript" src="./building.js"></script> -->
+	<!-- <script type="text/javascript" src="./fence.js"></script> -->
+    <!-- Background -->
 	<script type="text/javascript" src="./background.js"></script>
-	-->
+    <!-- Background Children -->
+    <script type="text/javascript" src="./spray.js"></script>
+	<!-- <script type="text/javascript" src="./ground.js"></script> -->
+	<!-- <script type="text/javascript" src="./road.js"></script> -->
 </head>
-<body>
+<body style="background-color:rgb(100, 100, 100);">
     <center><div>
     <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex ="0" autofocus muted="muted"></canvas>
     </div>

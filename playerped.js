@@ -11,6 +11,11 @@ class PlayerPed {
         this.pedestrian = new Pedestrian(game, x, y, direction, width, height, spritesheet);
     }
 
+	setup() {
+		// parent setup
+		this.pedestrian.setup();
+	}
+
     update() {
 		// Check for keyboard input to determine movement.
         this.controls();

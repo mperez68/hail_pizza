@@ -1,21 +1,21 @@
 // Pedestrian Entity
 class Pedestrian {
-	constructor(game, x, y, direction, width, height, spritesheet) {
+	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.RUN_SPEED = 3;
-		this.PIVOT_SPEED = 3;
+		this.RUN_SPEED = 5;
+		this.PIVOT_SPEED = 5;
 		// Assign Object Variables
-		Object.assign(this, { game, spritesheet });
-		
-		// Animations
-		this.standing = new Animator(this.spritesheet, 0, 20,
-			width, height, 5, 0.3, 1, direction, false, true);	// Standing
-		this.walking = new Animator(this.spritesheet, 0, 0,
-			width, height, 12, 0.05, 1, direction, false, true);	// Walking
+		Object.assign(this, { game });
+		this.isWalking = false;
 
 		// Initialize 'parent' object
-		this.entity = new Entity(game, x, y, direction, 1, width, height, this.standing);
+		this.entity = new Entity(game, x, y, direction, 1, width, height, animation);
 	};
+
+	setup() {
+		// Parent setup
+		this.entity.setup();
+	}
 	
 	update() {
 		// Pathfinding
@@ -69,11 +69,11 @@ class Pedestrian {
 		if (d > PARAMS.GRID_WIDTH) {
 			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
 			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction));
-			this.entity.spritesheet = this.walking;	// Update animation to be walking
+			this.isWalking = true;
 		} else if (d > this.entity.width / 2) {
 			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
 			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-			this.entity.spritesheet = this.walking;	// Update animation to be walking
+			this.isWalking = true;
 		}
 	}
 

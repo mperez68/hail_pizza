@@ -1,0 +1,5 @@
+frame 19x19
+Standing 0,0; 12 frames
+Running 228,0; 8 frames
+Dead 380,0; 1 frame
+v2 i*(0,19)

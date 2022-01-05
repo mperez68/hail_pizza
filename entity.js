@@ -1,8 +1,8 @@
 // Generic Entity Stub.
 class Entity {
-	constructor(game, x, y, direction, scale, width, height, spritesheet) {
+	constructor(game, x, y, direction, scale, width, height, animation ) {
 		// Parameters
-		Object.assign(this, { game, x, y, direction, scale, width, height, spritesheet });
+		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
 		// Initialize generic members
 		this.isColliding = false;
@@ -10,6 +10,12 @@ class Entity {
 		
 		this.updateBB();
 	};
+
+	setup() {
+		// reset flags
+		this.isApproaching = false;
+		this.isColliding = false;
+	}
 	
 	update() {
 		// Equalize direction
@@ -22,7 +28,7 @@ class Entity {
 	updateCollision() {
 		// add new points
 		for (var i = 0; i < this.BB.newPoints.length; i++){
-			this.game.addEntity(this.BB.newPoints[i]);
+			this.game.addEffects(this.BB.newPoints[i]);
 		}
 		this.BB.newPoints = [];
 	};
@@ -41,7 +47,7 @@ class Entity {
 	setNextBB(bb) { this.nextBB = bb; }
 	
 	draw(ctx) {
-		this.spritesheet.drawFrame(this.game.clockTick, this.direction, ctx,
+		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
 										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
 		
 		// Debug box drawing
@@ -81,7 +87,5 @@ class Entity {
 			ctx.fillText("R", this.BB.right.x, this.BB.right.y);
 			ctx.fillText("B", this.BB.bottom.x, this.BB.bottom.y);
 		}
-		this.isApproaching = false;
-		this.isColliding = false;
 	};
 };

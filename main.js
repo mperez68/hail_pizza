@@ -3,6 +3,8 @@ var gameEngine = new GameEngine();
 var ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./sprites/default.png");
 
+ASSET_MANAGER.queueDownload("./sprites/npcs.png");
+
 ASSET_MANAGER.queueDownload("./sprites/driver.png");
 ASSET_MANAGER.queueDownload("./sprites/drivercar.png");
 
