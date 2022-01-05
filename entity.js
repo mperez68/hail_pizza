@@ -5,7 +5,7 @@ class Entity {
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
 		// Initialize generic members
-		this.hitPoints = 3;
+		this.hitPoints = 5;
 		this.invulnerable = 0;
 		this.isColliding = false;
 		this.isApproaching = false;
@@ -19,7 +19,7 @@ class Entity {
 	damage(dmg) {
 		if (this.invulnerable <= 0){
 			this.hitPoints -= dmg;
-			this.invulnerable = 100;
+			this.invulnerable = 10;
 			this.game.camera.hitCount++;
 			return true;
 		}

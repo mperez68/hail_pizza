@@ -15,20 +15,10 @@ class NeutralPed {
 		this.goalList = [];
 
 		this.goalList.push(new Point(292,56));
-		this.goalList.push(new Point(520,709));
 		this.goalList.push(new Point(727,61));
-		this.goalList.push(new Point(141,525));
 		this.goalList.push(new Point(868,536));
-		
-		this.respawns = [];
-		this.respawns.push(new Point(-100,-100));	// TOP LEFT
-		this.respawns.push(new Point(512,-100));	// TOP
-		this.respawns.push(new Point(1124,-100));	// TOP RIGHT
-		this.respawns.push(new Point(1124,384));	// RIGHT
-		this.respawns.push(new Point(1124,868));	// BOTTOM RIGHT
-		this.respawns.push(new Point(512,868));		// BOTTOM
-		this.respawns.push(new Point(-100,868));	// BOTTOM LEFT
-		this.respawns.push(new Point(-100,384));	// LEFT
+		this.goalList.push(new Point(520,709));
+		this.goalList.push(new Point(141,525));
 		
 		// Animations
 		this.standing = new Animator(spritesheet, 0, height * this.version,
@@ -63,15 +53,13 @@ class NeutralPed {
 		this.intent();
 		
 		if (this.dead) {
+			// Statistics
 			this.game.camera.dudeCount--;
 			this.game.camera.deathCount++;
-			let newPt1 = this.respawns[randomInt(this.respawns.length)];
-			let newPt2 = this.respawns[randomInt(this.respawns.length)];
-			while ( (newPt1.x == newPt2.x) && (newPt1.y == newPt2.y) ) newPt2 = this.respawns[randomInt(this.respawns.length)];
-			this.game.addEntity(new NeutralPed(this.game, newPt1.x, newPt1.y , 0, 19, 19));
-			this.game.addEntity(new NeutralPed(this.game, newPt2.x, newPt2.y , 0, 19, 19));
+			// Create Corpse
 			this.game.addBackground(new Spray(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
 					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height))
+			// Delete this object
 			this.removeFromWorld = true;
 		} else {
 			// Collision
@@ -128,7 +116,14 @@ class NeutralPed {
 		if (this.game.backward) delete this.pedestrian.goal;
 
 		// Assign goal
-        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width / 2) this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
+        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width ) {
+			let ptr = 0;
+			for (var i = 0; i < this.goalList.length; i++){
+				if ( (this.goalList[i].x == this.pedestrian.goal.x) && (this.goalList[i].y == this.pedestrian.goal.y) ) ptr = i;
+			}
+			ptr = (ptr + 1) % this.goalList.length;
+			this.pedestrian.goal = this.goalList[ptr];
+		}
 
 		// if (this.game.click) {
 		// 	this.goal = this.game.click;

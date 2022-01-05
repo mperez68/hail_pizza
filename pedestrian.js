@@ -74,15 +74,15 @@ class Pedestrian {
 		if ( diff >= 180 && diff < 360 ) this.entity.direction -= this.PIVOT_SPEED;
 		if ( Math.abs(this.entity.direction - a) <= 2 * this.PIVOT_SPEED ) this.entity.direction = a;
 		// Move closer
-		if (d > PARAMS.GRID_WIDTH) {
+		// if (d > PARAMS.GRID_WIDTH) {
 			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
 			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction));
 			this.isWalking = true;
-		} else if (d > this.entity.width / 2) {
-			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-			this.isWalking = true;
-		}
+		// } else if (d > this.entity.width / 2) {
+		// 	this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
+		// 	this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
+		// 	this.isWalking = true;
+		// }
 	}
 
 	getDistanceToGoal() {

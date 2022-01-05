@@ -4,6 +4,17 @@ class SceneManager {
 		this.game.camera = this;
 		this.x = 0;
 		this.y = 0;
+		this.lastRespawn = 0;
+
+		this.respawns = [];
+		this.respawns.push(new Point(-100,-100));	// TOP LEFT
+		this.respawns.push(new Point(512,-100));	// TOP
+		this.respawns.push(new Point(1124,-100));	// TOP RIGHT
+		this.respawns.push(new Point(1124,384));	// RIGHT
+		this.respawns.push(new Point(1124,868));	// BOTTOM RIGHT
+		this.respawns.push(new Point(512,868));		// BOTTOM
+		this.respawns.push(new Point(-100,868));	// BOTTOM LEFT
+		this.respawns.push(new Point(-100,384));	// LEFT
 		
 		this.loadMap();
 	};
@@ -16,30 +27,11 @@ class SceneManager {
 
 		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
 
-		this.game.addEntity(new NeutralPed(this.game, 509, 753, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 760, 56, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 139, 554, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 828, 569, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 267, 27, 0, 19, 19));
-		
-		this.game.addEntity(new NeutralPed(this.game, 0, 0, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1024, 0, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 0, 768, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1024, 768, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 512, 384, 0, 19, 19));
-		
-		this.game.addEntity(new NeutralPed(this.game, 512, 0, 0, 19, 19));		// TOP
-		this.game.addEntity(new NeutralPed(this.game, 1024, 384, 0, 19, 19));	// RIGHT
-		this.game.addEntity(new NeutralPed(this.game, 512, 768, 0, 19, 19));	// BOTTOM
-		this.game.addEntity(new NeutralPed(this.game, 0, 384, 0, 19, 19));		// LEFT
-
-		this.game.addEntity(new NeutralPed(this.game, -100, -100, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 512, -100, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1124, -100, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1124, 384, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, -100, 868, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, -100, 384, 0, 19, 19));
-		this.game.addEntity(new NeutralPed(this.game, 1124, 868, 0, 19, 19));
+		// this.game.addEntity(new NeutralPed(this.game, 509, 753, 0, 19, 19));
+		// this.game.addEntity(new NeutralPed(this.game, 760, 56, 0, 19, 19));
+		// this.game.addEntity(new NeutralPed(this.game, 139, 554, 0, 19, 19));
+		// this.game.addEntity(new NeutralPed(this.game, 828, 569, 0, 19, 19));
+		// this.game.addEntity(new NeutralPed(this.game, 267, 27, 0, 19, 19));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
@@ -49,6 +41,13 @@ class SceneManager {
 	update() {
 		this.dudeCount = Math.min(this.dudeCount, this.game.ITEM_CAP);
 		this.corpseCount = Math.min(this.corpseCount, this.game.ITEM_CAP);
+
+		// Add more dudes
+		if ((randomInt(this.dudeCount) / this.game.ITEM_CAP < 0.000001)) {
+			let pt = this.respawns[this.lastRespawn];
+			this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
+			this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
+		}
 
 		// Reset
 		if (this.game.space) {
