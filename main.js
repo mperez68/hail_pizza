@@ -14,6 +14,9 @@ ASSET_MANAGER.queueDownload("./sprites/road/00-00.png");
 ASSET_MANAGER.queueDownload("./sprites/bloodsmear.png");
 // Buildings
 ASSET_MANAGER.queueDownload("./sprites/roof/00-00.png");
+// Markers
+ASSET_MANAGER.queueDownload("./sprites/missionmarker.png")
+ASSET_MANAGER.queueDownload("./sprites/targetmarker.png")
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

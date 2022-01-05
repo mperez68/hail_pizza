@@ -30,6 +30,8 @@ class SceneManager {
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
 		this.game.addBackground(new Road(this.game, 416, 384, 0));
 		this.game.addEntity(new Building(this.game, 544, 384, 0));
+		this.game.addEntity(new Mission(this.game, 598, 384, 0));
+		this.game.addEntity(new Target(this.game, 598, 354, 0));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
