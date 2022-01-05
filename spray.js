@@ -35,8 +35,6 @@ class Spray {
         this.background.update();
     }
 
-
-
     draw(ctx) {
         // Parent draw
         this.background.draw(ctx);

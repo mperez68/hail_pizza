@@ -1,12 +1,18 @@
 var gameEngine = new GameEngine();
 
 var ASSET_MANAGER = new AssetManager();
+// Default Square
 ASSET_MANAGER.queueDownload("./sprites/default.png");
-
-ASSET_MANAGER.queueDownload("./sprites/npcs.png");
-
+// Player Sprites
 ASSET_MANAGER.queueDownload("./sprites/driver.png");
 ASSET_MANAGER.queueDownload("./sprites/drivercar.png");
+// NPC's
+ASSET_MANAGER.queueDownload("./sprites/npcs.png");
+// Background Tiles
+ASSET_MANAGER.queueDownload("./sprites/ground.png");
+ASSET_MANAGER.queueDownload("./sprites/road/00-00.png");
+// Buildings
+ASSET_MANAGER.queueDownload("./sprites/roof/00-00.png");
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

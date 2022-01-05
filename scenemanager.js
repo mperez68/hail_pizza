@@ -26,12 +26,9 @@ class SceneManager {
 		this.corpseCount = 0;
 
 		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
-
-		// this.game.addEntity(new NeutralPed(this.game, 509, 753, 0, 19, 19));
-		// this.game.addEntity(new NeutralPed(this.game, 760, 56, 0, 19, 19));
-		// this.game.addEntity(new NeutralPed(this.game, 139, 554, 0, 19, 19));
-		// this.game.addEntity(new NeutralPed(this.game, 828, 569, 0, 19, 19));
-		// this.game.addEntity(new NeutralPed(this.game, 267, 27, 0, 19, 19));
+		
+		this.game.addBackground(new Ground(this.game, 480, 384, 0));
+		this.game.addBackground(new Road(this.game, 416, 384, 0));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
