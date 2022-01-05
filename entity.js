@@ -4,15 +4,10 @@ class Entity {
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, spritesheet });
 		
+		// Initialize generic members
 		this.isColliding = false;
 		this.isApproaching = false;
 		
-		// Animations/Bounding Box
-		// this.spritesheet = ASSET_MANAGER.getAsset("./sprites/default.png");
-		// (spritesheet, xStart, yStart,
-		//		width, height, frameCount, frameDuration, framePadding, angleStart, reverse, loop)
-		// this.spritesheet = new Animator(this.spritesheet, 0, 0,
-		// 	this.width, this.height, 1, 1, 0, direction, false, true);
 		this.updateBB();
 	};
 	
@@ -20,32 +15,16 @@ class Entity {
 		// Equalize direction
 		while (this.direction < 0) this.direction += 360;
 		this.direction = this.direction % 360;
+		
+		this.updateBB();
+	};
 
-		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof Entity) {	// collision example
-					that.isApproaching = true;
-				}
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof Entity) {	// collision example
-					that.isColliding = true;
-					entity.isColliding = true;
-				}
-			}
-		});
-
+	updateCollision() {
 		// add new points
 		for (var i = 0; i < this.BB.newPoints.length; i++){
 			this.game.addEntity(this.BB.newPoints[i]);
 		}
 		this.BB.newPoints = [];
-		
-		this.updateBB();
 	};
 	
 	updateBB(){
@@ -54,6 +33,12 @@ class Entity {
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 											(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
+
+	getBB() { return this.BB; }
+	getNextBB() { return this.nextBB; }
+
+	setBB(bb) { this.BB = bb; }
+	setNextBB(bb) { this.nextBB = bb; }
 	
 	draw(ctx) {
 		this.spritesheet.drawFrame(this.game.clockTick, this.direction, ctx,

@@ -5,18 +5,33 @@ class SceneManager {
 		this.x = 0;
 		this.y = 0;	
 		
+		// TODO remove after testing
+		this.collideCount = 0;
+		
 		this.loadMap();
 	};
 	
 	loadMap() {
-		this.game.addEntity(new Pedestrian(this.game, 1024 / 2, 768 / 2, 0, 19, 19));
+		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
+
+		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 3 * 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 3 * 768 / 4, 0, 19, 19));
+
+		this.game.addEntity(new NeutralPed(this.game, 1024 / 2, 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1024 / 4, 768 / 2, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 1024 / 2, 3 * 768 / 4, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, 3 * 1024 / 4, 768 / 2, 0, 19, 19));
+
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
 		this.rightText = "RIGHT";
 	};
 	
 	update() {
-		// TODO
+		// TODO remove after testing
+		this.centerText = this.collideCount;
 	};
 	
 	draw(ctx) {

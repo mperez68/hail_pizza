@@ -1,22 +1,13 @@
 // Pedestrian Entity
 class Pedestrian {
-	constructor(game, x, y, direction, width, height) {
+	constructor(game, x, y, direction, width, height, spritesheet) {
 		// Constants
 		this.RUN_SPEED = 3;
 		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
-		Object.assign(this, { game });
-		
-		this.goalList = [];
-		this.goalList.push(new Point(100,100));
-		this.goalList.push(new Point(924,100));
-		this.goalList.push(new Point(100,668));
-		this.goalList.push(new Point(924,668));
-
-		this.goal = this.goalList[Math.floor(Math.random() * 4)];
+		Object.assign(this, { game, spritesheet });
 		
 		// Animations
-		this.spritesheet = ASSET_MANAGER.getAsset("./sprites/driver.png");
 		this.standing = new Animator(this.spritesheet, 0, 20,
 			width, height, 5, 0.3, 1, direction, false, true);	// Standing
 		this.walking = new Animator(this.spritesheet, 0, 0,
@@ -27,33 +18,44 @@ class Pedestrian {
 	};
 	
 	update() {
-		// Reactive decision making for intent
-		this.intent();
-
 		// Pathfinding
 		if (this.goal) this.pathfind();
+		
+		this.updateCollision();
 
-		// Parent update, Collision
+		// Parent update
 		this.entity.update();
 	};
 
-	intent() {
-		// Assign goal
+	updateCollision() {
+		// Update self
+		this.BB = this.getBB();
+		this.nextBB = this.getNextBB();
 
+		// This objects collision cases go here
 
-		// if (this.game.click) {
-		// 	this.goal = this.game.click;
-		// 	this.game.addEntity(new Point(this.goal.x, this.goal.y));
-		// }
+		// Update parent BB
+		this.setBB(this.BB);
+		this.setNextBB(this.nextBB);
+
+		// Parent updateCollision
+		this.entity.updateCollision();
 	}
+
+	// Because typical inheritance doesn't work in Javascript in any simple way, we are using getters/setters for protected members.
+	// This ensures that while this object is interfacing with protected members in a typical way, only one object is ever being used.
+	// Getters
+	getBB() { return this.entity.getBB(); };
+	getNextBB() { return this.entity.getNextBB(); };
+
+	// Setters
+	setBB(bb) { this.entity.setBB(bb); }
+	setNextBB(bb) { this.entity.setNextBB(bb); }
 
 	pathfind(){
 		// Determine Distance/Angle
-		let d = Math.sqrt( Math.pow(this.entity.x - this.goal.x, 2) + Math.pow(this.entity.y - this.goal.y, 2) );
-		let a = Math.atan( (this.goal.y - this.entity.y) / (this.goal.x - this.entity.x) ) * 180 / Math.PI;
-		// Normalize for 360 deg calculation
-		if (this.goal.x < this.entity.x) a += 180;
-		if (a < 0) a += 360;
+		let d = this.getDistanceToGoal();
+		let a = this.getAngleToGoal();
 
 		let diff = a - this.entity.direction;
 		while (diff < 0) diff += 360;
@@ -63,9 +65,6 @@ class Pedestrian {
 		if ( diff >= 0 && diff < 180 ) this.entity.direction += this.PIVOT_SPEED;
 		if ( diff >= 180 && diff < 360 ) this.entity.direction -= this.PIVOT_SPEED;
 		if ( Math.abs(this.entity.direction - a) <= 2 * this.PIVOT_SPEED ) this.entity.direction = a;
-
-		// Initialize animation to standing
-		this.entity.spritesheet = this.standing;
 		// Move closer
 		if (d > PARAMS.GRID_WIDTH) {
 			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
@@ -75,31 +74,21 @@ class Pedestrian {
 			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
 			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
 			this.entity.spritesheet = this.walking;	// Update animation to be walking
-		} else {
-			this.goal = this.goalList[Math.floor(Math.random() * 4)];
 		}
 	}
 
-	controls() {
-		// Initialize animation to standing
-		this.entity.spritesheet = this.standing;
-		// Forward OR Backward, forward taking precedent.
-		if (this.game.forward) {
-			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
-			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction));
-			this.entity.spritesheet = this.walking;	// Update animation to be walking
-		} else if (this.game.backward) {
-			this.entity.x -= (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction) * 0.5);
-			this.entity.y -= (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction) * 0.5);
-			this.entity.spritesheet = this.walking;	// Update animation to be walking
-		}
-		// Left OR Right, both pressed cancels out.
-		if (this.game.left) {
-			this.entity.direction -= this.PIVOT_SPEED;
-		}
-		if (this.game.right) {
-			this.entity.direction += this.PIVOT_SPEED;
-		}
+	getDistanceToGoal() {
+		let d = 9999;
+		if (this.goal) d = Math.sqrt( Math.pow(this.entity.x - this.goal.x, 2) + Math.pow(this.entity.y - this.goal.y, 2) );
+		return d;
+	}
+
+	getAngleToGoal() {
+		let a = Math.atan( (this.goal.y - this.entity.y) / (this.goal.x - this.entity.x) ) * 180 / Math.PI;
+		// Normalize for 360 deg calculation
+		if (this.goal.x < this.entity.x) a += 180;
+		if (a < 0) a += 360;
+		return a;
 	}
 
 	draw(ctx) {
