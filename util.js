@@ -13,6 +13,20 @@ function hsl(h, s, l) {
     return "hsl(" + h + "," + s + "%," + l + "%)";
 };
 
+// returns distance between two points
+function getDistance(pt1, pt2) {
+	return Math.sqrt( Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2) );
+}
+
+// returns angle between two points
+function getAngle(pt1, pt2) {
+	let a = Math.atan( (pt2.y - pt1.y) / (pt2.x - pt1.x) ) * 180 / Math.PI;
+	// Normalize for 360 deg calculation
+	if (pt2.x < pt1.x) a += 180;
+	if (a < 0) a += 360;
+	return a;
+}
+
 // creates an alias for requestAnimationFrame for backwards compatibility
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||

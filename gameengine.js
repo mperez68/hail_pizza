@@ -2,6 +2,8 @@
 
 class GameEngine {
     constructor() {
+		this.ITEM_CAP = 100;
+
 		this.background = [];
 		this.terrain = [];
         this.entities = [];
@@ -135,6 +137,7 @@ class GameEngine {
 
     addBackground(item) {
         this.background.push(item);
+		if (this.background.length > this.ITEM_CAP) this.background.splice(0,1);
     }
 
     addTerrain(item) {
@@ -143,6 +146,7 @@ class GameEngine {
 
     addEntity(item) {
         this.entities.push(item);
+		if (this.entities.length > this.ITEM_CAP) this.entities.splice(0,1);
     };
 
     addEffects(item) {

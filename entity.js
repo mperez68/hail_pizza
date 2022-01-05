@@ -5,19 +5,44 @@ class Entity {
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
 		// Initialize generic members
+		this.hitPoints = 3;
+		this.invulnerable = 0;
 		this.isColliding = false;
 		this.isApproaching = false;
 		
 		this.updateBB();
 	};
 
+	setHP(hp) {this.hitPoints = hp; };
+	getHP(){ return this.hitPoints; };
+
+	damage(dmg) {
+		if (this.invulnerable <= 0){
+			this.hitPoints -= dmg;
+			this.invulnerable = 100;
+			this.game.camera.hitCount++;
+			return true;
+		}
+		return false;
+	};
+	push(a, d) {
+		// If input is valid, then calculate and push
+		if (a && d) {
+			//console.log("pushing distance " + d + " pixels @ " + a + " degrees");
+			this.x += (d * Math.cos((Math.PI / 180) * a));
+			this.y += (d * Math.sin((Math.PI / 180) * a));
+		}
+	}
+
 	setup() {
 		// reset flags
 		this.isApproaching = false;
 		this.isColliding = false;
-	}
+	};
 	
 	update() {
+		if (this.invulnerable >= 0) this.invulnerable--;
+
 		// Equalize direction
 		while (this.direction < 0) this.direction += 360;
 		this.direction = this.direction % 360;

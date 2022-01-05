@@ -11,6 +11,14 @@ class PlayerPed {
         this.pedestrian = new Pedestrian(game, x, y, direction, width, height, spritesheet);
     }
 
+	setHP(hp) {this.pedestrian.setHP(hp); };
+	getHP(){ return this.pedestrian.getHP(); };
+
+	damage(dmg) { return this.pedestrian.damage(dmg) };
+	push(a, d) {
+		this.pedestrian.push(a,d);
+	}
+
 	setup() {
 		// parent setup
 		this.pedestrian.setup();

@@ -3,15 +3,17 @@ class SceneManager {
 		Object.assign(this, { game });
 		this.game.camera = this;
 		this.x = 0;
-		this.y = 0;	
-		
-		// TODO remove after testing
-		this.collideCount = 0;
+		this.y = 0;
 		
 		this.loadMap();
 	};
 	
 	loadMap() {
+		// TODO remove after testing
+		this.dudeCount = 0;
+		this.deathCount = 0;
+		this.corpseCount = 0;
+
 		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
 
 		this.game.addEntity(new NeutralPed(this.game, 509, 753, 0, 19, 19));
@@ -45,6 +47,9 @@ class SceneManager {
 	};
 	
 	update() {
+		this.dudeCount = Math.min(this.dudeCount, this.game.ITEM_CAP);
+		this.corpseCount = Math.min(this.corpseCount, this.game.ITEM_CAP);
+
 		// Reset
 		if (this.game.space) {
 			this.clearEntities();
@@ -54,7 +59,9 @@ class SceneManager {
 	
 	draw(ctx) {
 		// HUD //
-		this.centerText = this.collideCount;
+		this.leftText = this.dudeCount + " Dudes";
+		this.centerText = this.deathCount + " Deaths";
+		this.rightText = this.corpseCount + " Corpses";
 		
 		// LEFT ALIGN TEXT //
 		ctx.textAlign  = "left";

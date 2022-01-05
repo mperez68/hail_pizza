@@ -7,14 +7,12 @@ class NeutralPed {
 		Object.assign(this, { game });
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
 
-		this.version = Math.floor(Math.random() * this.VERSION_COUNT);
+		this.version = randomInt(this.VERSION_COUNT);
 		this.dead = false;
+
+		this.game.camera.dudeCount++;
 		
 		this.goalList = [];
-		// this.goalList.push(new Point(100,100));
-		// this.goalList.push(new Point(924,100));
-		// this.goalList.push(new Point(100,668));
-		// this.goalList.push(new Point(924,668));
 
 		this.goalList.push(new Point(292,56));
 		this.goalList.push(new Point(520,709));
@@ -23,13 +21,14 @@ class NeutralPed {
 		this.goalList.push(new Point(868,536));
 		
 		this.respawns = [];
-		this.respawns.push(new Point(-100,-100));
-		this.respawns.push(new Point(512,-100));
-		this.respawns.push(new Point(1124,-100));
-		this.respawns.push(new Point(1124,384));
-		this.respawns.push(new Point(-100,868));
-		this.respawns.push(new Point(-100,384));
-		this.respawns.push(new Point(1124,868));
+		this.respawns.push(new Point(-100,-100));	// TOP LEFT
+		this.respawns.push(new Point(512,-100));	// TOP
+		this.respawns.push(new Point(1124,-100));	// TOP RIGHT
+		this.respawns.push(new Point(1124,384));	// RIGHT
+		this.respawns.push(new Point(1124,868));	// BOTTOM RIGHT
+		this.respawns.push(new Point(512,868));		// BOTTOM
+		this.respawns.push(new Point(-100,868));	// BOTTOM LEFT
+		this.respawns.push(new Point(-100,384));	// LEFT
 		
 		// Animations
 		this.standing = new Animator(spritesheet, 0, height * this.version,
@@ -40,8 +39,16 @@ class NeutralPed {
 		// Initialize 'parent' object
 		this.pedestrian = new Pedestrian(game, x, y, direction, width, height, this.standing);
 		
-		this.pedestrian.goal = this.goalList[Math.floor(Math.random() * (this.goalList.length + 1))];
+		this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
     }
+
+	setHP(hp) {this.pedestrian.setHP(hp); };
+	getHP(){ return this.pedestrian.getHP(); };
+
+	damage(dmg) { return this.pedestrian.damage(dmg) };
+	push(a, d) {
+		this.pedestrian.push(a,d);
+	}
 
 	setup() {
 		// Reset walking flag
@@ -56,8 +63,13 @@ class NeutralPed {
 		this.intent();
 		
 		if (this.dead) {
-			let newPt = this.respawns[Math.floor(Math.random() * 4)];
-			this.game.addEntity(new NeutralPed(this.game, newPt.x, newPt.y , 0, 19, 19));
+			this.game.camera.dudeCount--;
+			this.game.camera.deathCount++;
+			let newPt1 = this.respawns[randomInt(this.respawns.length)];
+			let newPt2 = this.respawns[randomInt(this.respawns.length)];
+			while ( (newPt1.x == newPt2.x) && (newPt1.y == newPt2.y) ) newPt2 = this.respawns[randomInt(this.respawns.length)];
+			this.game.addEntity(new NeutralPed(this.game, newPt1.x, newPt1.y , 0, 19, 19));
+			this.game.addEntity(new NeutralPed(this.game, newPt2.x, newPt2.y , 0, 19, 19));
 			this.game.addBackground(new Spray(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
 					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height))
 			this.removeFromWorld = true;
@@ -66,6 +78,7 @@ class NeutralPed {
 			this.updateCollision();
 		}
 
+		if (this.getHP() <= 0) this.dead = true;
 		// Parent update
         this.pedestrian.update();
 	};
@@ -80,17 +93,18 @@ class NeutralPed {
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	// collision example
+				if (entity instanceof NeutralPed && !entity.dead) {	
 					that.isApproaching = true;
+
+					if (entity.damage(1)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
 				}
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	// collision example
+				if (entity instanceof NeutralPed && !entity.dead) {	
+
 					that.isColliding = true;
 					entity.isColliding = true;
-					entity.dead = true;
-					that.game.camera.collideCount++;
 				}
 			}
 		});
@@ -110,11 +124,11 @@ class NeutralPed {
 	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
 
 	intent() {
-		if (this.game.forward) this.pedestrian.goal = this.goalList[Math.floor(Math.random() * 4)];
+		if (this.game.forward) this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
 		if (this.game.backward) delete this.pedestrian.goal;
 
 		// Assign goal
-        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width / 2) this.pedestrian.goal = this.goalList[Math.floor(Math.random() * 4)];
+        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width / 2) this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
 
 		// if (this.game.click) {
 		// 	this.goal = this.game.click;

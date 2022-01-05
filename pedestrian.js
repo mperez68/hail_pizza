@@ -2,8 +2,8 @@
 class Pedestrian {
 	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.RUN_SPEED = 5;
-		this.PIVOT_SPEED = 5;
+		this.RUN_SPEED = 3;
+		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
 		this.isWalking = false;
@@ -11,6 +11,14 @@ class Pedestrian {
 		// Initialize 'parent' object
 		this.entity = new Entity(game, x, y, direction, 1, width, height, animation);
 	};
+
+	setHP(hp) {this.entity.setHP(hp); };
+	getHP(){ return this.entity.getHP(); };
+
+	damage(dmg) { return this.entity.damage(dmg) };
+	push(a, d) {
+		this.entity.push(a,d);
+	}
 
 	setup() {
 		// Parent setup
@@ -79,15 +87,13 @@ class Pedestrian {
 
 	getDistanceToGoal() {
 		let d = 9999;
-		if (this.goal) d = Math.sqrt( Math.pow(this.entity.x - this.goal.x, 2) + Math.pow(this.entity.y - this.goal.y, 2) );
+		if (this.goal) d = getDistance(this.entity, this.goal);
 		return d;
 	}
 
 	getAngleToGoal() {
-		let a = Math.atan( (this.goal.y - this.entity.y) / (this.goal.x - this.entity.x) ) * 180 / Math.PI;
-		// Normalize for 360 deg calculation
-		if (this.goal.x < this.entity.x) a += 180;
-		if (a < 0) a += 360;
+		let a = 0;
+		if (this.goal) a = getAngle(this.entity, this.goal);
 		return a;
 	}
 
