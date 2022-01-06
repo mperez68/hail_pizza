@@ -2,8 +2,8 @@
 class PlayerVehicle {
 	constructor(game, x, y, direction, width, height) {
         // Constants
-        this.RUN_SPEED = 4;
-        this.PIVOT_SPEED = 3;
+        // this.vehicle.RUN_SPEED = 4;
+        // this.vehicle.PIVOT_SPEED = 3;
 
 		// Assign Object Variables
 		Object.assign(this, { game });
@@ -69,20 +69,20 @@ class PlayerVehicle {
 
 		// Forward OR Backward, forward taking precedent.
 		if (this.game.forward) {
-			ent.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction));
-			ent.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction));
+			ent.x += (this.vehicle.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction));
+			ent.y += (this.vehicle.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction));
 			ent.animation = this.walking;	// Update animation to be walking
 		} else if (this.game.backward) {
-			ent.x -= (this.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction) * 0.5);
-			ent.y -= (this.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction) * 0.5);
+			ent.x -= (this.vehicle.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction) * 0.5);
+			ent.y -= (this.vehicle.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction) * 0.5);
 			ent.animation = this.walking;	// Update animation to be walking
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {
-			ent.direction -= this.PIVOT_SPEED;
+			ent.direction -= this.vehicle.PIVOT_SPEED;
 		}
 		if (this.game.right) {
-			ent.direction += this.PIVOT_SPEED;
+			ent.direction += this.vehicle.PIVOT_SPEED;
 		}
 	}
 

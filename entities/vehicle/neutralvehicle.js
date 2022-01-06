@@ -8,9 +8,6 @@ class NeutralVehicle {
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 
 		this.version = randomInt(this.VERSION_COUNT);
-		this.dead = false;
-
-		this.game.camera.dudeCount++;
 		
 		this.goalList = [];
 
@@ -41,9 +38,6 @@ class NeutralVehicle {
 	}
 
 	setup() {
-		// Reset walking flag
-		this.vehicle.isWalking = false;
-
 		// parent setup
 		this.vehicle.setup();
 	}
@@ -52,19 +46,8 @@ class NeutralVehicle {
 		// Reactive decision making for intent
 		this.intent();
 		
-		if (this.dead) {
-			// Statistics
-			this.game.camera.dudeCount--;
-			this.game.camera.deathCount++;
-			// Create Corpse
-			this.game.addBackground(new Corpse(this.game, this.vehicle.entity.x, this.vehicle.entity.y,
-					this.vehicle.entity.direction, this.vehicle.entity.width, this.vehicle.entity.height, this.version))
-			// Delete this object
-			this.removeFromWorld = true;
-		} else {
-			// Collision
-			this.updateCollision();
-		}
+		// Collision
+		this.updateCollision();
 
 		if (this.getHP() <= 0) this.dead = true;
 		// Parent update
@@ -112,8 +95,8 @@ class NeutralVehicle {
 	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	intent() {
-		// if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
-		// if (this.game.backward) delete this.vehicle.goal;
+		if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
+		if (this.game.backward) delete this.vehicle.goal;
 
 		// Assign goal
         if (this.vehicle.getDistanceToGoal() <= this.vehicle.entity.width ) {

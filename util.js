@@ -13,6 +13,20 @@ function hsl(h, s, l) {
     return "hsl(" + h + "," + s + "%," + l + "%)";
 };
 
+// returns angle in radians given degrees
+function getRad(deg) {
+	return deg * (Math.PI / 180);
+}
+
+// returns angle in degrees given radians 
+function getDeg(rad) {
+	return deg * (180 / Math.PI);
+}
+
+function roundDecimals(num, dec) {
+	return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+}
+
 // returns distance between two points
 function getDistance(pt1, pt2) {
 	return Math.sqrt( Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2) );

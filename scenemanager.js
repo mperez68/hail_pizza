@@ -20,13 +20,9 @@ class SceneManager {
 	};
 	
 	loadMap() {
-		// TODO remove after testing
-		this.dudeCount = 0;
-		this.deathCount = 0;
-		this.corpseCount = 0;
 
 		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
-		this.game.addEntity(new PlayerVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
+		//this.game.addEntity(new PlayerVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
 		this.game.addEntity(new NeutralVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
@@ -34,6 +30,12 @@ class SceneManager {
 		this.game.addTerrain(new Building(this.game, 544, 384, 0));
 		this.game.addEffects(new Mission(this.game, 598, 384, 0));
 		this.game.addEffects(new Target(this.game, 598, 354, 0));
+		
+		this.game.addEffects(new Mission(this.game, 292,56, 0));
+		this.game.addEffects(new Mission(this.game, 727,61, 0));
+		this.game.addEffects(new Mission(this.game, 868,536, 0));
+		this.game.addEffects(new Mission(this.game, 520,709, 0));
+		this.game.addEffects(new Mission(this.game, 141,525, 0));
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
@@ -41,14 +43,12 @@ class SceneManager {
 	};
 	
 	update() {
-		this.dudeCount = Math.min(this.dudeCount, this.game.ITEM_CAP);
-		this.corpseCount = Math.min(this.corpseCount, this.game.ITEM_CAP);
-
 		// Add more dudes
 		if ((randomInt(this.dudeCount) / this.game.ITEM_CAP < 0.000001)) {
 			let pt = this.respawns[this.lastRespawn];
 			this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
-			this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
+			//this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
+			//this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
 		}
 
 		// Reset
@@ -60,9 +60,9 @@ class SceneManager {
 	
 	draw(ctx) {
 		// HUD //
-		this.leftText = this.dudeCount + " Dudes";
-		this.centerText = this.deathCount + " Deaths";
-		this.rightText = this.corpseCount + " Corpses";
+		// this.leftText = "LEFT";
+		// this.centerText = "CENTER";
+		// this.rightText = "RIGHT";
 		
 		// LEFT ALIGN TEXT //
 		ctx.textAlign  = "left";
@@ -93,7 +93,9 @@ class SceneManager {
 	};
 	
 	clearEntities() {
-        this.game.entities = [];
         this.game.background = [];
+        this.game.terrain = [];
+        this.game.entities = [];
+        this.game.effects = [];
     };
 }

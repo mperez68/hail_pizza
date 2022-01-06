@@ -2,15 +2,23 @@
 class Vehicle {
 	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.RUN_SPEED = 3;
+		this.MAX_SPEED = 10;
+		this.ACCELERATION = 0.25;
 		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
-		this.isWalking = false;
+		this.isAccelerating = false;
+		this.isDecelerating = false;
+		this.currentSpeed = 0;
+		this.isReorienting = 0;
 
 		// Initialize 'parent' object
 		this.entity = new Entity(game, x, y, direction, 1, width, height, animation);
 	};
+
+	getTurnRadius() {
+		return this.MAX_SPEED / getRad(this.PIVOT_SPEED);
+	}
 
 	setHP(hp) {this.entity.setHP(hp); };
 	getHP(){ return this.entity.getHP(); };
@@ -25,6 +33,9 @@ class Vehicle {
 	}
 
 	setup() {
+		this.isAccelerating = false;
+		this.isDecelerating = false;
+
 		// Parent setup
 		this.entity.setup();
 	}
@@ -32,8 +43,18 @@ class Vehicle {
 	update() {
 		// Pathfinding
 		if (this.goal) this.pathfind();
+
+		//this.game.camera.leftText = "Speed: " + roundDecimals(this.currentSpeed, 2);
+		if (this.isReorienting) this.game.camera.centerText = "Reorienting!"; else this.game.camera.centerText = "";
+		this.game.camera.rightText = "Turn Radius: " + roundDecimals(this.getTurnRadius(), 2);
+
+		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.ACCELERATION / 2;
 		
 		this.updateCollision();
+
+		// Move based on speed
+		this.entity.x += (this.currentSpeed * Math.cos((Math.PI / 180) * this.entity.direction));
+		this.entity.y += (this.currentSpeed * Math.sin((Math.PI / 180) * this.entity.direction));
 
 		// Parent update
 		this.entity.update();
@@ -86,20 +107,49 @@ class Vehicle {
 		while (diff < 0) diff += 360;
 		diff = diff % 360;
 
+		this.game.camera.leftText = "Difference: " + roundDecimals(diff, 2);
+
 		// Align direction
-		if ( diff >= 0 && diff < 180 ) this.entity.direction += this.PIVOT_SPEED;
-		if ( diff >= 180 && diff < 360 ) this.entity.direction -= this.PIVOT_SPEED;
-		if ( Math.abs(this.entity.direction - a) <= 2 * this.PIVOT_SPEED ) this.entity.direction = a;
+		if ( diff >= 0 && diff < 180 ) this.left();
+		if ( diff >= 180 && diff < 360 ) this.right();
+		if ( Math.abs(this.entity.direction - a) <= this.PIVOT_SPEED ) this.entity.direction = a;
+
 		// Move closer
-		// if (d > PARAMS.GRID_WIDTH) {
-			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
-			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction));
-			this.isWalking = true;
-		// } else if (d > this.entity.width / 2) {
-		// 	this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-		// 	this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-		// 	this.isWalking = true;
-		// }
+		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
+			this.isReorienting = true;
+			this.decelerate();
+		} else {
+			this.isReorienting = false;
+			this.accelerate();
+		}
+	}
+
+	right() {
+		// turning only happens when moving
+		this.entity.direction -= this.PIVOT_SPEED * (Math.abs(this.currentSpeed) / this.MAX_SPEED)
+	}
+
+	left() {
+		// turning only happens when moving
+		this.entity.direction += this.PIVOT_SPEED * (Math.abs(this.currentSpeed) / this.MAX_SPEED)
+	}
+
+	accelerate() {
+		if (this.currentSpeed + this.ACCELERATION < this.MAX_SPEED) {
+			this.currentSpeed += this.ACCELERATION;
+		} else {
+			this.currentSpeed = this.MAX_SPEED;
+		}
+		this.isAccelerating = true;
+	}
+
+	decelerate() {
+		if (this.currentSpeed - (this.ACCELERATION / 2) > -(this.MAX_SPEED / 2)) {
+			this.currentSpeed -= this.ACCELERATION;
+		} else {
+			this.currentSpeed = -this.MAX_SPEED / 2;
+		}
+		this.isDecelerating = true;
 	}
 
 	getDistanceToGoal() {
