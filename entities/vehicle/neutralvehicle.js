@@ -16,15 +16,17 @@ class NeutralVehicle {
 		this.goalList.push(new Point(868,536));
 		this.goalList.push(new Point(520,709));
 		this.goalList.push(new Point(141,525));
+
+		this.goalList.push(new Point(509,377));
 		
 		// Animations
-		this.standing = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// Standing
-		this.walking = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// Walking
+		this.idle = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// idle
+		this.driving = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// driving
 		
 		// Initialize 'parent' object
-		this.vehicle = new Vehicle(game, x, y, direction, width, height, this.standing);
+		this.vehicle = new Vehicle(game, x, y, direction, width, height, this.idle);
 		
 		this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
     }
@@ -66,16 +68,21 @@ class NeutralVehicle {
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
 				if (entity instanceof NeutralVehicle && !entity.dead) {	
 					that.isApproaching = true;
-
-					if (entity.damage(1)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
 				}
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
 				if (entity instanceof NeutralVehicle && !entity.dead) {	
-
 					that.isColliding = true;
 					entity.isColliding = true;
+					
+					entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+				}
+				if (entity instanceof NeutralPed && !entity.dead) {	
+					that.isColliding = true;
+					entity.isColliding = true;
+					
+					if (entity.damage(5)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
 				}
 			}
 		});
@@ -95,8 +102,8 @@ class NeutralVehicle {
 	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	intent() {
-		if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
-		if (this.game.backward) delete this.vehicle.goal;
+		// if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
+		// if (this.game.backward) delete this.vehicle.goal;
 
 		// Assign goal
         if (this.vehicle.getDistanceToGoal() <= this.vehicle.entity.width ) {
@@ -115,8 +122,8 @@ class NeutralVehicle {
 	}
 
     draw(ctx) {
-		if (this.vehicle.isWalking) this.vehicle.entity.animation = this.walking;
-		else if (!this.dead) this.vehicle.entity.animation = this.standing;
+		if (this.vehicle.isDriving) this.vehicle.entity.animation = this.driving;
+		else if (!this.dead) this.vehicle.entity.animation = this.idle;
 
         this.vehicle.draw(ctx);
     }

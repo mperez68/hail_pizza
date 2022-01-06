@@ -24,7 +24,6 @@ class GameEngine {
 		this.keyE = false;
         this.surfaceWidth = null;
         this.surfaceHeight = null;
-		this.blockExit = false;
     };
 
     init(ctx) {
@@ -136,21 +135,39 @@ class GameEngine {
     };
 
     addBackground(item) {
-        this.background.push(item);
-		if (this.background.length > this.ITEM_CAP) this.background.splice(0,1);
+		if (this.background.length <= this.ITEM_CAP) {
+			this.background.push(item);
+			return true;
+		}
+		console.log("Backgrounds at item cap: " + this.ITEM_CAP);
+		return false;
     }
 
     addTerrain(item) {
-        this.terrain.push(item);
+		if (this.terrain.length <= this.ITEM_CAP) {
+        	this.terrain.push(item);
+			return true;
+		}
+		console.log("Terrains at item cap: " + this.ITEM_CAP);
+		return false;
     };
 
     addEntity(item) {
-        this.entities.push(item);
-		if (this.entities.length > this.ITEM_CAP) this.entities.splice(0,1);
+		if (this.entities.length <= this.ITEM_CAP) {
+			this.entities.push(item);
+			return true;
+		}
+		console.log("Entities at item cap: " + this.ITEM_CAP);
+		return false;
     };
 
     addEffects(item) {
-        this.effects.push(item);
+		if (this.effects.length <= this.ITEM_CAP) {
+			this.effects.push(item);
+			return true;
+		}
+		console.log("Effects at item cap: " + this.ITEM_CAP);
+		return false;
     };
 
 	setup() {
@@ -183,6 +200,9 @@ class GameEngine {
 			PARAMS.MUSIC = true;
 		} else {
 			PARAMS.MUSIC = false;
+		}
+		if (document.getElementById("myRange").value) {
+			this.slider = document.getElementById("myRange").value;
 		}
 		
 		// Update items in order by layer

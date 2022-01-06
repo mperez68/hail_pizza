@@ -2,7 +2,7 @@
 class Vehicle {
 	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.MAX_SPEED = 10;
+		this.MAX_SPEED = 6;
 		this.ACCELERATION = 0.25;
 		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
@@ -25,7 +25,7 @@ class Vehicle {
 
 	damage(dmg) {
 		let result = this.entity.damage(dmg);
-		if (result) this.game.addBackground(new Splatter(this.game, this.entity.x, this.entity.y, this.entity.direction, 34, 34, 0));
+		//if (result) this.game.addBackground(new Splatter(this.game, this.entity.x, this.entity.y, this.entity.direction, 34, 34, 0));
 		return result;
 	}
 	push(a, d) {
@@ -36,6 +36,8 @@ class Vehicle {
 		this.isAccelerating = false;
 		this.isDecelerating = false;
 
+		if (this.game.slider) this.PIVOT_SPEED = this.game.slider;
+
 		// Parent setup
 		this.entity.setup();
 	}
@@ -44,8 +46,6 @@ class Vehicle {
 		// Pathfinding
 		if (this.goal) this.pathfind();
 
-		//this.game.camera.leftText = "Speed: " + roundDecimals(this.currentSpeed, 2);
-		if (this.isReorienting) this.game.camera.centerText = "Reorienting!"; else this.game.camera.centerText = "";
 		this.game.camera.rightText = "Turn Radius: " + roundDecimals(this.getTurnRadius(), 2);
 
 		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.ACCELERATION / 2;
@@ -106,8 +106,6 @@ class Vehicle {
 		let diff = a - this.entity.direction;
 		while (diff < 0) diff += 360;
 		diff = diff % 360;
-
-		this.game.camera.leftText = "Difference: " + roundDecimals(diff, 2);
 
 		// Align direction
 		if ( diff >= 0 && diff < 180 ) this.left();

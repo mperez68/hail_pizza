@@ -21,9 +21,11 @@ class SceneManager {
 	
 	loadMap() {
 
-		//this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
+		this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
 		//this.game.addEntity(new PlayerVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
+
 		this.game.addEntity(new NeutralVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
+		this.game.addEntity(new NeutralVehicle(this.game, 3 * 1024 / 4, 3 * 768 / 4, 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
 		this.game.addBackground(new Road(this.game, 416, 384, 0));
@@ -44,10 +46,10 @@ class SceneManager {
 	
 	update() {
 		// Add more dudes
-		if ((randomInt(this.dudeCount) / this.game.ITEM_CAP < 0.000001)) {
+		if ((randomInt(this.game.entities.length) / this.game.ITEM_CAP < 0.000001)) {
 			let pt = this.respawns[this.lastRespawn];
 			this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
-			//this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
+			this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
 			//this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
 		}
 
