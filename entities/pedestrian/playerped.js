@@ -1,21 +1,22 @@
 // Player as a pedestrian object
 class PlayerPed {
 	constructor(game, x, y, direction, width, height) {
-        // Constants
-        this.RUN_SPEED = 4;
-        this.PIVOT_SPEED = 3;
-
 		// Assign Object Variables
 		Object.assign(this, { game });
+
+        this.pedestrian = new Pedestrian(game, x, y, direction, width, height);
+
+		// Override walking/standing animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/driver.png");
-
-		// Animations
-		this.standing = new Animator(spritesheet, 0, height,
-			width, height, 5, 0.2, 1, direction, false, true);	// Standing
-		this.walking = new Animator(spritesheet, 0, 0,
-			width, height, 12, 0.06, 1, direction, false, true);	// Walking
-
-        this.pedestrian = new Pedestrian(game, x, y, direction, width, height, this.standing);
+		this.pedestrian.standing = new Animator(spritesheet, 0, height,
+										width, height, 5, 0.2, 1, direction, false, true);		// Standing
+		this.pedestrian.walking = new Animator(spritesheet, 0, 0,
+										width, height, 12, 0.08, 1, direction, false, true);	// Walking
+		this.pedestrian.walkingBack = new Animator(spritesheet, 0, 0,
+										width, height, 12, 0.10, 1, direction, true, true);		// Walking Backwards
+        // Override Constants
+        this.pedestrian.RUN_SPEED = 4;
+        this.pedestrian.PIVOT_SPEED = 3;
     }
 
 	setHP(hp) {this.pedestrian.setHP(hp); };
@@ -27,15 +28,21 @@ class PlayerPed {
 	}
 
 	setup() {
-		this.pedestrian.entity.animation = this.standing;
+		this.pedestrian.isWalking = false;
 
 		// parent setup
 		this.pedestrian.setup();
 	}
 
     update() {
+		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
+		if (this.pedestrian.getDistanceToGoal() < this.pedestrian.entity.width) this.intent(null);
+
 		// Check for keyboard input to determine movement.
-        this.controls();
+        if (!this.pedestrian.goal) this.controls();
+
+		if (this.game.click != this.lastClick) this.intent(this.game.click);
+		this.lastClick = this.game.click;
 
 		// Collision
 		this.updateCollision();
@@ -64,26 +71,24 @@ class PlayerPed {
 	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
 
 	controls() {
-        // temp for entity
-        let ent = this.pedestrian.entity;
-
 		// Forward OR Backward, forward taking precedent.
 		if (this.game.forward) {
-			ent.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction));
-			ent.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction));
-			ent.animation = this.walking;	// Update animation to be walking
+			this.pedestrian.forward(1);
 		} else if (this.game.backward) {
-			ent.x -= (this.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction) * 0.5);
-			ent.y -= (this.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction) * 0.5);
-			ent.animation = this.walking;	// Update animation to be walking
+			this.pedestrian.backward(1);
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {
-			ent.direction -= this.PIVOT_SPEED;
+			this.pedestrian.left(1);
 		}
 		if (this.game.right) {
-			ent.direction += this.PIVOT_SPEED;
+			this.pedestrian.right(1);
 		}
+	}
+
+	intent(point) {
+		// Assign goal
+		this.pedestrian.goal = point;
 	}
 
     draw(ctx) {

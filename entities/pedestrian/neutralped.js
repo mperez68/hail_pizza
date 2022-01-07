@@ -20,14 +20,16 @@ class NeutralPed {
 		this.goalList.push(new Point(520,709));
 		this.goalList.push(new Point(141,525));
 		
-		// Animations
-		this.standing = new Animator(spritesheet, 0, height * this.version,
-			width, height, 12, 0.2, 0, direction, false, true);	// Standing
-		this.walking = new Animator(spritesheet, 228, height * this.version,
-			width, height, 8, 0.08, 0, direction, false, true);	// Walking
-		
 		// Initialize 'parent' object
-		this.pedestrian = new Pedestrian(game, x, y, direction, width, height, this.standing);
+		this.pedestrian = new Pedestrian(game, x, y, direction, width, height);
+		
+		// Override walking/standing animations
+		this.pedestrian.standing = new Animator(spritesheet, 0, height * this.version,
+									width, height, 12, 0.2, 0, direction, false, true);	// Standing
+		this.pedestrian.walking = new Animator(spritesheet, 228, height * this.version,
+									width, height, 8, 0.08, 0, direction, false, true);	// Walking
+		this.pedestrian.walkingBack = new Animator(spritesheet, 228, height,
+									width, height, 8, 0.10, 0, direction, true, true);	// Walking Backward
 		
 		this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
     }
@@ -112,9 +114,6 @@ class NeutralPed {
 	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
 
 	intent() {
-		// if (this.game.forward) this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
-		// if (this.game.backward) delete this.pedestrian.goal;
-
 		// Assign goal
         if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width ) {
 			let ptr = 0;
@@ -124,17 +123,9 @@ class NeutralPed {
 			ptr = (ptr + 1) % this.goalList.length;
 			this.pedestrian.goal = this.goalList[ptr];
 		}
-
-		// if (this.game.click) {
-		// 	this.goal = this.game.click;
-		// 	this.game.addEntity(new Point(this.goal.x, this.goal.y));
-		// }
 	}
 
     draw(ctx) {
-		if (this.pedestrian.isWalking) this.pedestrian.entity.animation = this.walking;
-		else if (!this.dead) this.pedestrian.entity.animation = this.standing;
-
-        this.pedestrian.draw(ctx);
+		this.pedestrian.draw(ctx);
     }
 };

@@ -2,12 +2,13 @@
 
 class GameEngine {
     constructor() {
-		this.ITEM_CAP = 100;
+		this.ITEM_CAP = 250;
 
 		this.background = [];
 		this.terrain = [];
         this.entities = [];
 		this.effects = [];
+		this.debug = [];
         this.ctx = null;
 		
 		// Mouse Controls
@@ -170,12 +171,20 @@ class GameEngine {
 		return false;
     };
 
+    addDebug(item) {
+		this.debug.push(item);
+		return true;
+    };
+
 	setup() {
 		// Setup items in order by layer
-		this.setupIterator(this.background);
-		this.setupIterator(this.terrain);
-		this.setupIterator(this.entities);
-		this.setupIterator(this.effects);
+		if (!this.camera.title && !this.space) {
+			this.setupIterator(this.background);
+			this.setupIterator(this.terrain);
+			this.setupIterator(this.entities);
+			this.setupIterator(this.effects);
+			this.setupIterator(this.debug);
+		}
 	}
 
 	setupIterator(items) {
@@ -204,14 +213,15 @@ class GameEngine {
 		if (document.getElementById("myRange").value) {
 			this.slider = document.getElementById("myRange").value;
 		}
-		
+
 		// Update items in order by layer
-		//if (!this.camera.title) {
+		if (!this.camera.title && !this.space) {
 			this.updateIterator(this.background);
 			this.updateIterator(this.terrain);
 			this.updateIterator(this.entities);
 			this.updateIterator(this.effects);
-		//}
+			this.updateIterator(this.debug);
+		}
 
 		this.camera.update();
     };
@@ -241,6 +251,7 @@ class GameEngine {
 		this.drawIterator(this.terrain);
 		this.drawIterator(this.entities);
 		this.drawIterator(this.effects);
+		this.drawIterator(this.debug);
 		this.camera.draw(this.ctx);
     };
 

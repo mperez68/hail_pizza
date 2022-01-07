@@ -21,11 +21,11 @@ class SceneManager {
 	
 	loadMap() {
 
-		this.game.addEntity(new PlayerPed(this.game, 1024 / 4, 768 / 4, 0, 19, 19));
-		//this.game.addEntity(new PlayerVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
+		this.game.addEntity(new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19));
+		// this.game.addEntity(new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64));
 
-		this.game.addEntity(new NeutralVehicle(this.game, 1024 / 4, 768 / 4, 0, 70, 64));
-		this.game.addEntity(new NeutralVehicle(this.game, 3 * 1024 / 4, 3 * 768 / 4, 0, 70, 64));
+		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (1 / 4), this.game.surfaceHeight * (1 / 4), 0, 70, 64));
+		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (3 / 4), 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
 		this.game.addBackground(new Road(this.game, 416, 384, 0));
@@ -50,48 +50,52 @@ class SceneManager {
 			let pt = this.respawns[this.lastRespawn];
 			this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
 			this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
-			//this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
+			// this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
 		}
 
 		// Reset
-		if (this.game.space) {
-			this.clearEntities();
-			this.loadMap();
-		}
+		// if (this.game.space) {
+		// 	this.clearEntities();
+		// 	this.loadMap();
+		// }
 	};
 	
 	draw(ctx) {
 		// HUD //
-		// this.leftText = "LEFT";
-		// this.centerText = "CENTER";
-		// this.rightText = "RIGHT";
 		
-		// LEFT ALIGN TEXT //
-		ctx.textAlign  = "left";
 		//
-		ctx.font = "30px Impact";
-		ctx.strokeStyle = 'White';
-		ctx.strokeText(this.leftText, 50, 50);
-		ctx.strokeStyle = 'Black';
-		ctx.fillText(this.leftText, 50, 50);
-		
-		// CENTER ALIGN TEXT //
-		ctx.textAlign  = "center";
-		//
-		ctx.font = "30px Impact";
-		ctx.strokeStyle = 'White';
-		ctx.strokeText(this.centerText, this.game.surfaceWidth / 2, 50);
-		ctx.strokeStyle = 'Black';
-		ctx.fillText(this.centerText, this.game.surfaceWidth / 2, 50);
-		
-		// RIGHT ALIGN TEXT //
-		ctx.textAlign  = "right";
-		//
-		ctx.font = "30px Impact";
-		ctx.strokeStyle = 'White';
-		ctx.strokeText(this.rightText, this.game.surfaceWidth - 50, 50);
-		ctx.strokeStyle = 'Black';
-		ctx.fillText(this.rightText, this.game.surfaceWidth - 50, 50);
+
+		// DEBUG HUD //
+		if (PARAMS.DEBUG) {
+			let border = 50;
+			let font = 30;
+			// LEFT ALIGN TEXT //
+			ctx.textAlign  = "left";
+			//
+			ctx.font = font + "px Impact";
+			ctx.strokeStyle = 'White';
+			ctx.strokeText(this.leftText, border, this.game.surfaceHeight - border - (font / 2));
+			ctx.strokeStyle = 'Black';
+			ctx.fillText(this.leftText, border, this.game.surfaceHeight - border - (font / 2));
+			
+			// CENTER ALIGN TEXT //
+			ctx.textAlign  = "center";
+			//
+			ctx.font = font + "px Impact";
+			ctx.strokeStyle = 'White';
+			ctx.strokeText(this.centerText, this.game.surfaceWidth / 2, this.game.surfaceHeight - border - (font / 2));
+			ctx.strokeStyle = 'Black';
+			ctx.fillText(this.centerText, this.game.surfaceWidth / 2, this.game.surfaceHeight - border - (font / 2));
+			
+			// RIGHT ALIGN TEXT //
+			ctx.textAlign  = "right";
+			//
+			ctx.font = font + "px Impact";
+			ctx.strokeStyle = 'White';
+			ctx.strokeText(this.rightText, this.game.surfaceWidth - border, this.game.surfaceHeight - border - (font / 2));
+			ctx.strokeStyle = 'Black';
+			ctx.fillText(this.rightText, this.game.surfaceWidth - border, this.game.surfaceHeight - border - (font / 2));
+		}
 	};
 	
 	clearEntities() {

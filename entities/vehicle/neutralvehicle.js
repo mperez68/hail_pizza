@@ -51,7 +51,6 @@ class NeutralVehicle {
 		// Collision
 		this.updateCollision();
 
-		if (this.getHP() <= 0) this.dead = true;
 		// Parent update
         this.vehicle.update();
 	};
@@ -66,19 +65,19 @@ class NeutralVehicle {
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralVehicle && !entity.dead) {	
+				if (entity instanceof NeutralVehicle) {	
 					that.isApproaching = true;
 				}
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof NeutralVehicle && !entity.dead) {	
+				if (entity instanceof NeutralVehicle) {
 					that.isColliding = true;
 					entity.isColliding = true;
 					
 					entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
 				}
-				if (entity instanceof NeutralPed && !entity.dead) {	
+				if ( (entity instanceof NeutralPed || entity instanceof PlayerPed) && !entity.dead) {	
 					that.isColliding = true;
 					entity.isColliding = true;
 					

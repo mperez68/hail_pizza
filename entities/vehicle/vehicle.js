@@ -2,7 +2,7 @@
 class Vehicle {
 	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.MAX_SPEED = 6;
+		this.MAX_SPEED = 10;
 		this.ACCELERATION = 0.25;
 		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
@@ -45,21 +45,18 @@ class Vehicle {
 	update() {
 		// Pathfinding
 		if (this.goal) this.pathfind();
-
-		this.game.camera.rightText = "Turn Radius: " + roundDecimals(this.getTurnRadius(), 2);
-
-		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.ACCELERATION / 2;
 		
+		// Collision Cases
 		this.updateCollision();
 
-		// Move based on speed
-		this.entity.x += (this.currentSpeed * Math.cos((Math.PI / 180) * this.entity.direction));
-		this.entity.y += (this.currentSpeed * Math.sin((Math.PI / 180) * this.entity.direction));
+		this.updateMovement();
 
 		// Parent update
 		this.entity.update();
 
 		this.updateBB();
+		
+		this.entity.newForces.push( new ForceVector(this.game, this.entity.BB.x, this.entity.BB.y, this.entity.BB.direction, this.currentSpeed) );
 	};
 	
 	updateBB(){
@@ -115,7 +112,7 @@ class Vehicle {
 		// Move closer
 		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
 			this.isReorienting = true;
-			this.decelerate();
+			this.reverse();
 		} else {
 			this.isReorienting = false;
 			this.accelerate();
@@ -141,13 +138,25 @@ class Vehicle {
 		this.isAccelerating = true;
 	}
 
-	decelerate() {
+	reverse() {
 		if (this.currentSpeed - (this.ACCELERATION / 2) > -(this.MAX_SPEED / 2)) {
 			this.currentSpeed -= this.ACCELERATION;
 		} else {
 			this.currentSpeed = -this.MAX_SPEED / 2;
 		}
 		this.isDecelerating = true;
+	}
+
+	updateMovement() {
+		let xVector = (this.currentSpeed * Math.cos((Math.PI / 180) * this.entity.direction));
+		let yVector = (this.currentSpeed * Math.sin((Math.PI / 180) * this.entity.direction));
+
+		// Friction
+		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.ACCELERATION / 2;
+
+		// Move based on speed
+		this.entity.x += xVector;
+		this.entity.y += yVector;
 	}
 
 	getDistanceToGoal() {

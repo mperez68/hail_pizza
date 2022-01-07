@@ -1,15 +1,25 @@
 // Pedestrian Entity
 class Pedestrian {
-	constructor(game, x, y, direction, width, height, animation) {
+	constructor(game, x, y, direction, width, height) {
 		// Constants
 		this.RUN_SPEED = 3;
 		this.PIVOT_SPEED = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
 		this.isWalking = false;
+		
+		// Default Animations
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
+
+		this.standing = new Animator(spritesheet, 0, height,
+			width, height, 12, 0.2, 0, direction, false, true);	// Standing
+		this.walking = new Animator(spritesheet, 228, height,
+			width, height, 8, 0.08, 0, direction, false, true);	// Walking
+		this.walkingBack = new Animator(spritesheet, 228, height,
+			width, height, 8, 0.10, 0, direction, true, true);	// Walking Backward
 
 		// Initialize 'parent' object
-		this.entity = new Entity(game, x, y, direction, 1, width, height, animation);
+		this.entity = new Entity(game, x, y, direction, 1, width, height, this.standing);
 	};
 
 	setHP(hp) {this.entity.setHP(hp); };
@@ -25,6 +35,8 @@ class Pedestrian {
 	}
 
 	setup() {
+		this.walkingVector = 0;
+
 		// Parent setup
 		this.entity.setup();
 	}
@@ -78,15 +90,29 @@ class Pedestrian {
 		if ( diff >= 180 && diff < 360 ) this.entity.direction -= this.PIVOT_SPEED;
 		if ( Math.abs(this.entity.direction - a) <= 2 * this.PIVOT_SPEED ) this.entity.direction = a;
 		// Move closer
-		// if (d > PARAMS.GRID_WIDTH) {
-			this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction));
-			this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction));
-			this.isWalking = true;
-		// } else if (d > this.entity.width / 2) {
-		// 	this.entity.x += (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-		// 	this.entity.y += (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction)) * (d / PARAMS.GRID_WIDTH);
-		// 	this.isWalking = true;
-		// }
+		this.forward(1);
+	}
+
+	forward(scale) {
+		this.walkingVector = 1;
+
+		this.entity.x += this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction) * scale;
+		this.entity.y += this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction) * scale;
+	}
+
+	backward(scale) {	
+		this.walkingVector = -0.5;
+
+		this.entity.x -= (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.entity.direction) * scale) / 2;
+		this.entity.y -= (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.entity.direction) * scale) / 2;
+	}
+
+	left(scale) {
+		this.entity.direction -= this.PIVOT_SPEED * scale;
+	}
+
+	right(scale) {
+		this.entity.direction += this.PIVOT_SPEED * scale;
 	}
 
 	getDistanceToGoal() {
@@ -102,6 +128,14 @@ class Pedestrian {
 	}
 
 	draw(ctx) {
+		// Update animation
+		this.entity.animation = this.standing;	// init
+		if (this.walkingVector > 0) this.entity.animation = this.walking;
+		if (this.walkingVector < 0) this.entity.animation = this.walkingBack;
+
+		// Update debug walking vector
+		this.entity.newForces.push( new ForceVector(this.game, this.entity.BB.x, this.entity.BB.y, this.entity.BB.direction, this.walkingVector * this.RUN_SPEED) );
+
 		// Parent draw
 		this.entity.draw(ctx);
 	};

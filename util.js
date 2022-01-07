@@ -53,126 +53,109 @@ window.requestAnimFrame = (function () {
         };
 })();
 
-// ----- ----- ----- Collision helper fuctions ----- ----- ----- //
 
-// Vehicle colliding with a building, fence, etc.
-function vehicleToTerrain(vehicle, building) {
-	let buffer = 4;
-	let angle = 0;
-	let top = false, left = false, bottom = false, right = false;
-	let vertOffset = Math.abs(vehicle.BB.bottom.y - vehicle.BB.top.y) / 2 + buffer;
-	let horiOffset = Math.abs(vehicle.BB.right.x - vehicle.BB.left.x) / 2 + buffer;
-	if (building.BB.top < vehicle.BB.bottom.y && building.BB.top > vehicle.y) {
-		top = true;
-		vehicle.y = building.BB.top - vertOffset;
-		if ( vehicle.x < building.x ) vehicle.spinSpeed = -vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-		if ( vehicle.x > building.x ) vehicle.spinSpeed = vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-	};
-	if (building.BB.bottom > vehicle.BB.top.y && building.BB.bottom < vehicle.y) {
-		bottom = true;
-		vehicle.y = building.BB.bottom + vertOffset;
-		if ( vehicle.x < building.x ) vehicle.spinSpeed = -vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-		if ( vehicle.x > building.x ) vehicle.spinSpeed = vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-	};
-	if (building.BB.left < vehicle.BB.right.x && building.BB.left > vehicle.x) {
-		left = true;
-		vehicle.x = building.BB.left - horiOffset;
-		if ( vehicle.y > building.y ) vehicle.spinSpeed = -vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-		if ( vehicle.y < building.y ) vehicle.spinSpeed = vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-	};
-	if (building.BB.right > vehicle.BB.left.x && building.BB.right < vehicle.x) {
-		right = true;
-		vehicle.x = building.BB.right + horiOffset;
-		if ( vehicle.y > building.y ) vehicle.spinSpeed = -vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-		if ( vehicle.y < building.y ) vehicle.spinSpeed = vehicle.MAX_SPIN_SPEED * (vehicle.currentSpeed / vehicle.MAX_SPEED);
-	};
+// ----- ----- ----- Objects ----- ----- ----- //
+
+// Point object
+class Point {
+	constructor(x, y) {
+		Object.assign( this, {x, y} )
+		this.isDrawn = false;
+		this.color = 'Red';
+		this.removeFromWorld = false;
+	}
 	
-	// Determine angle based on which ends are colliding
-	if (top) {
-		angle = 270;
-		if (left) {
-			angle -= 45;
-		} else if (right) {
-			angle += 45;
+	isLeft(oth) {
+		var returnFlag = false;
+		if (this.x <= oth.x) returnFlag = true;
+		return returnFlag;
+	}
+	
+	isRight(oth) {
+		var returnFlag = false;
+		if (this.x >= oth.x) returnFlag = true;
+		return returnFlag;
+	}
+	
+	isAbove(oth) {
+		var returnFlag = false;
+		if (this.y <= oth.y) returnFlag = true;
+		return returnFlag;
+	}
+	
+	isBelow(oth) {
+		var returnFlag = false;
+		if (this.y >= oth.y) returnFlag = true;
+		return returnFlag;
+	}
+
+	setup() {
+		//
+	}
+
+	update(){
+		if (this.isDrawn) this.removeFromWorld = true;
+	}
+
+	draw(ctx){
+		if (PARAMS.DEBUG) {
+			ctx.strokeStyle = this.color;
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, 6, 0, 2 * Math.PI);
+			ctx.stroke();
 		}
+		this.isDrawn = true;
 	}
-	if (left) {
-		angle = 180;
-		if (bottom) {
-			angle -= 45;
-		} else if (top) {
-			angle += 45;
+}
+
+// Force vector object
+class ForceVector {
+	constructor(game, x, y, direction, force) {
+		Object.assign (this, { game, x, y, direction, force });
+		this.isDrawn = false;
+		this.color = 'Blue';
+		this.removeFromWorld = false;
+	}
+
+	setup() {
+		//
+	}
+
+	update(){
+		if (this.isDrawn) this.removeFromWorld = true;
+	}
+
+	getHead() {
+		return new Point (this.getHeadX(), this.getHeadY());
+	}
+
+	getHeadX() {
+		return this.x + this.force * Math.cos(getRad(this.direction));
+	}
+
+	getHeadY() {
+		return this.y + this.force * Math.sin(getRad(this.direction));
+	}
+
+	draw(ctx){
+		if (PARAMS.DEBUG) {
+			let drawX = this.x + PARAMS.VECTOR_SCALE * this.force * Math.cos(getRad(this.direction));
+			let drawY = this.y + PARAMS.VECTOR_SCALE * this.force * Math.sin(getRad(this.direction));
+
+			ctx.strokeStyle = this.color;
+			// Draw Line
+			ctx.beginPath();
+			ctx.moveTo(this.x - this.game.camera.x, this.y - this.game.camera.y);
+			ctx.lineTo(drawX - this.game.camera.x, drawY - this.game.camera.y);
+			ctx.stroke();
+
+			// Draw Head
+			ctx.beginPath();
+			ctx.arc(drawX, drawY, 3, 0, 2 * Math.PI);
+			ctx.stroke();
 		}
+		this.isDrawn = true;
 	}
-	if (bottom) {
-		angle = 90;
-		if (right) {
-			angle -= 45;
-		} else if (left) {
-			angle += 45;
-		}
-	}
-	if (right) {
-		angle = 0;
-		if (top) {
-			angle = 315;
-		} else if (bottom) {
-			angle += 45;
-		}
-	}
-	// Push
-	if (vehicle.pushed || vehicle.pushSpeed != 0) {
-		vehicle.pushed = false;
-		vehicle.pushSpeed = 0;
-		return;
-	}
-	vehicle.pushSpeed = Math.max(vehicle.currentSpeed / 2, vehicle.MAX_SPEED / 4);
-	vehicle.pushDirection = angle;
-	vehicle.pushed = true;
-	// Halt movement
-	vehicle.currentSpeed = 0;
-	vehicle.driftSpeed = 0;
-}
-
-// Vehicle colliding with a pedestrian; NOTE: this occurs when a moving vehicle strikes a pedestrian at sufficient speed to do damage.
-function vehicleToPedestrian(vehicle, oth) {
-	// TODO
-}
-
-// Vehicle colliding with another vehicle
-function vehicleToVehicle(vehicle, oth) {
-	// Calculate center to center angle
-		let angle = Math.atan( Math.abs(oth.y - vehicle.y) / Math.abs(oth.x - vehicle.x) ) * (180 / Math.PI);
-		let spin = 3;
-		if (Math.abs(angle) < 30) spin = 1;
-		if (oth.x - vehicle.x >= 0 && oth.y - vehicle.y >= 0) angle = (angle % 90); //Q1
-		if (oth.x - vehicle.x <  0 && oth.y - vehicle.y >= 0) {angle = 180 - (angle % 90); //Q2
-			spin = -spin;}
-		if (oth.x - vehicle.x <  0 && oth.y - vehicle.y <  0) angle = 180 + (angle % 90); //Q3
-		if (oth.x - vehicle.x >= 0 && oth.y - vehicle.y <  0) {angle = 360 - (angle % 90); //Q4
-			spin = -spin;}
-		// Stop drivercar
-		vehicle.currentSpeed = 0;
-		vehicle.driftSpeed = 0;
-		// push car
-		oth.pushSpeed = Math.max(vehicle.currentSpeed, 10 * vehicle.DRAG) / 2;
-		oth.pushDirection = angle;
-		oth.spinSpeed = spin;
-}
-
-// Pedestrian colliding with a building, fence, etc.
-function pedestrianToTerrain (pedestrian, oth) {
-	// TODO
-}
-
-// Pedestrian colliding with another pedestrian
-function pedestrianToPedestrian (pedestrian, oth) {
-	// TODO
-}
-
-// Pedestrian colliding with a vehicle; NOTE: this occurs when a pedestrian approaches a stationary or slow moving vehicle and does not result in damage.
-function pedestrianToVehicle (pedestrian, oth) {
-	// TODO
 }
 
 // ----- ----- ----- global parameters ----- ----- ----- //
@@ -183,5 +166,6 @@ const PARAMS = {
 	MAP_HEIGHT: 6400,
 	GRID_WIDTH: 64,
 	GRID_HEIGHT: 64,
+	VECTOR_SCALE: 5,
 	SCALE: 1
 };

@@ -9,6 +9,8 @@ class Entity {
 		this.invulnerable = 0;
 		this.isColliding = false;
 		this.isApproaching = false;
+
+		this.newForces = [];
 		
 		this.updateBB();
 	};
@@ -51,18 +53,14 @@ class Entity {
 	};
 
 	updateCollision() {
-		// add new points
-		for (var i = 0; i < this.BB.newPoints.length; i++){
-			this.game.addEffects(this.BB.newPoints[i]);
-		}
-		this.BB.newPoints = [];
+		//
 	};
 	
 	updateBB(){
 		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
-											(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
 
 	getBB() { return this.BB; }
@@ -72,6 +70,18 @@ class Entity {
 	setNextBB(bb) { this.nextBB = bb; }
 	
 	draw(ctx) {
+		// add new points
+		for (var i = 0; i < this.BB.newPoints.length; i++){
+			this.game.addDebug(this.BB.newPoints[i]);
+		}
+		this.BB.newPoints = [];
+
+		// add new forces
+		for (var i = 0; i < this.newForces.length; i++){
+			this.game.addDebug(this.newForces[i]);
+		}
+		this.newForces = [];
+		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
 										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
 		
