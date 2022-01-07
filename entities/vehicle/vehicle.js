@@ -1,19 +1,27 @@
 // Vehicle Entity
 class Vehicle {
-	constructor(game, x, y, direction, width, height, animation) {
+	constructor(game, x, y, direction, width, height) {
 		// Constants
-		this.MAX_SPEED = 10;
+		this.MAX_SPEED = 6;
 		this.ACCELERATION = 0.25;
 		this.PIVOT_SPEED = 3;
+		this.BRAKE_FRICTION = 0.5;
 		// Assign Object Variables
 		Object.assign(this, { game });
 		this.isAccelerating = false;
 		this.isDecelerating = false;
 		this.currentSpeed = 0;
-		this.isReorienting = 0;
+		
+		// Default Animations
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
+		this.idle = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// idle
 
 		// Initialize 'parent' object
-		this.entity = new Entity(game, x, y, direction, 1, width, height, animation);
+		this.entity = new Entity(game, x, y, direction, 1, width, height, this.idle);
+
+		// Override Constants
+		this.entity.FRICTION = this.ACCELERATION / 2;
 	};
 
 	getTurnRadius() {
@@ -36,33 +44,29 @@ class Vehicle {
 		this.isAccelerating = false;
 		this.isDecelerating = false;
 
-		if (this.game.slider) this.PIVOT_SPEED = this.game.slider;
-
 		// Parent setup
 		this.entity.setup();
 	}
 	
 	update() {
-		// Pathfinding
-		if (this.goal) this.pathfind();
-		
 		// Collision Cases
 		this.updateCollision();
 
+		// Pathfinding
+		if (this.goal) this.pathfind();
 		this.updateMovement();
 
 		// Parent update
 		this.entity.update();
 
 		this.updateBB();
-		
 		this.entity.newForces.push( new ForceVector(this.game, this.entity.BB.x, this.entity.BB.y, this.entity.BB.direction, this.currentSpeed) );
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.entity.x - (this.entity.width / 2), this.entity.y - (this.entity.height / 2),
+		this.BB = new BoundingBox(this.game, this.entity.x - (this.entity.width / 2), this.entity.y - (this.entity.height / 2),
 											(3 * this.entity.width) / 4, this.entity.height / 2, this.entity.direction);
-		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.entity.width) / 4 * Math.cos((Math.PI / 180) * this.entity.direction)),
+		this.nextBB = new BoundingBox(this.game, this.BB.x + ((3 * this.entity.width) / 4 * Math.cos((Math.PI / 180) * this.entity.direction)),
 											this.BB.y + ((3 * this.entity.height) / 4 * Math.sin((Math.PI / 180) * this.entity.direction)),
 											(3 * this.entity.width) / 4, this.entity.height / 2, this.entity.direction);
 
@@ -105,28 +109,40 @@ class Vehicle {
 		diff = diff % 360;
 
 		// Align direction
-		if ( diff >= 0 && diff < 180 ) this.left();
-		if ( diff >= 180 && diff < 360 ) this.right();
+		if ( diff >= 0 && diff < 180 ) {
+			if (this.currentSpeed > 0){
+				this.right();
+			} else {
+				this.left();
+			}
+		}
+		if ( diff >= 180 && diff < 360 ) {
+			if (this.currentSpeed > 0){
+				this.left();
+			} else {
+				this.right();
+			}
+		}
 		if ( Math.abs(this.entity.direction - a) <= this.PIVOT_SPEED ) this.entity.direction = a;
 
 		// Move closer
 		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
-			this.isReorienting = true;
 			this.reverse();
 		} else {
-			this.isReorienting = false;
-			this.accelerate();
+			if (this.getRollDistance() < this.getDistanceToGoal()) {
+				this.accelerate();
+			}
 		}
 	}
 
 	right() {
 		// turning only happens when moving
-		this.entity.direction -= this.PIVOT_SPEED * (Math.abs(this.currentSpeed) / this.MAX_SPEED)
+		this.entity.direction += this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
 	}
 
 	left() {
 		// turning only happens when moving
-		this.entity.direction += this.PIVOT_SPEED * (Math.abs(this.currentSpeed) / this.MAX_SPEED)
+		this.entity.direction -= this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
 	}
 
 	accelerate() {
@@ -147,12 +163,22 @@ class Vehicle {
 		this.isDecelerating = true;
 	}
 
+	brake() {
+		if (this.currentSpeed > this.BRAKE_FRICTION) this.currentSpeed -= this.BRAKE_FRICTION;
+		else if (this.currentSpeed < -this.BRAKE_FRICTION) this.currentSpeed += this.BRAKE_FRICTION;
+		else this.currentSpeed = 0;
+	}
+
 	updateMovement() {
 		let xVector = (this.currentSpeed * Math.cos((Math.PI / 180) * this.entity.direction));
 		let yVector = (this.currentSpeed * Math.sin((Math.PI / 180) * this.entity.direction));
 
 		// Friction
-		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.ACCELERATION / 2;
+		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.entity.FRICTION;
+		if (!this.isDecelerating && this.currentSpeed < 0) this.currentSpeed += this.entity.FRICTION;
+
+		// Normalize near 0 values
+		if (Math.abs(this.currentSpeed) < this.entity.FRICTION) this.currentSpeed = 0;
 
 		// Move based on speed
 		this.entity.x += xVector;
@@ -169,6 +195,19 @@ class Vehicle {
 		let a = 0;
 		if (this.goal) a = getAngle(this.entity, this.goal);
 		return a;
+	}
+
+	getRollDistance() {
+		return this.getDistanceHelper(this.currentSpeed, this.entity.FRICTION);
+	}
+
+	getBrakeDistance() {
+		return this.getDistanceHelper(this.currentSpeed, this.BRAKE_FRICTION);
+	}
+
+	getDistanceHelper(speed, friction) {
+		if (speed <= friction) return Math.max(0, speed);
+		return speed + this.getDistanceHelper(speed - friction, friction);
 	}
 
 	draw(ctx) {

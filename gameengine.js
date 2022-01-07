@@ -178,7 +178,7 @@ class GameEngine {
 
 	setup() {
 		// Setup items in order by layer
-		if (!this.camera.title && !this.space) {
+		if (!this.camera.title) {
 			this.setupIterator(this.background);
 			this.setupIterator(this.terrain);
 			this.setupIterator(this.entities);
@@ -215,7 +215,7 @@ class GameEngine {
 		}
 
 		// Update items in order by layer
-		if (!this.camera.title && !this.space) {
+		if (!this.camera.title) {
 			this.updateIterator(this.background);
 			this.updateIterator(this.terrain);
 			this.updateIterator(this.entities);

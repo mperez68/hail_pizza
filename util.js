@@ -58,8 +58,8 @@ window.requestAnimFrame = (function () {
 
 // Point object
 class Point {
-	constructor(x, y) {
-		Object.assign( this, {x, y} )
+	constructor(game, x, y) {
+		Object.assign( this, {game, x, y} )
 		this.isDrawn = false;
 		this.color = 'Red';
 		this.removeFromWorld = false;
@@ -101,7 +101,7 @@ class Point {
 		if (PARAMS.DEBUG) {
 			ctx.strokeStyle = this.color;
 			ctx.beginPath();
-			ctx.arc(this.x, this.y, 6, 0, 2 * Math.PI);
+			ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, 6, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
 		this.isDrawn = true;
@@ -139,14 +139,14 @@ class ForceVector {
 
 	draw(ctx){
 		if (PARAMS.DEBUG) {
-			let drawX = this.x + PARAMS.VECTOR_SCALE * this.force * Math.cos(getRad(this.direction));
-			let drawY = this.y + PARAMS.VECTOR_SCALE * this.force * Math.sin(getRad(this.direction));
+			let drawX = this.x + PARAMS.VECTOR_SCALE * this.force * Math.cos(getRad(this.direction)) - this.game.camera.x;
+			let drawY = this.y + PARAMS.VECTOR_SCALE * this.force * Math.sin(getRad(this.direction)) - this.game.camera.y;
 
 			ctx.strokeStyle = this.color;
 			// Draw Line
 			ctx.beginPath();
 			ctx.moveTo(this.x - this.game.camera.x, this.y - this.game.camera.y);
-			ctx.lineTo(drawX - this.game.camera.x, drawY - this.game.camera.y);
+			ctx.lineTo(drawX, drawY);
 			ctx.stroke();
 
 			// Draw Head

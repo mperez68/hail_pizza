@@ -14,11 +14,11 @@ class NeutralPed {
 		
 		this.goalList = [];
 
-		this.goalList.push(new Point(292,56));
-		this.goalList.push(new Point(727,61));
-		this.goalList.push(new Point(868,536));
-		this.goalList.push(new Point(520,709));
-		this.goalList.push(new Point(141,525));
+		this.goalList.push(new Point(this.game,292,56));
+		this.goalList.push(new Point(this.game,727,61));
+		this.goalList.push(new Point(this.game,868,536));
+		this.goalList.push(new Point(this.game,520,709));
+		this.goalList.push(new Point(this.game,141,525));
 		
 		// Initialize 'parent' object
 		this.pedestrian = new Pedestrian(game, x, y, direction, width, height);

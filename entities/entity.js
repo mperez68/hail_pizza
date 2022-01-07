@@ -1,6 +1,8 @@
 // Generic Entity Stub.
 class Entity {
 	constructor(game, x, y, direction, scale, width, height, animation ) {
+		// Constants
+		this.FRICTION = 0.1;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
@@ -57,8 +59,8 @@ class Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
+		this.BB = new BoundingBox(this.game, this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+		this.nextBB = new BoundingBox(this.game, this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
@@ -117,10 +119,10 @@ class Entity {
 			ctx.font = "12px Arial";
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-			ctx.fillText("L", this.BB.left.x, this.BB.left.y);
-			ctx.fillText("T", this.BB.top.x, this.BB.top.y);
-			ctx.fillText("R", this.BB.right.x, this.BB.right.y);
-			ctx.fillText("B", this.BB.bottom.x, this.BB.bottom.y);
+			ctx.fillText("L", this.BB.left.x - this.game.camera.x, this.BB.left.y - this.game.camera.y);
+			ctx.fillText("T", this.BB.top.x - this.game.camera.x, this.BB.top.y - this.game.camera.y);
+			ctx.fillText("R", this.BB.right.x - this.game.camera.x, this.BB.right.y - this.game.camera.y);
+			ctx.fillText("B", this.BB.bottom.x - this.game.camera.x, this.BB.bottom.y - this.game.camera.y);
 		}
 	};
 };

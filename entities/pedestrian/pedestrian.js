@@ -22,6 +22,10 @@ class Pedestrian {
 		this.entity = new Entity(game, x, y, direction, 1, width, height, this.standing);
 	};
 
+	getTurnRadius() {
+		return this.RUN_SPEED / getRad(this.PIVOT_SPEED);
+	}
+
 	setHP(hp) {this.entity.setHP(hp); };
 	getHP(){ return this.entity.getHP(); };
 
@@ -42,10 +46,11 @@ class Pedestrian {
 	}
 	
 	update() {
+		// Collision Cases
+		this.updateCollision();
+
 		// Pathfinding
 		if (this.goal) this.pathfind();
-		
-		this.updateCollision();
 
 		// Parent update
 		this.entity.update();
@@ -86,11 +91,15 @@ class Pedestrian {
 		diff = diff % 360;
 
 		// Align direction
-		if ( diff >= 0 && diff < 180 ) this.entity.direction += this.PIVOT_SPEED;
-		if ( diff >= 180 && diff < 360 ) this.entity.direction -= this.PIVOT_SPEED;
+		if ( diff >= 0 && diff < 180 ) this.right(1);
+		if ( diff >= 180 && diff < 360 ) this.left(1);
 		if ( Math.abs(this.entity.direction - a) <= 2 * this.PIVOT_SPEED ) this.entity.direction = a;
 		// Move closer
-		this.forward(1);
+		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
+			this.backward(0.2);
+		} else {
+			this.forward(1);
+		}
 	}
 
 	forward(scale) {

@@ -1,7 +1,7 @@
 // Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {
-    constructor(x, y, width, height, direction) {
-        Object.assign(this, { x, y, width, height });
+    constructor(game, x, y, width, height, direction) {
+        Object.assign(this, { game, x, y, width, height });
 
 		this.direction = direction + 0.000001;
 		
@@ -12,14 +12,14 @@ class BoundingBox {
 			
 		this.distance = Math.sqrt( Math.pow( this.width / 2 , 2) + Math.pow( this.height / 2 , 2) );
 		
-        this.left = new Point (x, y);
-        this.top = new Point (x, y);
-        this.right = new Point (x, y);
-        this.bottom = new Point (x, y);
+        this.left = new Point(this.game,x, y);
+        this.top = new Point(this.game,x, y);
+        this.right = new Point(this.game,x, y);
+        this.bottom = new Point(this.game,x, y);
 		
 		this.points = [];
 		for (var i = 0; i < this.radians.length; i++) {
-			let temp = new Point(this.x + (Math.sin(this.radians[i]) * this.distance),
+			let temp = new Point(this.game,this.x + (Math.sin(this.radians[i]) * this.distance),
 									this.y - (Math.cos(this.radians[i]) * this.distance));
 			this.points[i] = temp;
 			if (temp.isLeft(this.left)) this.left = temp;
@@ -41,8 +41,8 @@ class BoundingBox {
 				return true;
 			} 
 			// Midpoints
-			// else if (this.narrowDetection(this.getMidpoint(oth.left, oth.top)) || this.narrowDetection(this.getMidpoint(oth.top, oth.right))
-			// 			|| this.narrowDetection(this.getMidpoint(oth.left, oth.bottom)) || this.narrowDetection(this.getMidpoint(oth.bottom, oth.right))) {
+			// else if (this.narrowDetection(this.getMidPoint(this.game,oth.left, oth.top)) || this.narrowDetection(this.getMidPoint(this.game,oth.top, oth.right))
+			// 			|| this.narrowDetection(this.getMidPoint(this.game,oth.left, oth.bottom)) || this.narrowDetection(this.getMidPoint(this.game,oth.bottom, oth.right))) {
 			// 	return true;
 			// }
 		}
@@ -57,7 +57,7 @@ class BoundingBox {
 	// Narrow Detection
 	narrowDetection(oth) {
 		let intersect = this.x;
-		let pt1 = new Point(oth.x, oth.y);
+		let pt1 = new Point(this.game,oth.x, oth.y);
 		// IF TOP LEFT
 		if (oth.y <= this.left.y && oth.x <= this.top.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
@@ -111,10 +111,10 @@ class BoundingBox {
 		return (y - b) / m;
 	}
 
-	getMidpoint(l, r){
+	getMidPoint(l, r){
 		let x = (l.x + r.x) / 2;
 		let y = (l.y + r.y) / 2;
 
-		return new Point(x,y);
+		return new Point(this.game,x,y);
 	}
 };

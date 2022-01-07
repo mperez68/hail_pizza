@@ -5,28 +5,26 @@ class NeutralVehicle {
 		this.VERSION_COUNT = 1;
 		// Assign Object Variables
 		Object.assign(this, { game });
-		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 
 		this.version = randomInt(this.VERSION_COUNT);
 		
 		this.goalList = [];
 
-		this.goalList.push(new Point(292,56));
-		this.goalList.push(new Point(727,61));
-		this.goalList.push(new Point(868,536));
-		this.goalList.push(new Point(520,709));
-		this.goalList.push(new Point(141,525));
+		this.goalList.push(new Point(this.game,292,56));
+		this.goalList.push(new Point(this.game,727,61));
+		this.goalList.push(new Point(this.game,868,536));
+		this.goalList.push(new Point(this.game,520,709));
+		this.goalList.push(new Point(this.game,141,525));
 
-		this.goalList.push(new Point(509,377));
-		
-		// Animations
-		this.idle = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// idle
-		this.driving = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// driving
+		this.goalList.push(new Point(this.game,509,377));
 		
 		// Initialize 'parent' object
-		this.vehicle = new Vehicle(game, x, y, direction, width, height, this.idle);
+		this.vehicle = new Vehicle(game, x, y, direction, width, height);
+		
+		// Override Animations
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
+		this.vehicle.idle = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// idle
 		
 		this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
     }
@@ -40,6 +38,8 @@ class NeutralVehicle {
 	}
 
 	setup() {
+		if (this.game.slider) this.PIVOT_SPEED = this.game.slider;
+		
 		// parent setup
 		this.vehicle.setup();
 	}
@@ -101,9 +101,6 @@ class NeutralVehicle {
 	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	intent() {
-		// if (this.game.forward) this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
-		// if (this.game.backward) delete this.vehicle.goal;
-
 		// Assign goal
         if (this.vehicle.getDistanceToGoal() <= this.vehicle.entity.width ) {
 			let ptr = 0;
@@ -113,17 +110,9 @@ class NeutralVehicle {
 			ptr = (ptr + 1) % this.goalList.length;
 			this.vehicle.goal = this.goalList[ptr];
 		}
-
-		// if (this.game.click) {
-		// 	this.goal = this.game.click;
-		// 	this.game.addEntity(new Point(this.goal.x, this.goal.y));
-		// }
 	}
 
     draw(ctx) {
-		if (this.vehicle.isDriving) this.vehicle.entity.animation = this.driving;
-		else if (!this.dead) this.vehicle.entity.animation = this.idle;
-
         this.vehicle.draw(ctx);
     }
 };

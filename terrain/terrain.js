@@ -18,7 +18,7 @@ class Terrain {
     }
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, this.width, this.height, this.direction);
+		this.BB = new BoundingBox(this.game, this.x - this.width / 2, this.y - this.width / 2, this.width, this.height, this.direction);
 	};
 
 	getBB() { return this.BB; }
@@ -45,10 +45,10 @@ class Terrain {
 			ctx.font = "12px Arial";
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-			ctx.fillText("L", this.BB.left.x, this.BB.left.y);
-			ctx.fillText("T", this.BB.top.x, this.BB.top.y);
-			ctx.fillText("R", this.BB.right.x, this.BB.right.y);
-			ctx.fillText("B", this.BB.bottom.x, this.BB.bottom.y);
+			ctx.fillText("L", this.BB.left.x - this.game.camera.x, this.BB.left.y - this.game.camera.y);
+			ctx.fillText("T", this.BB.top.x - this.game.camera.x, this.BB.top.y - this.game.camera.y);
+			ctx.fillText("R", this.BB.right.x - this.game.camera.x, this.BB.right.y - this.game.camera.y);
+			ctx.fillText("B", this.BB.bottom.x - this.game.camera.x, this.BB.bottom.y - this.game.camera.y);
 		}
     }
 }

@@ -38,11 +38,11 @@ class PlayerPed {
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.pedestrian.getDistanceToGoal() < this.pedestrian.entity.width) this.intent(null);
 
-		// Check for keyboard input to determine movement.
-        if (!this.pedestrian.goal) this.controls();
-
 		if (this.game.click != this.lastClick) this.intent(this.game.click);
 		this.lastClick = this.game.click;
+
+		// Check for keyboard input to determine movement.
+        if (!this.pedestrian.goal) this.controls();
 
 		// Collision
 		this.updateCollision();

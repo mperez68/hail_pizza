@@ -1,21 +1,21 @@
 // Player as a vehicle object
 class PlayerVehicle {
 	constructor(game, x, y, direction, width, height) {
-        // Constants
-        // this.vehicle.RUN_SPEED = 4;
-        // this.vehicle.PIVOT_SPEED = 3;
-
 		// Assign Object Variables
 		Object.assign(this, { game });
+
+		// Initialize 'parent' object
+        this.vehicle = new Vehicle(game, x, y, direction, width, height);
+
+		// Override Constants
+		this.vehicle.MAX_SPEED = 20;
+		//this.vehicle.ACCELERATION = 0.5;
+		this.vehicle.PIVOT_SPEED = 4;
+		
+		// Override Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
-
-		// Animations
-		this.standing = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// Standing
-		this.walking = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// Walking
-
-        this.vehicle = new Vehicle(game, x, y, direction, width, height, this.standing);
+		this.vehicle.idle = new Animator(spritesheet, 0, 0,
+			width, height, 1, 1, 1, direction, false, true);	// idle
     }
 
 	setHP(hp) {this.vehicle.setHP(hp); };
@@ -27,13 +27,19 @@ class PlayerVehicle {
 	}
 
 	setup() {
-		this.vehicle.entity.animation = this.standing;
-
 		// parent setup
 		this.vehicle.setup();
 	}
 
     update() {
+		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
+		if (this.vehicle.getDistanceToGoal() < this.vehicle.entity.width) this.intent(null);
+		
+		let dest = null;
+		if (this.game.click) dest = new Point(this.game, this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
+		if (this.game.click != this.lastClick) this.intent(dest);
+		this.lastClick = this.game.click;
+
 		// Check for keyboard input to determine movement.
         this.controls();
 
@@ -64,29 +70,33 @@ class PlayerVehicle {
 	setNextBB(bb) { this.vehicle.setNextBB(bb); }
 
 	controls() {
-        // temp for entity
-        let ent = this.vehicle.entity;
-
-		// Forward OR Backward, forward taking precedent.
-		if (this.game.forward) {
-			ent.x += (this.vehicle.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction));
-			ent.y += (this.vehicle.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction));
-			ent.animation = this.walking;	// Update animation to be walking
+		// Forward, Backward or Braking.
+		if (this.game.space){
+			this.vehicle.brake();
+		} else if (this.game.forward) {
+			this.vehicle.accelerate();
 		} else if (this.game.backward) {
-			ent.x -= (this.vehicle.RUN_SPEED * Math.cos((Math.PI / 180) * ent.direction) * 0.5);
-			ent.y -= (this.vehicle.RUN_SPEED * Math.sin((Math.PI / 180) * ent.direction) * 0.5);
-			ent.animation = this.walking;	// Update animation to be walking
+			this.vehicle.reverse();
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {
-			ent.direction -= this.vehicle.PIVOT_SPEED;
+			this.vehicle.left();
 		}
 		if (this.game.right) {
-			ent.direction += this.vehicle.PIVOT_SPEED;
+			this.vehicle.right();
 		}
 	}
 
+	intent(point) {
+		// Assign goal
+		this.vehicle.goal = point;
+	}
+
     draw(ctx) {
+		this.game.camera.leftText = Math.round(this.vehicle.getBrakeDistance());
+		this.game.camera.rightText = Math.round(this.vehicle.getRollDistance());
+
+		// Call parent draw
         this.vehicle.draw(ctx);
     }
 };

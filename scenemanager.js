@@ -7,25 +7,28 @@ class SceneManager {
 		this.lastRespawn = 0;
 
 		this.respawns = [];
-		this.respawns.push(new Point(-100,-100));	// TOP LEFT
-		this.respawns.push(new Point(512,-100));	// TOP
-		this.respawns.push(new Point(1124,-100));	// TOP RIGHT
-		this.respawns.push(new Point(1124,384));	// RIGHT
-		this.respawns.push(new Point(1124,868));	// BOTTOM RIGHT
-		this.respawns.push(new Point(512,868));		// BOTTOM
-		this.respawns.push(new Point(-100,868));	// BOTTOM LEFT
-		this.respawns.push(new Point(-100,384));	// LEFT
+		this.respawns.push(new Point(this.game,-100,-100));	// TOP LEFT
+		this.respawns.push(new Point(this.game,512,-100));	// TOP
+		this.respawns.push(new Point(this.game,1124,-100));	// TOP RIGHT
+		this.respawns.push(new Point(this.game,1124,384));	// RIGHT
+		this.respawns.push(new Point(this.game,1124,868));	// BOTTOM RIGHT
+		this.respawns.push(new Point(this.game,512,868));		// BOTTOM
+		this.respawns.push(new Point(this.game,-100,868));	// BOTTOM LEFT
+		this.respawns.push(new Point(this.game,-100,384));	// LEFT
 		
 		this.loadMap();
 	};
 	
 	loadMap() {
+		//let player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
+		//this.player = player.pedestrian.entity;
+		let player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
+		this.player = player.vehicle.entity;
 
-		this.game.addEntity(new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19));
-		// this.game.addEntity(new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64));
+		this.game.addEntity(player);
 
 		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (1 / 4), this.game.surfaceHeight * (1 / 4), 0, 70, 64));
-		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (3 / 4), 0, 70, 64));
+		// this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (3 / 4), 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));
 		this.game.addBackground(new Road(this.game, 416, 384, 0));
@@ -45,11 +48,16 @@ class SceneManager {
 	};
 	
 	update() {
+		if (this.player) {
+			this.x = this.player.x - this.game.surfaceWidth / 2;
+			this.y = this.player.y - this.game.surfaceHeight / 2;
+		}
+
 		// Add more dudes
 		if ((randomInt(this.game.entities.length) / this.game.ITEM_CAP < 0.000001)) {
 			let pt = this.respawns[this.lastRespawn];
 			this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
-			this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
+			// this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
 			// this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
 		}
 
