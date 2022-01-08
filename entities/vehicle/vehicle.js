@@ -36,8 +36,8 @@ class Vehicle {
 		//if (result) this.game.addBackground(new Splatter(this.game, this.entity.x, this.entity.y, this.entity.direction, 34, 34, 0));
 		return result;
 	}
-	push(a, d) {
-		this.entity.push(a,d);
+	addForce(a, d) {
+		this.entity.addForce(a,d);
 	}
 
 	setup() {
@@ -79,7 +79,31 @@ class Vehicle {
 		this.BB = this.getBB();
 		this.nextBB = this.getNextBB();
 
-		// This objects collision cases go here
+		// Collision
+		var that = this;
+		this.game.entities.forEach(function (entity) {
+			// Action predictions
+			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
+				if (entity instanceof NeutralVehicle) {	
+					that.isApproaching = true;
+				}
+			}
+			// Collision cases
+			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+				if ( (entity instanceof PlayerPed || entity instanceof NeutralPed) && !entity.dead) {	
+					that.isColliding = true;
+					entity.isColliding = true;
+					
+					if (entity.damage(5)) entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+				}
+				if ( (entity instanceof PlayerVehicle || entity instanceof NeutralVehicle) && !entity.dead && that != entity) {	
+					that.isColliding = true;
+					entity.isColliding = true;
+
+					entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+				}
+			}
+		});
 
 		// Update parent BB
 		this.setBB(this.BB);

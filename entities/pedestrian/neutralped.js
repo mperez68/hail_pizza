@@ -38,8 +38,8 @@ class NeutralPed {
 	getHP(){ return this.pedestrian.getHP(); };
 
 	damage(dmg) { return this.pedestrian.damage(dmg) };
-	push(a, d) {
-		this.pedestrian.push(a,d);
+	addForce(a, d) {
+		this.pedestrian.addForce(a,d);
 	}
 
 	setup() {
@@ -86,7 +86,7 @@ class NeutralPed {
 				if (entity instanceof NeutralPed && !entity.dead) {	
 					that.isApproaching = true;
 
-					if (entity.damage(1)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+					if (entity.damage(1)) entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
 				}
 			}
 			// Collision cases
