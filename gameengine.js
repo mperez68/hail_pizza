@@ -23,8 +23,6 @@ class GameEngine {
         this.surfaceHeight = null;
 		this.blockExit = false;
 
-        this.theScore = 0;
-
         // if (this.keyE) {
         //     ASSET_MANAGER.playAsset("./music/driving.mp3");
         // }
@@ -36,17 +34,7 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
-        this.score = 0;
-        this.displayScore = document.getElementById('score');
     };
-
-    getScore() {
-        return this.theScore;
-    }
-
-    incrementScore() {
-        this.theScore++;
-    }
 
     start() {
 		var that = this;
@@ -58,7 +46,6 @@ class GameEngine {
 
     // reset() {
     //     this.entities = [];
-    //     this.score = 0;
     //     this.displayScore.innerHTML = 0;
     //     this.timer = new Timer();
     // };

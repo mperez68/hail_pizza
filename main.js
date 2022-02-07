@@ -1,89 +1,89 @@
 var gameEngine = new GameEngine();
 
 var ASSET_MANAGER = new AssetManager();
-ASSET_MANAGER.queueDownload("./assets/hailpizza.png");
+// ASSET_MANAGER.queueDownload("./assets/hailpizza.png");
 
-ASSET_MANAGER.queueDownload("./assets/bgtile00.png");
-ASSET_MANAGER.queueDownload("./assets/bgtile01.png");
-ASSET_MANAGER.queueDownload("./assets/bgtile02.png");
-ASSET_MANAGER.queueDownload("./assets/streetlight.png");
-ASSET_MANAGER.queueDownload("./assets/streetlight02.png");
-ASSET_MANAGER.queueDownload("./assets/fence.png");
-ASSET_MANAGER.queueDownload("./assets/building.png");
+// ASSET_MANAGER.queueDownload("./assets/bgtile00.png");
+// ASSET_MANAGER.queueDownload("./assets/bgtile01.png");
+// ASSET_MANAGER.queueDownload("./assets/bgtile02.png");
+// ASSET_MANAGER.queueDownload("./assets/streetlight.png");
+// ASSET_MANAGER.queueDownload("./assets/streetlight02.png");
+// ASSET_MANAGER.queueDownload("./assets/fence.png");
+// ASSET_MANAGER.queueDownload("./assets/building.png");
 
-ASSET_MANAGER.queueDownload("./assets/ground.png");
+// ASSET_MANAGER.queueDownload("./assets/ground.png");
 
-ASSET_MANAGER.queueDownload("./assets/road/00-00.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-00.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-01.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-02.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-03.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-04.png");
-ASSET_MANAGER.queueDownload("./assets/road/01-05.png");
-ASSET_MANAGER.queueDownload("./assets/road/02-00.png");
-ASSET_MANAGER.queueDownload("./assets/road/02-01.png");
-ASSET_MANAGER.queueDownload("./assets/road/02-02.png");
-ASSET_MANAGER.queueDownload("./assets/road/02-03.png");
-ASSET_MANAGER.queueDownload("./assets/road/03-00.png");
-ASSET_MANAGER.queueDownload("./assets/road/03-01.png");
-ASSET_MANAGER.queueDownload("./assets/road/03-02.png");
-ASSET_MANAGER.queueDownload("./assets/road/03-03.png");
+// ASSET_MANAGER.queueDownload("./assets/road/00-00.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-00.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-01.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-02.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-03.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-04.png");
+// ASSET_MANAGER.queueDownload("./assets/road/01-05.png");
+// ASSET_MANAGER.queueDownload("./assets/road/02-00.png");
+// ASSET_MANAGER.queueDownload("./assets/road/02-01.png");
+// ASSET_MANAGER.queueDownload("./assets/road/02-02.png");
+// ASSET_MANAGER.queueDownload("./assets/road/02-03.png");
+// ASSET_MANAGER.queueDownload("./assets/road/03-00.png");
+// ASSET_MANAGER.queueDownload("./assets/road/03-01.png");
+// ASSET_MANAGER.queueDownload("./assets/road/03-02.png");
+// ASSET_MANAGER.queueDownload("./assets/road/03-03.png");
 
-ASSET_MANAGER.queueDownload("./assets/roof/00-00.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-00.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-01.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-02.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-03.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-04.png");
-ASSET_MANAGER.queueDownload("./assets/roof/01-05.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-00.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-01.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-02.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-03.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-04.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-05.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-06.png");
-ASSET_MANAGER.queueDownload("./assets/roof/02-07.png");
-ASSET_MANAGER.queueDownload("./assets/roof/03-00.png");
-ASSET_MANAGER.queueDownload("./assets/roof/03-01.png");
-ASSET_MANAGER.queueDownload("./assets/roof/03-02.png");
-ASSET_MANAGER.queueDownload("./assets/roof/03-03.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-00.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-01.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-02.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-03.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-04.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-05.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-06.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-07.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-08.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-09.png");
-ASSET_MANAGER.queueDownload("./assets/roof/04-10.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/00-00.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-00.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-01.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-02.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-03.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-04.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/01-05.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-00.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-01.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-02.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-03.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-04.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-05.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-06.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/02-07.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/03-00.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/03-01.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/03-02.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/03-03.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-00.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-01.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-02.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-03.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-04.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-05.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-06.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-07.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-08.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-09.png");
+// ASSET_MANAGER.queueDownload("./assets/roof/04-10.png");
 
-ASSET_MANAGER.queueDownload("./assets/npcs.png");
-ASSET_MANAGER.queueDownload("./assets/npccars.png");
+// ASSET_MANAGER.queueDownload("./assets/npcs.png");
+// ASSET_MANAGER.queueDownload("./assets/npccars.png");
 
-ASSET_MANAGER.queueDownload("./assets/driver.png");
-ASSET_MANAGER.queueDownload("./assets/drivercar.png");
+// ASSET_MANAGER.queueDownload("./assets/driver.png");
+// ASSET_MANAGER.queueDownload("./assets/drivercar.png");
 
-ASSET_MANAGER.queueDownload("./assets/exhaustflame.png");
-ASSET_MANAGER.queueDownload("./assets/health.PNG");
+// ASSET_MANAGER.queueDownload("./assets/exhaustflame.png");
+// ASSET_MANAGER.queueDownload("./assets/health.PNG");
 
-ASSET_MANAGER.queueDownload("./assets/exclamation.png");
-ASSET_MANAGER.queueDownload("./assets/goal.png");
-ASSET_MANAGER.queueDownload("./assets/arrow01.png");
-ASSET_MANAGER.queueDownload("./assets/arrow02.png");
+// ASSET_MANAGER.queueDownload("./assets/exclamation.png");
+// ASSET_MANAGER.queueDownload("./assets/goal.png");
+// ASSET_MANAGER.queueDownload("./assets/arrow01.png");
+// ASSET_MANAGER.queueDownload("./assets/arrow02.png");
 
-//sound effects
-ASSET_MANAGER.queueDownload("./music/DoorClose.mp3");
-ASSET_MANAGER.queueDownload("./music/driving.mp3");
-ASSET_MANAGER.queueDownload("./music/CarImpact.mp3");
-ASSET_MANAGER.queueDownload("./music/CarImpact2.mp3");
-ASSET_MANAGER.queueDownload("./music/dead.mp3");
-ASSET_MANAGER.queueDownload("./music/walking.mp3");
-ASSET_MANAGER.queueDownload("./music/achievement.mp3");
-ASSET_MANAGER.queueDownload("./music/newMission.mp3");
-ASSET_MANAGER.queueDownload("./music/engine.mp3");
+// //sound effects
+// ASSET_MANAGER.queueDownload("./music/DoorClose.mp3");
+// ASSET_MANAGER.queueDownload("./music/driving.mp3");
+// ASSET_MANAGER.queueDownload("./music/CarImpact.mp3");
+// ASSET_MANAGER.queueDownload("./music/CarImpact2.mp3");
+// ASSET_MANAGER.queueDownload("./music/dead.mp3");
+// ASSET_MANAGER.queueDownload("./music/walking.mp3");
+// ASSET_MANAGER.queueDownload("./music/achievement.mp3");
+// ASSET_MANAGER.queueDownload("./music/newMission.mp3");
+// ASSET_MANAGER.queueDownload("./music/engine.mp3");
 
 ASSET_MANAGER.downloadAll(function () {
 
@@ -91,8 +91,8 @@ ASSET_MANAGER.downloadAll(function () {
 	var ctx = canvas.getContext('2d');
 
 	// Player
-	gameEngine.addEntity(driver);
-	gameEngine.addEntity(drivercar);
+	// gameEngine.addEntity(driver);
+	// gameEngine.addEntity(drivercar);
 	
 	new SceneManager(gameEngine);
 	
