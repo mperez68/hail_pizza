@@ -3,37 +3,57 @@
 <head>
     <meta charset="utf-8">
     <title>HAIL PIZZA</title>
-  
-    <script type="text/javascript" src="./assetmanager.js"></script>
-    <script type="text/javascript" src="./timer.js"></script>
-	<script type="text/javascript" src="./animator.js"></script>
-	<!-- <script type="text/javascript" src="./angleanimator.js"></script> -->
-	<script type="text/javascript" src="./gameengine.js"></script>
-    <!-- <script type="text/javascript" src="./goalmarkers.js"></script> -->
-    <script type="text/javascript" src="./boundingbox.js"></script>
+    <!-- Utility -->
     <script type="text/javascript" src="./util.js"></script>
+    <script type="text/javascript" src="./timer.js"></script>
+    <script type="text/javascript" src="./assetmanager.js"></script>
+    <!-- Engine -->
+	<script type="text/javascript" src="./scenemanager.js"></script>
+	<script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
-    <!-- <script type="text/javascript" src="./background.js"></script>
-    <script type="text/javascript" src="./modularbuilding.js"></script> -->
-    <script type="text/javascript" src="./scenemanager.js"></script>
-    <!-- <script type="text/javascript" src="./audiomanager.js"></script>
-    <script type="text/javascript" src="./driver.js"></script>
-    <script type="text/javascript" src="./drivercar.js"></script>
-    <script type="text/javascript" src="./obstacles.js"></script>
-    <script type="text/javascript" src="./npc.js"></script>
-    <script type="text/javascript" src="./hud.js"></script> -->
-
-    <!-- <script type="text/javascript" src="./mission.js"></script> -->
+    <!-- Item Utilities -->
+	<script type="text/javascript" src="./animator.js"></script>
+    <script type="text/javascript" src="./boundingbox.js"></script>
+    <!-- Entity -->
+	<script type="text/javascript" src="./entities/entity.js"></script>
+    <!-- Pedestrian -->
+	<script type="text/javascript" src="./entities/pedestrian/pedestrian.js"></script>
+	<script type="text/javascript" src="./entities/pedestrian/playerped.js"></script>
+	<script type="text/javascript" src="./entities/pedestrian/neutralped.js"></script>
+	<!-- <script type="text/javascript" src="./entities/pedestrian/hostileped.js"></script> -->
+    <!-- Vehicle -->
+    <script type="text/javascript" src="./entities/vehicle/vehicle.js"></script>
+    <script type="text/javascript" src="./entities/vehicle/playervehicle.js"></script>
+    <script type="text/javascript" src="./entities/vehicle/neutralvehicle.js"></script>
+    <!-- <script type="text/javascript" src="./entities/vehicle/hostilevehicle.js"></script> -->
+    <!-- Marker -->
+    <script type="text/javascript" src="./marker/marker.js"></script>
+    <script type="text/javascript" src="./marker/mission.js"></script>
+    <script type="text/javascript" src="./marker/target.js"></script>
+    <!-- Terrain -->
+	<script type="text/javascript" src="./terrain/terrain.js"></script>
+    <!-- Terrain Children -->
+	<script type="text/javascript" src="./terrain/building.js"></script>
+	<!-- <script type="text/javascript" src="./terrain/fence.js"></script> -->
+    <!-- Background -->
+	<script type="text/javascript" src="./background/background.js"></script>
+    <!-- Background Children -->
+    <script type="text/javascript" src="./background/corpse.js"></script>
+    <script type="text/javascript" src="./background/splatter.js"></script>
+	<script type="text/javascript" src="./background/ground.js"></script>
+	<script type="text/javascript" src="./background/road.js"></script>
 </head>
-<body>
-    <div>
+<body style="background-color:rgb(100, 100, 100);">
+    <center><div>
     <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex ="0" autofocus muted="muted"></canvas>
     </div>
 
     <div>
     <input type="checkbox" id="myMusic" checked> Toggle music. 
-    <input type="checkbox" id="myDebug" > Toggle Debug. 
-    </div>
+    <input type="checkbox" id="myDebug" checked> Toggle Debug. 
+    <p>turn speed:</p>
+    <input type="range" id="myRange" min="1" max="5" value="3">
+    </div></center>
     
  </div>
 	

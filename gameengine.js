@@ -2,16 +2,20 @@
 
 class GameEngine {
     constructor() {
+		this.ITEM_CAP = 250;
+
 		this.background = [];
+		this.terrain = [];
         this.entities = [];
-        this.showOutlines = false;
+		this.effects = [];
+		this.debug = [];
         this.ctx = null;
-		/*
+		
 		// Mouse Controls
         this.click = null;
         this.mouse = null;
-        this.wheel = null;
-		*/
+        //this.wheel = null;
+		
 		// Keyboard Controls
 		this.forward = false;
 		this.backward = false;
@@ -21,11 +25,6 @@ class GameEngine {
 		this.keyE = false;
         this.surfaceWidth = null;
         this.surfaceHeight = null;
-		this.blockExit = false;
-
-        // if (this.keyE) {
-        //     ASSET_MANAGER.playAsset("./music/driving.mp3");
-        // }
     };
 
     init(ctx) {
@@ -44,16 +43,9 @@ class GameEngine {
         })();
     };
 
-    // reset() {
-    //     this.entities = [];
-    //     this.displayScore.innerHTML = 0;
-    //     this.timer = new Timer();
-    // };
-
     startInput() {
         var that = this;
 
-		/*
 		// Mouse Controls
         var getXandY = function (e) {
             var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
@@ -67,23 +59,23 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
-            //console.log(getXandY(e));
+            console.log(getXandY(e));
             that.click = getXandY(e);
         }, false);
 
-        this.ctx.canvas.addEventListener("wheel", function (e) {
-            //console.log(getXandY(e));
-            that.wheel = e;
-            //       console.log(e.wheelDelta);
-            e.preventDefault();
-        }, false);
+        // this.ctx.canvas.addEventListener("wheel", function (e) {
+        //     //console.log(getXandY(e));
+        //     that.wheel = e;
+        //     //       console.log(e.wheelDelta);
+        //     e.preventDefault();
+        // }, false);
 
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
             //console.log(getXandY(e));
             that.rightclick = getXandY(e);
             e.preventDefault();
         }, false);
-		*/
+		
 		// Keyboard Controls
 		this.ctx.canvas.addEventListener("keydown", function (e) {
 			//console.log("KeyDown");
@@ -105,15 +97,10 @@ class GameEngine {
 					that.right = true;
 					break;
 				case "Space":
-					event.preventDefault();
 					that.space = true;
 					break;
 				case "KeyE":
 					that.keyE = true;
-                    // if (that.keyE) {
-                    //     ASSET_MANAGER.pauseAsset("./music/driving.mp3");
-                    // }
-                    //ASSET_MANAGER.playAsset("./music/DoorClose.mp3");
 					break;
 			}
 		}, false);
@@ -142,73 +129,146 @@ class GameEngine {
 					break;
 				case "KeyE":
 					that.keyE = false;
-                    ASSET_MANAGER.playAsset("./music/DoorClose.mp3");
 					break;
 			}
 		}, false);
 		
-		
     };
 
-    addEntity(entity) {
-        this.entities.push(entity);
+    addBackground(item) {
+		if (this.background.length <= this.ITEM_CAP) {
+			this.background.push(item);
+			return true;
+		}
+		console.log("Backgrounds at item cap: " + this.ITEM_CAP);
+		return false;
+    }
+
+    addTerrain(item) {
+		if (this.terrain.length <= this.ITEM_CAP) {
+        	this.terrain.push(item);
+			return true;
+		}
+		console.log("Terrains at item cap: " + this.ITEM_CAP);
+		return false;
     };
 
-    addBackground(entity) {
-        this.background.push(entity);
+    addEntity(item) {
+		if (this.entities.length <= this.ITEM_CAP) {
+			this.entities.push(item);
+			return true;
+		}
+		console.log("Entities at item cap: " + this.ITEM_CAP);
+		return false;
     };
 
-    draw() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        for (var i = 0; i < this.background.length; i++) {
-			// Draw flag used to only load sprites within the viewport for performance.
-			let drawFlag = true;
-			if (Math.abs(this.player.x - this.background[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			if (Math.abs(this.player.y - this.background[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
-			if (drawFlag) { this.background[i].draw(this.ctx); };
-        }
-        for (var i = 0; i < this.entities.length; i++) {
-			// Draw flag used to only load sprites within the viewport for performance.
-			let drawFlag = true;
-			if (Math.abs(this.player.x - this.entities[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
-			if (Math.abs(this.player.y - this.entities[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
-			if (this.entities[i] instanceof GoalPost) drawFlag = true;	// Edge case, goalpost controls it's own arrows
-			if (this.entities[i] instanceof Driver) drawFlag = true;				// edge case, player
-			if (drawFlag) { this.entities[i].draw(this.ctx); };
-        }
-		this.camera.draw(this.ctx);
+    addEffects(item) {
+		if (this.effects.length <= this.ITEM_CAP) {
+			this.effects.push(item);
+			return true;
+		}
+		console.log("Effects at item cap: " + this.ITEM_CAP);
+		return false;
     };
+
+    addDebug(item) {
+		this.debug.push(item);
+		return true;
+    };
+
+	setup() {
+		// Setup items in order by layer
+		if (!this.camera.title) {
+			this.setupIterator(this.background);
+			this.setupIterator(this.terrain);
+			this.setupIterator(this.entities);
+			this.setupIterator(this.effects);
+			this.setupIterator(this.debug);
+		}
+	}
+
+	setupIterator(items) {
+        var count = items.length;
+		for (var i = 0; i < count; i++) {
+
+			var item = items[i];
+			if (!item.removeFromWorld) {
+				item.setup();
+			}
+		}
+	}
 
     update() {
-
+		// Check HTML elements
 		if (document.getElementById("myDebug").checked) {
 			PARAMS.DEBUG = true;
 		} else {
 			PARAMS.DEBUG = false;
 		}
-		
-        var entitiesCount = this.entities.length;
+		if (document.getElementById("myMusic").checked) {
+			PARAMS.MUSIC = true;
+		} else {
+			PARAMS.MUSIC = false;
+		}
+		if (document.getElementById("myRange").value) {
+			this.slider = document.getElementById("myRange").value;
+		}
+
+		// Update items in order by layer
 		if (!this.camera.title) {
-			for (var i = 0; i < entitiesCount; i++) {
-				var entity = this.entities[i];
+			this.updateIterator(this.background);
+			this.updateIterator(this.terrain);
+			this.updateIterator(this.entities);
+			this.updateIterator(this.effects);
+			this.updateIterator(this.debug);
+		}
 
-				if (!entity.removeFromWorld) {
-					entity.update();
-				}
-			}
+		this.camera.update();
+    };
 
-			for (var i = this.entities.length - 1; i >= 0; --i) {
-				if (this.entities[i].removeFromWorld) {
-					this.entities.splice(i, 1);
-				}
+	updateIterator(items) {
+		// updates
+		var count = items.length;
+		for (var i = 0; i < count; i++) {
+			var item = items[i];
+
+			if (!item.removeFromWorld) {
+				item.update();
 			}
 		}
-		this.camera.update();
-		this.audio.update();
+		// removals
+		for (var i = items.length - 1; i >= 0; --i) {
+			if (items[i].removeFromWorld) {
+				items.splice(i, 1);
+			}
+		}
+	}
+
+    draw() {
+		// Draw items in order by layer
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+		this.drawIterator(this.background);
+		this.drawIterator(this.terrain);
+		this.drawIterator(this.entities);
+		this.drawIterator(this.effects);
+		this.drawIterator(this.debug);
+		this.camera.draw(this.ctx);
     };
+
+	drawIterator(items) {
+        for (var i = 0; i < items.length; i++) {
+			// Draw flag used to only load sprites within the viewport for performance.
+			let drawFlag = true;
+			//if (Math.abs(this.player.x - items[i].x) > PARAMS.PAGE_WIDTH) drawFlag = false;
+			//if (Math.abs(this.player.y - items[i].y) > PARAMS.PAGE_HEIGHT) drawFlag = false;
+			//if (items[i] instanceof Driver) drawFlag = true;				// edge case, player
+			if (drawFlag) { items[i].draw(this.ctx); };
+        }
+	}
 
     loop() {
         this.clockTick = this.timer.tick();
+		this.setup();
         this.update();
         this.draw();
     };
