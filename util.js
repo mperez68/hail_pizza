@@ -58,11 +58,9 @@ window.requestAnimFrame = (function () {
 
 // Point object
 class Point {
-	constructor(game, x, y) {
-		Object.assign( this, {game, x, y} )
-		this.isDrawn = false;
+	constructor(x, y) {
+		Object.assign( this, {x, y} )
 		this.color = 'Red';
-		this.removeFromWorld = false;
 	}
 	
 	isLeft(oth) {
@@ -89,19 +87,14 @@ class Point {
 		return returnFlag;
 	}
 
-	setup() {
-		//
+	draw(ctx, game){
+	if (!(game instanceof GameEngine)){
+		throw new Error("Null GameEngine Variable!")
 	}
-
-	update(){
-		if (this.isDrawn) this.removeFromWorld = true;
-	}
-
-	draw(ctx){
 		if (PARAMS.DEBUG) {
 			ctx.strokeStyle = this.color;
 			ctx.beginPath();
-			ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, 6, 0, 2 * Math.PI);
+			ctx.arc(this.x - game.camera.x, this.y - game.camera.y, 6, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
 		this.isDrawn = true;
@@ -109,43 +102,29 @@ class Point {
 }
 
 // Force vector object
-class ForceVector {
-	constructor(game, x, y, direction, force) {
-		Object.assign (this, { game, x, y, direction, force });
-		this.isDrawn = false;
+class Vector {
+	constructor(x, y, direction, force) {
+		Object.assign (this, { x, y, direction, force });
 		this.color = 'Blue';
-		this.removeFromWorld = false;
-	}
-
-	setup() {
-		//
-	}
-
-	update(){
-		if (this.isDrawn) this.removeFromWorld = true;
 	}
 
 	getHead() {
-		return new Point (this.getHeadX(), this.getHeadY());
+		return new Point (this.x + this.force * Math.cos(getRad(this.direction)), 
+			this.y + this.force * Math.sin(getRad(this.direction)));
 	}
 
-	getHeadX() {
-		return this.x + this.force * Math.cos(getRad(this.direction));
-	}
-
-	getHeadY() {
-		return this.y + this.force * Math.sin(getRad(this.direction));
-	}
-
-	draw(ctx){
+	draw(ctx, game){
+		if (!(game instanceof GameEngine)){
+			throw new Error("Null GameEngine Variable!")
+		}
 		if (PARAMS.DEBUG) {
-			let drawX = this.x + PARAMS.VECTOR_SCALE * this.force * Math.cos(getRad(this.direction)) - this.game.camera.x;
-			let drawY = this.y + PARAMS.VECTOR_SCALE * this.force * Math.sin(getRad(this.direction)) - this.game.camera.y;
+			let drawX = this.x + PARAMS.VECTOR_SCALE * this.force * Math.cos(getRad(this.direction)) - game.camera.x;
+			let drawY = this.y + PARAMS.VECTOR_SCALE * this.force * Math.sin(getRad(this.direction)) - game.camera.y;
 
 			ctx.strokeStyle = this.color;
 			// Draw Line
 			ctx.beginPath();
-			ctx.moveTo(this.x - this.game.camera.x, this.y - this.game.camera.y);
+			ctx.moveTo(this.x - game.camera.x, this.y - game.camera.y);
 			ctx.lineTo(drawX, drawY);
 			ctx.stroke();
 
@@ -154,7 +133,6 @@ class ForceVector {
 			ctx.arc(drawX, drawY, 3, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
-		this.isDrawn = true;
 	}
 }
 

@@ -49,9 +49,9 @@ class Vehicle extends Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.game, this.x - (this.width / 2), this.y - (this.height / 2),
+		this.BB = new BoundingBox(this.x - (this.width / 2), this.y - (this.height / 2),
 											(3 * this.width) / 4, this.height / 2, this.direction);
-		this.nextBB = new BoundingBox(this.game, this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
+		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 											(3 * this.width) / 4, this.height / 2, this.direction);
 	};
@@ -197,9 +197,4 @@ class Vehicle extends Entity {
 		if (speed <= friction) return Math.max(0, speed);
 		return speed + this.getDistanceHelper(speed - friction, friction);
 	}
-
-	draw(ctx) {
-		// Parent draw
-		super.draw(ctx);
-	};
 };

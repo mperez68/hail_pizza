@@ -11,8 +11,6 @@ class Entity {
 		this.invulnerable = 0;
 		this.isColliding = false;
 		this.isApproaching = false;
-
-		this.newForces = [];
 		
 		this.updateBB();
 	};
@@ -59,64 +57,24 @@ class Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.game, this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		this.nextBB = new BoundingBox(this.game, this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
+		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
 	
 	draw(ctx) {
-		// add new points
-		for (var i = 0; i < this.BB.newPoints.length; i++){
-			this.game.addDebug(this.BB.newPoints[i]);
-		}
-		this.BB.newPoints = [];
-
-		// add new forces
-		for (var i = 0; i < this.newForces.length; i++){
-			this.game.addDebug(this.newForces[i]);
-		}
-		this.newForces = [];
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
 										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
 		
 		// Debug box drawing
 		if (PARAMS.DEBUG) {
-			//Draw 4 Bounding Box points to represent corners
-			ctx.strokeStyle = 'Red';
-			if (this.isColliding == true) ctx.strokeStyle = 'Green';
-			for (var i = 0; i < this.BB.points.length; i++) {
-				let j = (i-1 + 4) % 4;
-				ctx.beginPath();
-				ctx.moveTo(this.BB.points[i].x - this.game.camera.x, this.BB.points[i].y - this.game.camera.y);
-				ctx.lineTo(this.BB.points[j].x - this.game.camera.x, this.BB.points[j].y - this.game.camera.y);
-				ctx.stroke();
-			}
-			// nextBB
-			ctx.strokeStyle = 'Blue';
-			ctx.beginPath();
-			ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-			ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-			ctx.stroke();
-			if (this.isApproaching == true) {
-				ctx.strokeStyle = 'Red';
-				ctx.beginPath();
-				ctx.moveTo(this.nextBB.points[0].x - this.game.camera.x, this.nextBB.points[0].y - this.game.camera.y);
-				ctx.lineTo(this.nextBB.points[2].x - this.game.camera.x, this.nextBB.points[2].y - this.game.camera.y);
-				ctx.stroke();
-				ctx.beginPath();
-				ctx.moveTo(this.nextBB.points[1].x - this.game.camera.x, this.nextBB.points[1].y - this.game.camera.y);
-				ctx.lineTo(this.nextBB.points[3].x - this.game.camera.x, this.nextBB.points[3].y - this.game.camera.y);
-				ctx.stroke();
-			}
-			ctx.font = "12px Arial";
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.fillText("L", this.BB.left.x - this.game.camera.x, this.BB.left.y - this.game.camera.y);
-			ctx.fillText("T", this.BB.top.x - this.game.camera.x, this.BB.top.y - this.game.camera.y);
-			ctx.fillText("R", this.BB.right.x - this.game.camera.x, this.BB.right.y - this.game.camera.y);
-			ctx.fillText("B", this.BB.bottom.x - this.game.camera.x, this.BB.bottom.y - this.game.camera.y);
+			if (this.isColliding) this.BB.draw(ctx, this.game, "Green");
+			else this.BB.draw(ctx, this.game, "Red");
+
+			if (this.isApproaching) this.nextBB.draw(ctx, this.game, "Blue");
+			else this.nextBB.draw(ctx, this.game, "Orange");
 		}
 	};
 };

@@ -105,14 +105,11 @@ class Pedestrian extends Entity {
 	}
 
 	draw(ctx) {
-		super.draw(ctx);
-
 		// Update animation
 		this.animation = this.standing;	// init
 		if (this.walkingVector > 0) this.animation = this.walking;
 		if (this.walkingVector < 0) this.animation = this.walkingBack;
-
-		// Update debug walking vector
-		this.newForces.push( new ForceVector(this.game, this.BB.x, this.BB.y, this.BB.direction, this.walkingVector * this.RUN_SPEED) );
+		// Parent
+		super.draw(ctx);
 	};
 };

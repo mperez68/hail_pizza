@@ -20,9 +20,6 @@ class PlayerVehicle extends Vehicle {
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.getDistanceToGoal() < this.width) this.intent(null);
 		
-		let dest = null;
-		if (this.game.click) dest = new Point(this.game, this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
-		if (this.game.click != this.lastClick) this.intent(dest);
 		this.lastClick = this.game.click;
 
 		// Check for keyboard input to determine movement.
@@ -59,9 +56,4 @@ class PlayerVehicle extends Vehicle {
 		// Assign goal
 		this.goal = point;
 	}
-
-    draw(ctx) {
-		// Call parent draw
-        super.draw(ctx);
-    }
 };

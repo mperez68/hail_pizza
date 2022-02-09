@@ -1,7 +1,7 @@
 // Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {
-    constructor(game, x, y, width, height, direction) {
-        Object.assign(this, { game, x, y, width, height });
+    constructor(x, y, width, height, direction) {
+        Object.assign(this, { x, y, width, height });
 
 		this.direction = direction + 0.000001;
 		
@@ -12,14 +12,14 @@ class BoundingBox {
 			
 		this.distance = Math.sqrt( Math.pow( this.width / 2 , 2) + Math.pow( this.height / 2 , 2) );
 		
-        this.left = new Point(this.game,x, y);
-        this.top = new Point(this.game,x, y);
-        this.right = new Point(this.game,x, y);
-        this.bottom = new Point(this.game,x, y);
+        this.left = new Point(x, y);
+        this.top = new Point(x, y);
+        this.right = new Point(x, y);
+        this.bottom = new Point(x, y);
 		
 		this.points = [];
 		for (var i = 0; i < this.radians.length; i++) {
-			let temp = new Point(this.game,this.x + (Math.sin(this.radians[i]) * this.distance),
+			let temp = new Point(this.x + (Math.sin(this.radians[i]) * this.distance),
 									this.y - (Math.cos(this.radians[i]) * this.distance));
 			this.points[i] = temp;
 			if (temp.isLeft(this.left)) this.left = temp;
@@ -27,9 +27,34 @@ class BoundingBox {
 			if (temp.isAbove(this.top)) this.top = temp;
 			if (temp.isBelow(this.bottom)) this.bottom = temp;
 		};
-
-		this.newPoints = [];
     };
+
+	draw(ctx, game, color) {
+			//Draw Outline
+			ctx.strokeStyle = 'Black';
+			if (color) ctx.strokeStyle = color;
+			for (var i = 0; i < this.points.length; i++) {
+				// Point
+				ctx.beginPath();
+				ctx.arc(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y, 7, 0, 2 * Math.PI);
+				ctx.stroke();
+				// Line
+				let j = (i-1 + 4) % 4;
+				ctx.beginPath();
+				ctx.moveTo(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y);
+				ctx.lineTo(this.points[j].x - game.camera.x, this.points[j].y - game.camera.y);
+				ctx.stroke();
+			}
+			// Letter Denotations for Points
+			ctx.strokeStyle = 'Black';
+			ctx.font = "12px Arial";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText("L", this.left.x - game.camera.x, this.left.y - game.camera.y);
+			ctx.fillText("T", this.top.x - game.camera.x, this.top.y - game.camera.y);
+			ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
+			ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
+	};
 	
 	// Collision checking function
     collide(oth) {
@@ -39,12 +64,7 @@ class BoundingBox {
 			// Corners
 			if (this.narrowDetection(oth) || this.narrowDetection(oth.left) || this.narrowDetection(oth.top) || this.narrowDetection(oth.right) || this.narrowDetection(oth.bottom)){
 				return true;
-			} 
-			// Midpoints
-			// else if (this.narrowDetection(this.getMidPoint(this.game,oth.left, oth.top)) || this.narrowDetection(this.getMidPoint(this.game,oth.top, oth.right))
-			// 			|| this.narrowDetection(this.getMidPoint(this.game,oth.left, oth.bottom)) || this.narrowDetection(this.getMidPoint(this.game,oth.bottom, oth.right))) {
-			// 	return true;
-			// }
+			}
 		}
 		return false;
 	};
@@ -57,14 +77,13 @@ class BoundingBox {
 	// Narrow Detection
 	narrowDetection(oth) {
 		let intersect = this.x;
-		let pt1 = new Point(this.game,oth.x, oth.y);
+		let pt1 = new Point(oth.x, oth.y);
 		// IF TOP LEFT
 		if (oth.y <= this.left.y && oth.x <= this.top.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
 			intersect = this.getX(this.left, this.top, oth.y);
 			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
-			this.newPoints.push(pt1);
 			// Returns true if past the intersection point.
 			return oth.x >= intersect;
 		}
@@ -74,7 +93,6 @@ class BoundingBox {
 			intersect = this.getX(this.top, this.right, oth.y);
 			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
-			this.newPoints.push(pt1);
 			// Returns true if past the intersection point.
 			return oth.x <= intersect;
 		}
@@ -84,7 +102,6 @@ class BoundingBox {
 			intersect = this.getX(this.left, this.bottom, oth.y);
 			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
-			this.newPoints.push(pt1);
 			// Returns true if past the intersection point.
 			return oth.x >= intersect;
 		}
@@ -94,12 +111,12 @@ class BoundingBox {
 			intersect = this.getX(this.bottom, this.right, oth.y);
 			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
-			this.newPoints.push(pt1);
 			// Returns true if past the intersection point.
 			return oth.x <= intersect;
 		}
 		// If in dead zone, point is in the center of the entity so we can assume this is true.
 		else {
+			// TODO check for thin objects where this is not always true
 			return true;
 		}
 	}
@@ -115,6 +132,6 @@ class BoundingBox {
 		let x = (l.x + r.x) / 2;
 		let y = (l.y + r.y) / 2;
 
-		return new Point(this.game,x,y);
+		return new Point(x,y);
 	}
 };

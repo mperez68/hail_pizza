@@ -18,7 +18,7 @@ class Terrain {
     }
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.game, this.x - this.width / 2, this.y - this.width / 2, this.width, this.height, this.direction);
+		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, this.width, this.height, this.direction);
 	};
 
     draw(ctx) {

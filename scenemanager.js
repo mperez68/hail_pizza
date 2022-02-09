@@ -7,14 +7,14 @@ class SceneManager {
 		// this.lastRespawn = 0;
 
 		// this.respawns = [];
-		// this.respawns.push(new Point(this.game,-100,-100));	// TOP LEFT
-		// this.respawns.push(new Point(this.game,512,-100));	// TOP
-		// this.respawns.push(new Point(this.game,1124,-100));	// TOP RIGHT
-		// this.respawns.push(new Point(this.game,1124,384));	// RIGHT
-		// this.respawns.push(new Point(this.game,1124,868));	// BOTTOM RIGHT
-		// this.respawns.push(new Point(this.game,512,868));		// BOTTOM
-		// this.respawns.push(new Point(this.game,-100,868));	// BOTTOM LEFT
-		// this.respawns.push(new Point(this.game,-100,384));	// LEFT
+		// this.respawns.push(new Point(-100,-100));	// TOP LEFT
+		// this.respawns.push(new Point(512,-100));	// TOP
+		// this.respawns.push(new Point(1124,-100));	// TOP RIGHT
+		// this.respawns.push(new Point(1124,384));	// RIGHT
+		// this.respawns.push(new Point(1124,868));	// BOTTOM RIGHT
+		// this.respawns.push(new Point(512,868));		// BOTTOM
+		// this.respawns.push(new Point(-100,868));	// BOTTOM LEFT
+		// this.respawns.push(new Point(-100,384));	// LEFT
 		
 		this.loadMap();
 	};
