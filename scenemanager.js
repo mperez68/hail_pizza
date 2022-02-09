@@ -27,7 +27,7 @@ class SceneManager {
 
 		this.game.addEntity(player);
 
-		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (1 / 4), this.game.surfaceHeight * (1 / 4), 0, 70, 64));
+		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
 		// this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (3 / 4), 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));

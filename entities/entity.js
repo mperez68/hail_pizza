@@ -24,12 +24,11 @@ class Entity {
 		if (this.invulnerable <= 0){
 			this.hitPoints -= dmg;
 			this.invulnerable = 10;
-			this.game.camera.hitCount++;
 			return true;
 		}
 		return false;
 	};
-	push(a, d) {
+	addForce(a, d) {
 		// If input is valid, then calculate and push
 		if (a && d) {
 			//console.log("pushing distance " + d + " pixels @ " + a + " degrees");

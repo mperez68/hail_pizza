@@ -23,8 +23,8 @@ class PlayerPed {
 	getHP(){ return this.pedestrian.getHP(); };
 
 	damage(dmg) { return this.pedestrian.damage(dmg) };
-	push(a, d) {
-		this.pedestrian.push(a,d);
+	addForce(a, d) {
+		this.pedestrian.addForce(a,d);
 	}
 
 	setup() {

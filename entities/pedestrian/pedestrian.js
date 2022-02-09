@@ -34,8 +34,8 @@ class Pedestrian {
 		if (result) this.game.addBackground(new Splatter(this.game, this.entity.x, this.entity.y, this.entity.direction, 34, 34, 0));
 		return result;
 	}
-	push(a, d) {
-		this.entity.push(a,d);
+	addForce(a, d) {
+		this.entity.addForce(a,d);
 	}
 
 	setup() {

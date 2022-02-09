@@ -26,15 +26,15 @@ class NeutralVehicle {
 		this.vehicle.idle = new Animator(spritesheet, 0, 0,
 			width, height, 1, 1, 1, direction, false, true);	// idle
 		
-		this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
+		//this.vehicle.goal = this.goalList[randomInt(this.goalList.length)];
     }
 
 	setHP(hp) {this.vehicle.setHP(hp); };
 	getHP(){ return this.vehicle.getHP(); };
 
 	damage(dmg) { return this.vehicle.damage(dmg) };
-	push(a, d) {
-		this.vehicle.push(a,d);
+	addForce(a, d) {
+		this.vehicle.addForce(a,d);
 	}
 
 	setup() {
@@ -59,32 +59,6 @@ class NeutralVehicle {
 		// Update self
 		this.BB = this.getBB();
 		this.nextBB = this.getNextBB();
-
-		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralVehicle) {	
-					that.isApproaching = true;
-				}
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof NeutralVehicle) {
-					that.isColliding = true;
-					entity.isColliding = true;
-					
-					entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
-				}
-				if ( (entity instanceof NeutralPed || entity instanceof PlayerPed) && !entity.dead) {	
-					that.isColliding = true;
-					entity.isColliding = true;
-					
-					if (entity.damage(5)) entity.push( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
-				}
-			}
-		});
 		
 		// Update parent BB
 		this.setBB(this.BB);

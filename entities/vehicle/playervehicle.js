@@ -22,8 +22,8 @@ class PlayerVehicle {
 	getHP(){ return this.vehicle.getHP(); };
 
 	damage(dmg) { return this.vehicle.damage(dmg) };
-	push(a, d) {
-		this.vehicle.push(a,d);
+	addForce(a, d) {
+		this.vehicle.addForce(a,d);
 	}
 
 	setup() {
@@ -48,6 +48,8 @@ class PlayerVehicle {
 
 		// Parent update
         this.vehicle.update();
+
+		this.game.camera.centerText = this.getHP() + "HP";
 	};
 
 	updateCollision(){
