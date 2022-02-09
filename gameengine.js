@@ -210,8 +210,14 @@ class GameEngine {
 		} else {
 			PARAMS.MUSIC = false;
 		}
-		if (document.getElementById("myRange").value) {
-			this.slider = document.getElementById("myRange").value;
+		if (document.getElementById("myIn1").value) {
+			//
+		}
+		if (document.getElementById("myIn2").value) {
+			//
+		}
+		if (document.getElementById("myIn3").value) {
+			//
 		}
 
 		// Update items in order by layer

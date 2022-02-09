@@ -1,30 +1,10 @@
 //
-class Road {
+class Road extends Background {
 	constructor(game, x, y, version) {
+        super(game, x, y, 0, 1, PARAMS.GRID_WIDTH, PARAMS.GRID_HEIGHT, 
+            new Animator(ASSET_MANAGER.getAsset("./sprites/road/00-00.png"), 0, 0,
+			PARAMS.GRID_WIDTH, PARAMS.GRID_HEIGHT, 1, 1, 0, 0, false, true));
 		// Assign Object Variables
         Object.assign(this, { game, version });
-
-        let spritesheet = ASSET_MANAGER.getAsset("./sprites/road/00-00.png");
-        
-		let animation = new Animator(spritesheet, 0, 0,
-			PARAMS.GRID_WIDTH, PARAMS.GRID_HEIGHT, 1, 1, 0, 0, false, true);	// Tile
-
-        // Initialize 'parent' object
-        this.background = new Background(game, x, y, 0, 1, PARAMS.GRID_WIDTH, PARAMS.GRID_HEIGHT, animation);
     };
-
-    setup(){
-        // Parent setup
-        this.background.setup();
-    };
-
-    update() {
-        // Parent update
-        this.background.update();
-    }
-
-    draw(ctx) {
-        // Parent draw
-        this.background.draw(ctx);
-    }
 }

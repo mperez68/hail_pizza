@@ -1,6 +1,7 @@
-// Player as a pedestrian object
-class NeutralPed {
+// Player as a Pedestrian object
+class NeutralPed extends Pedestrian {
 	constructor(game, x, y, direction, width, height) {
+		super(game, x, y, direction, width, height);
 		// Constants
 		this.VERSION_COUNT = 2;
 		// Assign Object Variables
@@ -12,42 +13,21 @@ class NeutralPed {
 
 		this.game.camera.dudeCount++;
 		
-		this.goalList = [];
-
-		this.goalList.push(new Point(this.game,292,56));
-		this.goalList.push(new Point(this.game,727,61));
-		this.goalList.push(new Point(this.game,868,536));
-		this.goalList.push(new Point(this.game,520,709));
-		this.goalList.push(new Point(this.game,141,525));
-		
-		// Initialize 'parent' object
-		this.pedestrian = new Pedestrian(game, x, y, direction, width, height);
-		
 		// Override walking/standing animations
-		this.pedestrian.standing = new Animator(spritesheet, 0, height * this.version,
+		this.standing = new Animator(spritesheet, 0, height * this.version,
 									width, height, 12, 0.2, 0, direction, false, true);	// Standing
-		this.pedestrian.walking = new Animator(spritesheet, 228, height * this.version,
+		this.walking = new Animator(spritesheet, 228, height * this.version,
 									width, height, 8, 0.08, 0, direction, false, true);	// Walking
-		this.pedestrian.walkingBack = new Animator(spritesheet, 228, height,
+		this.walkingBack = new Animator(spritesheet, 228, height,
 									width, height, 8, 0.10, 0, direction, true, true);	// Walking Backward
-		
-		this.pedestrian.goal = this.goalList[randomInt(this.goalList.length)];
     }
-
-	setHP(hp) {this.pedestrian.setHP(hp); };
-	getHP(){ return this.pedestrian.getHP(); };
-
-	damage(dmg) { return this.pedestrian.damage(dmg) };
-	addForce(a, d) {
-		this.pedestrian.addForce(a,d);
-	}
 
 	setup() {
 		// Reset walking flag
-		this.pedestrian.isWalking = false;
+		this.isWalking = false;
 
 		// parent setup
-		this.pedestrian.setup();
+		super.setup();
 	}
 
     update() {
@@ -59,8 +39,8 @@ class NeutralPed {
 			this.game.camera.dudeCount--;
 			this.game.camera.deathCount++;
 			// Create Corpse
-			this.game.addBackground(new Corpse(this.game, this.pedestrian.entity.x, this.pedestrian.entity.y,
-					this.pedestrian.entity.direction, this.pedestrian.entity.width, this.pedestrian.entity.height, this.version))
+			this.game.addBackground(new Corpse(this.game, this.x, this.y,
+					this.direction, this.width, this.height, this.version))
 			// Delete this object
 			this.removeFromWorld = true;
 		} else {
@@ -70,14 +50,10 @@ class NeutralPed {
 
 		if (this.getHP() <= 0) this.dead = true;
 		// Parent update
-        this.pedestrian.update();
+        super.update();
 	};
 
 	updateCollision(){
-		// Update self
-		this.BB = this.getBB();
-		this.nextBB = this.getNextBB();
-
 		// Collision
 		var that = this;
 		this.game.entities.forEach(function (entity) {
@@ -98,34 +74,19 @@ class NeutralPed {
 				}
 			}
 		});
-		
-		// Update parent BB
-		this.setBB(this.BB);
-		this.setNextBB(this.nextBB);
 
 		// parent updateCollision
-		this.pedestrian.updateCollision();
+		super.updateCollision();
 	}
-
-	getBB() { return this.pedestrian.getBB(); };
-	getNextBB() { return this.pedestrian.getNextBB(); };
-
-	setBB(bb) { this.pedestrian.setBB(bb); }
-	setNextBB(bb) { this.pedestrian.setNextBB(bb); }
 
 	intent() {
 		// Assign goal
-        if (this.pedestrian.getDistanceToGoal() <= this.pedestrian.entity.width ) {
-			let ptr = 0;
-			for (var i = 0; i < this.goalList.length; i++){
-				if ( (this.goalList[i].x == this.pedestrian.goal.x) && (this.goalList[i].y == this.pedestrian.goal.y) ) ptr = i;
-			}
-			ptr = (ptr + 1) % this.goalList.length;
-			this.pedestrian.goal = this.goalList[ptr];
+        if (this.getDistanceToGoal() <= this.width ) {
+			// TODO goal queue
 		}
 	}
 
     draw(ctx) {
-		this.pedestrian.draw(ctx);
+		super.draw(ctx);
     }
 };

@@ -28,6 +28,7 @@ class Entity {
 		}
 		return false;
 	};
+
 	addForce(a, d) {
 		// If input is valid, then calculate and push
 		if (a && d) {
@@ -63,12 +64,6 @@ class Entity {
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
-
-	getBB() { return this.BB; }
-	getNextBB() { return this.nextBB; }
-
-	setBB(bb) { this.BB = bb; }
-	setNextBB(bb) { this.nextBB = bb; }
 	
 	draw(ctx) {
 		// add new points

@@ -21,10 +21,6 @@ class Terrain {
 		this.BB = new BoundingBox(this.game, this.x - this.width / 2, this.y - this.width / 2, this.width, this.height, this.direction);
 	};
 
-	getBB() { return this.BB; }
-
-	setBB(bb) { this.BB = bb; }
-
     draw(ctx) {
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
 			this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
