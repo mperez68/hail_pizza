@@ -27,6 +27,21 @@ class Point {
 		if (a < 0) a += 360;
 		return a;
 	}
+	
+	// Returns the x intercept
+	static getXIntercept(l, r, y) {
+		let m = (r.y - l.y) / (r.x - l.x);
+		let b = l.y - (m * l.x);
+		return (y - b) / m;
+	}
+	
+	// Returns the midpoint between two points
+	static getMidPoint(l, r){
+		let x = (l.x + r.x) / 2;
+		let y = (l.y + r.y) / 2;
+
+		return new Point(x,y);
+	}
 
 	isLeft(oth) {
 		var returnFlag = false;
@@ -71,4 +86,8 @@ class Point {
 }
 
 // Export for testing
-module.exports = Point;
+try{
+	module.exports = Point;
+} catch (e) {
+	//Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.
+}

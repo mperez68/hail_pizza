@@ -28,10 +28,6 @@ function roundDecimals(num, dec) {
 	return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
 }
 
-function angle(point) {
-	return Point.angle(new Point(0,1), Point.sum(point));
-}
-
 // creates an alias for requestAnimationFrame for backwards compatibility
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||

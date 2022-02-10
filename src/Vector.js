@@ -10,7 +10,7 @@ class Vector {
         for (let i = 0; i < vectors.length; i++){
             points.push(vectors[i].getHead());
         }
-        return new Vector(angle(sum(points)),
+        return new Vector(Point.angle(sum(points)),
             Point.distance(new Point(0,0), Point.sum(points)));
     }
 
@@ -42,4 +42,9 @@ class Vector {
 	}
 }
 
-module.exports = Vector
+// Export for testing
+try{
+	module.exports = Vector;
+} catch (e) {
+	//Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.
+}
