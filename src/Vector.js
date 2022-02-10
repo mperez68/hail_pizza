@@ -12,7 +12,6 @@ class Vector {
         }
         return new Vector(angle(sum(points)),
             Point.distance(new Point(0,0), Point.sum(points)));
-
     }
 
 	getHead() {
@@ -42,3 +41,5 @@ class Vector {
 		}
 	}
 }
+
+module.exports = Vector

@@ -18,8 +18,9 @@ class Point {
 		return Math.sqrt( Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2) );
 	}
 
-	// returns angle between two points
+	// returns angle between two points or of a point from angle 0
 	static angle(pt1, pt2) {
+		if (pt2 === null) pt2 = new Point(1,0);
 		let a = Math.atan( (pt2.y - pt1.y) / (pt2.x - pt1.x) ) * 180 / Math.PI;
 		// Normalize for 360 deg calculation
 		if (pt2.x < pt1.x) a += 180;
@@ -68,3 +69,6 @@ class Point {
 		this.isDrawn = true;
 	}
 }
+
+// Export for testing
+module.exports = Point;
