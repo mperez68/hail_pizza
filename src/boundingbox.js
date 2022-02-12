@@ -1,3 +1,5 @@
+const Point = require('../src/point');
+
 // Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {
     constructor(x, y, width, height, direction) {
@@ -55,6 +57,16 @@ class BoundingBox {
 			ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
 			ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
 	};
+
+	equals(oth) {
+		let result = true;
+		if (Math.abs(this.x - oth.x) > 0.001) result = false;
+		if (Math.abs(this.y - oth.y) > 0.001) result = false;
+		if (Math.abs(this.width - oth.width) > 0.001) result = false;
+		if (Math.abs(this.height - oth.height) > 0.001) result = false;
+		if (Math.abs(this.direction - oth.direction) > 0.001) result = false;
+		return result;
+	}
 	
 	// Collision checking function
     collide(oth) {
