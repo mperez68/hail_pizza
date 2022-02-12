@@ -4,6 +4,7 @@
   "description": "Javascript browser game about slinging pizza and driving fast.",
   "author": "Marc Perez; MPDev",
   "main": "index.html",
+  "homepage" : "https://mperez68.github.io/hail_pizza/",
   "scripts": {
     "test": "mocha"
   },
