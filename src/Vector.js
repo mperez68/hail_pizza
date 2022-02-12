@@ -14,6 +14,13 @@ class Vector {
             Point.distance(new Point(0,0), Point.sum(points)));
     }
 
+	equals(oth) {
+		let result = true;
+		if (this.angle != oth.angle) result = false;
+		if (this.magnitude != oth.magnitude) result = false;
+		return false;
+	}
+
 	getHead() {
 		return new Point(this.magnitude * Math.cos(getRad(this.angle)),
 			this.magnitude * Math.sin(getRad(this.angle)));

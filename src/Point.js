@@ -7,7 +7,7 @@ class Point {
 
 	static sum(points) {
 		let result = new Point(0,0);
-		for (let i = 0; i < points.length; i++)  {
+		for (let i = 0; i <  points.length; i++)  {
 			result.x = result.x + points[i].x;
 			result.y = result.y + points[i].y;
 		}
@@ -20,7 +20,10 @@ class Point {
 
 	// returns angle between two points or of a point from angle 0
 	static angle(pt1, pt2) {
-		if (pt2 === null) pt2 = new Point(1,0);
+		if (pt2 === null) {
+			pt2 = pt1;
+			pt1 = new Point(0,0);
+		}
 		let a = Math.atan( (pt2.y - pt1.y) / (pt2.x - pt1.x) ) * 180 / Math.PI;
 		// Normalize for 360 deg calculation
 		if (pt2.x < pt1.x) a += 180;
@@ -30,7 +33,9 @@ class Point {
 	
 	// Returns the x intercept
 	static getXIntercept(l, r, y) {
+		if (l.x == r.x) return l.x;
 		let m = (r.y - l.y) / (r.x - l.x);
+		if (m == 0) return null;
 		let b = l.y - (m * l.x);
 		return (y - b) / m;
 	}
@@ -41,6 +46,13 @@ class Point {
 		let y = (l.y + r.y) / 2;
 
 		return new Point(x,y);
+	}
+
+	equals(oth) {
+		let result = true;
+		if (this.x != oth.x) result = false;
+		if (this.y != oth.y) result = false;
+		return result;
 	}
 
 	isLeft(oth) {

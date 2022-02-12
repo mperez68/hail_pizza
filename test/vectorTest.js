@@ -7,6 +7,7 @@ const Vector = require('../src/vector');
  * Methods being tested:
  * constructor (angle, magnitude)
  * static sum (vectors)
+ * equals (oth)
  * getHead ()
  * 
  * Method NOT being tested:
@@ -21,6 +22,11 @@ describe('Vector', function() {
 
     it ('should construct vectors', function(){
         // constructor (angle, magnitude)
+        assert.fail("Not Implemented.")
+    })
+
+    it ('should compare two vectors', function(){
+        // equals (oth)
         assert.fail("Not Implemented.")
     })
 
