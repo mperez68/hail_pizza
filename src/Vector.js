@@ -1,3 +1,9 @@
+const Point = require("./point");
+
+function getRad(deg) {
+	return deg * (Math.PI / 180);
+};
+
 // magnitude vector object
 class Vector {
 	constructor(angle, magnitude) {
@@ -10,20 +16,26 @@ class Vector {
         for (let i = 0; i < vectors.length; i++){
             points.push(vectors[i].getHead());
         }
-        return new Vector(Point.angle(sum(points)),
-            Point.distance(new Point(0,0), Point.sum(points)));
+		let newHead = Point.sum(points);
+		
+		let newAng = (Point.angle(newHead, null) + 360) % 360;
+		let newMag = Point.distance(new Point(0, 0), newHead);
+		if (Math.abs(newMag) < 0.1) return new Vector(0,0);
+		
+        return new Vector(newAng, newMag);
     }
 
 	equals(oth) {
 		let result = true;
-		if (this.angle != oth.angle) result = false;
-		if (this.magnitude != oth.magnitude) result = false;
-		return false;
+		if (Math.abs(this.angle - oth.angle) > 0.1) result = false;
+		if (Math.abs(this.magnitude - oth.magnitude) > 0.1) result = false;
+		return result;
 	}
 
 	getHead() {
-		return new Point(this.magnitude * Math.cos(getRad(this.angle)),
-			this.magnitude * Math.sin(getRad(this.angle)));
+		let x = this.magnitude * Math.cos(getRad(this.angle));
+		let y = this.magnitude * Math.sin(getRad(this.angle));
+		return new Point(x, y);
 	}
 
 	draw(ctx, game, x, y) {

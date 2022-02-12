@@ -50,8 +50,8 @@ class Point {
 
 	equals(oth) {
 		let result = true;
-		if (this.x != oth.x) result = false;
-		if (this.y != oth.y) result = false;
+		if (Math.abs(this.x - oth.x) > 0.001) result = false;
+		if (Math.abs(this.y - oth.y) > 0.001) result = false;
 		return result;
 	}
 
