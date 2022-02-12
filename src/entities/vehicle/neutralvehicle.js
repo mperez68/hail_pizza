@@ -20,9 +20,6 @@ class NeutralVehicle extends Vehicle {
     update() {
 		// Reactive decision making for intent
 		this.intent();
-		
-		// Collision
-		this.updateCollision();
 
 		// Parent update
         super.update();

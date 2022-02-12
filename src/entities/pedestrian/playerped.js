@@ -35,9 +35,6 @@ class PlayerPed extends Pedestrian {
 		// Check for keyboard input to determine movement.
         if (!this.goal) this.controls();
 
-		// Collision
-		this.updateCollision();
-
 		// Parent update
         super.update();
 	};
