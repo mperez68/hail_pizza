@@ -1,8 +1,5 @@
-try {
-	const Point = require("./point");
-} catch {
-	//
-}
+// Testing imports
+try{ Point = require("./point");} catch {  }
 
 function getRad(deg) {
 	return deg * (Math.PI / 180);

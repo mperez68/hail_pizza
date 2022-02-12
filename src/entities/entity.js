@@ -15,8 +15,71 @@ class Entity {
 		this.updateBB();
 	};
 
-	setHP(hp) {this.hitPoints = hp; };
-	getHP(){ return this.hitPoints; };
+	setup() {
+		// reset flags
+		this.isApproaching = false;
+		this.isColliding = false;
+	};
+	
+	update() {
+		// Timers
+		if (this.invulnerable >= 0) this.invulnerable--;
+
+		// Equalize direction
+		while (this.direction < 0) this.direction += 360;
+		this.direction = this.direction % 360;
+		
+		this.updateBB();
+
+		if (!this.dead) this.updateCollision();
+	};
+
+	updateCollision() {
+		// TODO turn into arrays of items approaching/colliding
+
+		// Create global reference to self
+		var that = this;
+		// Terrain Collision
+		this.game.terrain.forEach(function (terrain) {
+			// Action predictions
+			if (that != terrain && terrain.BB && that.nextBB.collide(terrain.BB)) {
+				that.isApproaching = true;
+			}
+			// Collision cases
+			if (that != terrain && terrain.BB && that.BB.collide(terrain.BB)) {
+				that.isColliding = true;
+			}
+		});
+		// Entities Collision
+		this.game.entities.forEach(function (entity) {
+			// Action predictions
+			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
+				that.isApproaching = true;
+			}
+			// Collision cases
+			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+				that.isColliding = true;
+			}
+		});
+		// Markers Collision
+		this.game.effects.forEach(function (effect) {
+			// Action predictions
+			if (that != effect && effect.BB && that.nextBB.collide(effect.BB)) {
+				that.isApproaching = true;
+			}
+			// Collision cases
+			if (that != effect && effect.BB && that.BB.collide(effect.BB)) {
+				that.isColliding = true;
+			}
+		});
+	};
+	
+	updateBB(){
+		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
+											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
+												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+	};
 
 	damage(dmg) {
 		if (this.invulnerable <= 0){
@@ -35,33 +98,6 @@ class Entity {
 			this.y += (d * Math.sin((Math.PI / 180) * a));
 		}
 	}
-
-	setup() {
-		// reset flags
-		this.isApproaching = false;
-		this.isColliding = false;
-	};
-	
-	update() {
-		if (this.invulnerable >= 0) this.invulnerable--;
-
-		// Equalize direction
-		while (this.direction < 0) this.direction += 360;
-		this.direction = this.direction % 360;
-		
-		this.updateBB();
-	};
-
-	updateCollision() {
-		//
-	};
-	
-	updateBB(){
-		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
-											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
-												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-	};
 	
 	draw(ctx) {
 		// Animate frame

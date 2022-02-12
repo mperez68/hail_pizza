@@ -39,14 +39,29 @@ class Pedestrian extends Entity {
 	}
 	
 	update() {
-		// Collision Cases
-		this.updateCollision();
-
 		// Pathfinding
 		if (this.goal) this.pathfind();
 
 		// Parent Method
 		super.update();
+	};
+
+	updateCollision(){
+		// parent updateCollision
+		super.updateCollision();
+		
+		// Collision
+		var that = this;
+		this.game.entities.forEach(function (entity) {
+			// Action predictions
+			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
+				//
+			}
+			// Collision cases
+			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+				//
+			}
+		});
 	};
 
 	pathfind(){

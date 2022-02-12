@@ -1,8 +1,5 @@
-try {
-	const Point = require('../src/point');
-} catch {
-	//
-}
+// Testing imports
+try { const Point = require('../src/point'); } catch {  }
 
 // Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {

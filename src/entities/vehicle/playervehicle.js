@@ -25,13 +25,10 @@ class PlayerVehicle extends Vehicle {
 		// Check for keyboard input to determine movement.
         this.controls();
 
-		// Collision
-		this.updateCollision();
-
 		// Parent update
         super.update();
 
-		this.game.camera.centerText = this.getHP() + "HP";
+		this.game.camera.centerText = this.hitPoints + "HP";
 	};
 
 	controls() {

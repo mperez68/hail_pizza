@@ -43,41 +43,12 @@ class NeutralPed extends Pedestrian {
 					this.direction, this.width, this.height, this.version))
 			// Delete this object
 			this.removeFromWorld = true;
-		} else {
-			// Collision
-			this.updateCollision();
 		}
 
-		if (this.getHP() <= 0) this.dead = true;
+		if (this.hitPoints <= 0) this.dead = true;
 		// Parent update
         super.update();
 	};
-
-	updateCollision(){
-		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	
-					that.isApproaching = true;
-
-					if (entity.damage(1)) entity.addForce( Math.round( Point.angle(that.BB, entity.BB)), Math.round(Point.distance(that.BB,entity.BB) ) );
-				}
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof NeutralPed && !entity.dead) {	
-
-					that.isColliding = true;
-					entity.isColliding = true;
-				}
-			}
-		});
-
-		// parent updateCollision
-		super.updateCollision();
-	}
 
 	intent() {
 		// Assign goal

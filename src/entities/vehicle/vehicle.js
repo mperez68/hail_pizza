@@ -37,9 +37,6 @@ class Vehicle extends Entity {
 	}
 	
 	update() {
-		// Collision Cases
-		this.updateCollision();
-
 		// Pathfinding
 		if (this.goal) this.pathfind();
 		//this.updateMovement();
@@ -55,6 +52,24 @@ class Vehicle extends Entity {
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 											(3 * this.width) / 4, this.height / 2, this.direction);
 	};
+
+	updateCollision() {
+		// Parent updateCollision
+		super.updateCollision();
+		
+		// Collision
+		var that = this;
+		this.game.entities.forEach(function (entity) {
+			// Action predictions
+			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
+				//
+			}
+			// Collision cases
+			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+				//
+			}
+		});
+	}
 
 	pathfind(){
 		// Determine Distance/Angle

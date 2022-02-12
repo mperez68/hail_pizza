@@ -2,7 +2,6 @@ const assert = require('chai').assert;
 const BoundingBox = require('../src/boundingbox');
 const Point = require('../src/point');
 
-
 /**
  * Unit Testing for the BoundingBox class
  * 
