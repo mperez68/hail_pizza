@@ -112,9 +112,7 @@ class Point {
 class ForceVector {
 	constructor(game, x, y, direction, force) {
 		Object.assign (this, { game, x, y, direction, force });
-		this.isDrawn = false;
 		this.color = 'Blue';
-		this.removeFromWorld = false;
 	}
 
 	setup() {
@@ -122,19 +120,34 @@ class ForceVector {
 	}
 
 	update(){
-		if (this.isDrawn) this.removeFromWorld = true;
+		//
 	}
 
-	getHead() {
-		return new Point (this.getHeadX(), this.getHeadY());
+	setCoords(x,y) { 
+		this.x = x;
+		this.y = y;
+	 }
+
+	sumForce(fv) {
+		if (fv instanceof ForceVector) {
+			let self = this.getVector();
+			let oth = fv.getVector();
+			let net = new Point(this.game, self.x + oth.x, self.y + oth.y);
+			this.force = getDistance(new Point(this.game, 0, 0), net);
+			this.direction = getAngle(new Point(this.game, 0, 0), net);
+		}
 	}
 
-	getHeadX() {
-		return this.x + this.force * Math.cos(getRad(this.direction));
+	getVector() {
+		return new Point (this.game, this.getVectorX(), this.getVectorY());
 	}
 
-	getHeadY() {
-		return this.y + this.force * Math.sin(getRad(this.direction));
+	getVectorX() {
+		return this.force * Math.cos(getRad(this.direction));
+	}
+
+	getVectorY() {
+		return this.force * Math.sin(getRad(this.direction));
 	}
 
 	draw(ctx){
@@ -154,7 +167,6 @@ class ForceVector {
 			ctx.arc(drawX, drawY, 3, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
-		this.isDrawn = true;
 	}
 }
 
@@ -166,6 +178,6 @@ const PARAMS = {
 	MAP_HEIGHT: 6400,
 	GRID_WIDTH: 64,
 	GRID_HEIGHT: 64,
-	VECTOR_SCALE: 5,
+	VECTOR_SCALE: 1,
 	SCALE: 1
 };

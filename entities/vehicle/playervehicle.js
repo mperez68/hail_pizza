@@ -22,6 +22,7 @@ class PlayerVehicle {
 	getHP(){ return this.vehicle.getHP(); };
 
 	damage(dmg) { return this.vehicle.damage(dmg) };
+
 	addForce(a, d) {
 		this.vehicle.addForce(a,d);
 	}
@@ -32,13 +33,14 @@ class PlayerVehicle {
 	}
 
     update() {
+		// Clear auto-pilot
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.vehicle.getDistanceToGoal() < this.vehicle.entity.width) this.intent(null);
 		
-		let dest = null;
-		if (this.game.click) dest = new Point(this.game, this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
-		if (this.game.click != this.lastClick) this.intent(dest);
-		this.lastClick = this.game.click;
+		// let dest = null;
+		// if (this.game.click) dest = new Point(this.game, this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
+		// if (this.game.click != this.lastClick) this.intent(dest);
+		// this.lastClick = this.game.click;
 
 		// Check for keyboard input to determine movement.
         this.controls();
@@ -95,8 +97,9 @@ class PlayerVehicle {
 	}
 
     draw(ctx) {
-		this.game.camera.leftText = Math.round(this.vehicle.getBrakeDistance());
-		this.game.camera.rightText = Math.round(this.vehicle.getRollDistance());
+		// this.game.camera.leftText = Math.round(this.vehicle.getBrakeDistance());
+		// this.game.camera.rightText = Math.round(this.vehicle.getRollDistance());
+		this.game.camera.leftText = roundDecimals(this.vehicle.entity.netForce.force, 2);
 
 		// Call parent draw
         this.vehicle.draw(ctx);

@@ -2,7 +2,8 @@
 class Entity {
 	constructor(game, x, y, direction, scale, width, height, animation ) {
 		// Constants
-		this.FRICTION = 0.1;
+		this.FRICTION = 0;
+		this.MAX_SPEED = 9999;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
@@ -11,10 +12,10 @@ class Entity {
 		this.invulnerable = 0;
 		this.isColliding = false;
 		this.isApproaching = false;
-
-		this.newForces = [];
 		
 		this.updateBB();
+		this.netForce = new ForceVector(this.game, this.BB.x, this.BB.y, this.direction, 0);
+		this.game.addDebug(this.netForce);
 	};
 
 	setHP(hp) {this.hitPoints = hp; };
@@ -29,11 +30,10 @@ class Entity {
 		return false;
 	};
 	addForce(a, d) {
-		// If input is valid, then calculate and push
+		// If input is valid, then calculate and insert
 		if (a && d) {
-			//console.log("pushing distance " + d + " pixels @ " + a + " degrees");
-			this.x += (d * Math.cos((Math.PI / 180) * a));
-			this.y += (d * Math.sin((Math.PI / 180) * a));
+			let f = new ForceVector(this.game, this.BB.x, this.BB.y, a, d);
+			this.netForce.sumForce(f);
 		}
 	}
 
@@ -49,8 +49,21 @@ class Entity {
 		// Equalize direction
 		while (this.direction < 0) this.direction += 360;
 		this.direction = this.direction % 360;
-		
+
+		// Enact Forces
+		if (this.netForce.force > this.FRICTION) {
+			this.netForce.force -= this.FRICTION * (this.netForce.force / this.MAX_SPEED);
+		} else if (this.netForce.force < -this.FRICTION) {
+			this.netForce.force += this.FRICTION * (this.netForce.force / this.MAX_SPEED);
+		} else {
+			this.netForce.force = 0;
+		}
+		this.x += (this.netForce.force * Math.cos((Math.PI / 180) * this.netForce.direction));
+		this.y += (this.netForce.force * Math.sin((Math.PI / 180) * this.netForce.direction));
+		//if (this.netForce.force > 0) console.log("FORCE: " + this.netForce.force + " pixels @ " + this.netForce.direction + " degrees to (" + this.x + "," + this.y + ")");
+
 		this.updateBB();
+		this.netForce.setCoords(this.BB.x, this.BB.y);
 	};
 
 	updateCollision() {
@@ -77,11 +90,6 @@ class Entity {
 		}
 		this.BB.newPoints = [];
 
-		// add new forces
-		for (var i = 0; i < this.newForces.length; i++){
-			this.game.addDebug(this.newForces[i]);
-		}
-		this.newForces = [];
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
 										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);

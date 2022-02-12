@@ -22,12 +22,12 @@ class SceneManager {
 	loadMap() {
 		//let player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
 		//this.player = player.pedestrian.entity;
-		let player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
+		let player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 1, 70, 64);
 		this.player = player.vehicle.entity;
 
 		this.game.addEntity(player);
 
-		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
+		//this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
 		// this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (3 / 4), 0, 70, 64));
 		
 		this.game.addBackground(new Ground(this.game, 480, 384, 0));

@@ -2,8 +2,8 @@
 class Vehicle {
 	constructor(game, x, y, direction, width, height) {
 		// Constants
-		this.MAX_SPEED = 6;
-		this.ACCELERATION = 0.25;
+		this.MAX_SPEED = 30;
+		this.ACCELERATION = 2;
 		this.PIVOT_SPEED = 3;
 		this.BRAKE_FRICTION = 0.5;
 		// Assign Object Variables
@@ -21,6 +21,7 @@ class Vehicle {
 		this.entity = new Entity(game, x, y, direction, 1, width, height, this.idle);
 
 		// Override Constants
+		this.entity.MAX_SPEED = this.MAX_SPEED;
 		this.entity.FRICTION = this.ACCELERATION / 2;
 	};
 
@@ -54,13 +55,13 @@ class Vehicle {
 
 		// Pathfinding
 		if (this.goal) this.pathfind();
-		this.updateMovement();
+		//this.updateMovement();
 
 		// Parent update
 		this.entity.update();
 
 		this.updateBB();
-		this.entity.newForces.push( new ForceVector(this.game, this.entity.BB.x, this.entity.BB.y, this.entity.BB.direction, this.currentSpeed) );
+		//this.entity.forces.push( new ForceVector(this.game, this.entity.BB.x, this.entity.BB.y, this.entity.BB.direction, this.currentSpeed) );
 	};
 	
 	updateBB(){
@@ -80,30 +81,31 @@ class Vehicle {
 		this.nextBB = this.getNextBB();
 
 		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				if (entity instanceof NeutralVehicle) {	
-					that.isApproaching = true;
-				}
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				if ( (entity instanceof PlayerPed || entity instanceof NeutralPed) && !entity.dead) {	
-					that.isColliding = true;
-					entity.isColliding = true;
+		// var that = this;
+		// this.game.entities.forEach(function (entity) {
+		// 	// Action predictions
+		// 	if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
+		// 		if (entity instanceof NeutralVehicle) {	
+		// 			that.isApproaching = true;
+		// 		}
+		// 	}
+		// 	// Collision cases
+		// 	if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+		// 		if ( (entity instanceof PlayerPed || entity instanceof NeutralPed) && !entity.dead) {	
+		// 			that.isColliding = true;
+		// 			entity.isColliding = true;
 					
-					if (entity.damage(5)) entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
-				}
-				if ( (entity instanceof PlayerVehicle || entity instanceof NeutralVehicle) && !entity.dead && that != entity) {	
-					that.isColliding = true;
-					entity.isColliding = true;
+		// 			if (entity.damage(5)) entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+		// 		}
+		// 		if ( (entity instanceof NeutralVehicle) && !entity.dead) {	
+		// 			that.isColliding = true;
+		// 			entity.isColliding = true;
 
-					entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
-				}
-			}
-		});
+		// 			entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round( 2 ) );
+		// 			//entity.addForce( Math.round( getAngle(that.BB, entity.BB)), Math.round(getDistance(that.BB,entity.BB) ) );
+		// 		}
+		// 	}
+		// });
 
 		// Update parent BB
 		this.setBB(this.BB);
@@ -160,31 +162,45 @@ class Vehicle {
 	}
 
 	right() {
-		// turning only happens when moving
-		this.entity.direction += this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
+		// turning only happens when moving TODO fix reverse turning
+		if (Math.abs(this.entity.direction - this.entity.netForce.force) > 90) {
+			this.entity.direction -= this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+			this.entity.netForce.direction -= this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+		} else {
+			this.entity.direction += this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+			this.entity.netForce.direction += this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+		}
 	}
 
 	left() {
 		// turning only happens when moving
-		this.entity.direction -= this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
+		if (Math.abs(this.entity.direction - this.entity.netForce.force) > 90) {
+			this.entity.direction += this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+			this.entity.netForce.direction += this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+		} else {
+			this.entity.direction -= this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+			this.entity.netForce.direction -= this.PIVOT_SPEED * (this.entity.netForce.force / this.MAX_SPEED)
+		}
 	}
 
 	accelerate() {
-		if (this.currentSpeed + this.ACCELERATION < this.MAX_SPEED) {
-			this.currentSpeed += this.ACCELERATION;
-		} else {
-			this.currentSpeed = this.MAX_SPEED;
-		}
+		// if (this.currentSpeed + this.ACCELERATION < this.MAX_SPEED) {
+		// 	this.currentSpeed += this.ACCELERATION;
+		// } else {
+		// 	this.currentSpeed = this.MAX_SPEED;
+		// }
 		this.isAccelerating = true;
+		this.addForce(this.entity.direction, this.ACCELERATION);
 	}
 
 	reverse() {
-		if (this.currentSpeed - (this.ACCELERATION / 2) > -(this.MAX_SPEED / 2)) {
-			this.currentSpeed -= this.ACCELERATION;
-		} else {
-			this.currentSpeed = -this.MAX_SPEED / 2;
-		}
+		// if (this.currentSpeed - (this.ACCELERATION / 2) > -(this.MAX_SPEED / 2)) {
+		// 	this.currentSpeed -= this.ACCELERATION;
+		// } else {
+		// 	this.currentSpeed = -this.MAX_SPEED / 2;
+		// }
 		this.isDecelerating = true;
+		this.addForce(this.entity.direction, - this.ACCELERATION);
 	}
 
 	brake() {
