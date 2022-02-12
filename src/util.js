@@ -16,21 +16,17 @@ function randomInt(n) {
 // returns angle in radians given degrees
 function getRad(deg) {
 	return deg * (Math.PI / 180);
-}
+};
 
 // returns angle in degrees given radians 
 function getDeg(rad) {
 	return rad * (180 / Math.PI);
-}
+};
 
 // Rounds a number to a given a number of decimal points
 function roundDecimals(num, dec) {
 	return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
-}
-
-function angle(point) {
-	return Point.angle(new Point(0,1), Point.sum(point));
-}
+};
 
 // creates an alias for requestAnimationFrame for backwards compatibility
 window.requestAnimFrame = (function () {

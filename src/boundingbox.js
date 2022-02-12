@@ -1,3 +1,5 @@
+const Point = require('../src/point');
+
 // Improved bounding box, allows 360 degree movement and calculates collisions at odd angles.
 class BoundingBox {
     constructor(x, y, width, height, direction) {
@@ -55,6 +57,16 @@ class BoundingBox {
 			ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
 			ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
 	};
+
+	equals(oth) {
+		let result = true;
+		if (Math.abs(this.x - oth.x) > 0.001) result = false;
+		if (Math.abs(this.y - oth.y) > 0.001) result = false;
+		if (Math.abs(this.width - oth.width) > 0.001) result = false;
+		if (Math.abs(this.height - oth.height) > 0.001) result = false;
+		if (Math.abs(this.direction - oth.direction) > 0.001) result = false;
+		return result;
+	}
 	
 	// Collision checking function
     collide(oth) {
@@ -81,7 +93,7 @@ class BoundingBox {
 		// IF TOP LEFT
 		if (oth.y <= this.left.y && oth.x <= this.top.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
-			intersect = this.getX(this.left, this.top, oth.y);
+			intersect = Point.getXIntercept(this.left, this.top, oth.y);
 			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
 			// Returns true if past the intersection point.
@@ -90,7 +102,7 @@ class BoundingBox {
 		// IF TOP RIGHT
 		else if (oth.y <= this.right.y && oth.x >= this.top.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
-			intersect = this.getX(this.top, this.right, oth.y);
+			intersect = Point.getXIntercept(this.top, this.right, oth.y);
 			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
 			// Returns true if past the intersection point.
@@ -99,7 +111,7 @@ class BoundingBox {
 		// IF BOT LEFT
 		else if (oth.y >= this.left.y && oth.x <= this.bottom.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
-			intersect = this.getX(this.left, this.bottom, oth.y);
+			intersect = Point.getXIntercept(this.left, this.bottom, oth.y);
 			// Debug points
 			if (oth.x >= intersect) pt1.color = 'Green';
 			// Returns true if past the intersection point.
@@ -108,7 +120,7 @@ class BoundingBox {
 		// IF BOT RIGHT
 		else if (oth.y >= this.right.y && oth.x >= this.bottom.x) {
 			// Determine point on interesection line given the y of the point being passed in for comparison.
-			intersect = this.getX(this.bottom, this.right, oth.y);
+			intersect = Point.getXIntercept(this.bottom, this.right, oth.y);
 			// Debug points
 			if (oth.x <= intersect) pt1.color = 'Green';
 			// Returns true if past the intersection point.
@@ -120,18 +132,11 @@ class BoundingBox {
 			return true;
 		}
 	}
-
-	// HELPER FUNCTIONS
-	getX(l, r, y) {
-		let m = (r.y - l.y) / (r.x - l.x);
-		let b = l.y - (m * l.x);
-		return (y - b) / m;
-	}
-
-	getMidPoint(l, r){
-		let x = (l.x + r.x) / 2;
-		let y = (l.y + r.y) / 2;
-
-		return new Point(x,y);
-	}
 };
+
+// Export for testing
+try{
+	module.exports = BoundingBox;
+} catch (e) {
+	//Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.
+}
