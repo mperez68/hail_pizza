@@ -52,6 +52,21 @@ class BoundingBox {
 				return true;
 			}
 		}
+		// Check reverse detection
+		return oth.revCollide(this);
+	};
+	
+	// Collision checking function, breaks if not detected
+    revCollide(oth) {
+		// Broad Detection
+		if (this.broadDetection(oth)) {
+			// Narrow Detection
+			// Corners
+			if (this.narrowDetection(oth) || this.narrowDetection(oth.left) || this.narrowDetection(oth.top) || this.narrowDetection(oth.right) || this.narrowDetection(oth.bottom)){
+				return true;
+			}
+		}
+		// Check reverse detection
 		return false;
 	};
 

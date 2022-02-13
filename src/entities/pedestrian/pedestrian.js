@@ -10,7 +10,6 @@ class Pedestrian extends Entity {
 		this.pivotSpeed = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
-		this.isWalking = false;
 		
 		// Default Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
@@ -28,7 +27,7 @@ class Pedestrian extends Entity {
 	}
 
 	damage(dmg) {
-		if (super.damage(dmg)) this.game.addBackground(new Splatter(this.game, this.x, this.y, this.direction, 34, 34, 0));
+		if (super.damage(dmg)) this.game.addBackground(new Splatter(this.game, this.x, this.y, this.direction, this.width, this.height, 0));
 		super.damage(dmg);
 	}
 
@@ -36,7 +35,7 @@ class Pedestrian extends Entity {
 		this.walkingVector = 0;
 		
 		super.setup();
-	}
+	};
 	
 	update() {
 		// Pathfinding
@@ -44,24 +43,6 @@ class Pedestrian extends Entity {
 
 		// Parent Method
 		super.update();
-	};
-
-	updateCollision(){
-		// parent updateCollision
-		super.updateCollision();
-		
-		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				//
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				//
-			}
-		});
 	};
 
 	pathfind(){
@@ -83,7 +64,7 @@ class Pedestrian extends Entity {
 		} else {
 			this.forward(1);
 		}
-	}
+	};
 
 	forward(scale) {
 		this.walkingVector = 1;

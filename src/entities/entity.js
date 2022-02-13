@@ -7,6 +7,7 @@ class Entity {
 		const DRAG = 2;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation, DRAG });
+		this.collidingWith = []
 
 		
 		// Initialize private variables
@@ -62,6 +63,7 @@ class Entity {
 			// Collision cases
 			if (that != terrain && terrain.BB && that.BB.collide(terrain.BB)) {
 				that.isColliding = true;
+				terrain.isColliding = true;
 			}
 		});
 		// Entities Collision
@@ -73,6 +75,7 @@ class Entity {
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
 				that.isColliding = true;
+				entity.isColliding = true;
 			}
 		});
 		// Markers Collision
@@ -84,6 +87,7 @@ class Entity {
 			// Collision cases
 			if (that != effect && effect.BB && that.BB.collide(effect.BB)) {
 				that.isColliding = true;
+				effect.isColliding = true;
 			}
 		});
 	};
@@ -105,9 +109,7 @@ class Entity {
 	};
 
 	addForce(a, d) {
-		// if (d > 0) console.log(new Vector(a, d));
 		this.force = Vector.sum( [new Vector(a, d), this.force] );
-		if (d > 0) console.log(this.force);
 	};
 
 	// TODO addSpin(a, d);

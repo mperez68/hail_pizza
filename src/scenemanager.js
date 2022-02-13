@@ -20,8 +20,8 @@ class SceneManager {
 	};
 	
 	loadMap() {
-		// this.player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
-		this.player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
+		this.player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
+		// this.player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
 
 		this.game.addEntity(this.player);
 		
@@ -39,17 +39,16 @@ class SceneManager {
 
 		// this.game.addBackground(new Ground(this.game, 480, 384, 0));
 
-		// this.game.addBackground(new Road(this.game, 416, 384, 0));
+		this.game.addBackground(new Road(this.game, 416, 384, 0));
 
-		// this.game.addTerrain(new Building(this.game, 544, 384, 0));
+		this.game.addTerrain(new Building(this.game, 544, 344, 0));
 
-		// this.game.addEffects(new Mission(this.game, 598, 384, 0));
+		this.game.addEffects(new Mission(this.game, 598, 384, 0));
 
-		// this.game.addEffects(new Target(this.game, 598, 354, 0));
+		this.game.addEffects(new Target(this.game, 598, 354, 0));
 
 		// TEST //
-		setTimeout(() => {this.player.damage(1)}, 800);
-		setTimeout(() => {ped.addForce(0, 50)}, 500);
+		//
 		// END TEST //
 
 		this.leftText = "LEFT";

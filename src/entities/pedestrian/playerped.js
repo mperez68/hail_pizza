@@ -18,19 +18,9 @@ class PlayerPed extends Pedestrian {
         this.pivotSpeed = 3;
     }
 
-	setup() {
-		this.isWalking = false;
-
-		// parent setup
-		super.setup();
-	}
-
     update() {
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.getDistanceToGoal() < this.width) this.intent(null);
-
-		if (this.game.click != this.lastClick) this.intent(this.game.click);
-		this.lastClick = this.game.click;
 
 		// Check for keyboard input to determine movement.
         if (!this.goal) this.controls();
