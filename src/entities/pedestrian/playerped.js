@@ -15,7 +15,7 @@ class PlayerPed extends Pedestrian {
 										width, height, 12, 0.10, 1, direction, true, true);		// Walking Backwards
         // Override Constants
         this.RUN_SPEED = 4;
-        this.PIVOT_SPEED = 3;
+        this.pivotSpeed = 3;
     }
 
 	setup() {

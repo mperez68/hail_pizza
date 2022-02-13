@@ -1,23 +1,18 @@
+//const Vector = require("../Vector");
+
 // Generic Entity Stub.
 class Entity {
 	constructor(game, x, y, direction, scale, width, height, animation ) {
+		// Constants
+		const DRAG = 2;
 		// Parameters
-		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
+		Object.assign(this, { game, x, y, direction, scale, width, height, animation, DRAG });
+
 		
 		// Initialize private variables
 		this.hitPoints = 5;
 		this.timers = new Map();
 		this.force = new Vector(0, 0);
-
-		if (this instanceof PlayerVehicle) {
-			this.addForce(180,25);
-			this.damage(1);
-			var that = this;
-			setTimeout(() => {that.addForce(0, 25)}, 200);
-			setTimeout(() => {that.addForce(90, 25)}, 300);
-			setTimeout(() => {that.addForce(270, 25)}, 400);
-			setTimeout(() => {that.addForce(315, 25)}, 600);
-		}
 		
 		this.updateBB();
 	};
@@ -38,14 +33,11 @@ class Entity {
 		}
 
 		// Forces
+		this.addForce(this.force.angle, (-1 * this.force.magnitude * this.DRAG) / 20);
+
+		// Movement
 		this.x += this.force.getHead().x;
 		this.y += this.force.getHead().y;
-		// Friction/Drag
-		if (this.force.magnitude > 1) {
-			this.force.magnitude--;
-		} else {
-			this.force.magnitude = 0;
-		}
 
 		// Equalize direction
 		while (this.direction < 0) this.direction += 360;
@@ -113,7 +105,9 @@ class Entity {
 	};
 
 	addForce(a, d) {
+		// if (d > 0) console.log(new Vector(a, d));
 		this.force = Vector.sum( [new Vector(a, d), this.force] );
+		if (d > 0) console.log(this.force);
 	}
 
 	// TODO addSpin(a, d);
@@ -136,6 +130,8 @@ class Entity {
 				ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, 20, 0, 2 * Math.PI);
 				ctx.stroke();
 			}
+
+			this.force.draw(ctx, this.game, this.x, this.y);
 		}
 	};
 };

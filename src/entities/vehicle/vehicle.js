@@ -1,20 +1,13 @@
 // Vehicle Entity
 class Vehicle extends Entity {
 	constructor(game, x, y, direction, width, height, animation) {
-		// Constants
-		const MAX_SPEED = 10;
-		const ACCELERATION = 0.25;
-		const PIVOT_SPEED = 3;
-		const BRAKE_FRICTION = 0.5;
-		const FRICTION = ACCELERATION / 2;
 
 		super(game, x, y, direction, 1, width, height, animation);
-		Object.assign( this, { MAX_SPEED, ACCELERATION, PIVOT_SPEED, BRAKE_FRICTION, FRICTION } );
 
-		// Assign Object Variables
-		this.isAccelerating = false;
-		this.isDecelerating = false;
-		this.currentSpeed = 0;
+		// local variables
+		let acceleration = 2;
+		let pivotSpeed = 0.15;
+		Object.assign( this, { acceleration, pivotSpeed } );
 	};
 
 	setup() {
@@ -28,26 +21,9 @@ class Vehicle extends Entity {
 	update() {
 		// Pathfinding
 		if (this.goal) this.pathfind();
-		this.updateMovement();
 
 		// Parent update
 		super.update();
-	};
-
-	updateMovement() {
-		let xVector = (this.currentSpeed * Math.cos((Math.PI / 180) * this.direction));
-		let yVector = (this.currentSpeed * Math.sin((Math.PI / 180) * this.direction));
-
-		// Friction
-		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.FRICTION;
-		if (!this.isDecelerating && this.currentSpeed < 0) this.currentSpeed += this.FRICTION;
-
-		// Normalize near 0 values
-		if (Math.abs(this.currentSpeed) < this.FRICTION) this.currentSpeed = 0;
-
-		// Move based on speed
-		this.x += xVector;
-		this.y += yVector;
 	};
 	
 	updateBB(){
@@ -56,24 +32,6 @@ class Vehicle extends Entity {
 		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 											(3 * this.width) / 4, this.height / 2, this.direction);
-	};
-
-	updateCollision() {
-		// Parent updateCollision
-		super.updateCollision();
-		
-		// Collision
-		var that = this;
-		this.game.entities.forEach(function (entity) {
-			// Action predictions
-			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				//
-			}
-			// Collision cases
-			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
-				//
-			}
-		});
 	};
 
 	pathfind(){
@@ -100,7 +58,7 @@ class Vehicle extends Entity {
 				this.right();
 			}
 		}
-		if ( Math.abs(this.direction - a) <= this.PIVOT_SPEED ) this.direction = a;
+		if ( Math.abs(this.direction - a) <= this.pivotSpeed ) this.direction = a;
 
 		// Move closer
 		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
@@ -113,41 +71,51 @@ class Vehicle extends Entity {
 	};
 
 	right() {
-		// turning only happens when moving
-		this.direction += this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
+		this.direction += this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / this.maxSpeed());
 	}
 
 	left() {
-		// turning only happens when moving
-		this.direction -= this.PIVOT_SPEED * (this.currentSpeed / this.MAX_SPEED)
+		this.direction -= this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / this.maxSpeed());
+	}
+
+	//returns 1 if moving forward, -1 if moving backward
+	forwardVec() {
+		let result = 1;
+		//if (  ) result = -1; 	// TODO
+		return result;
 	}
 
 	accelerate() {
-		if (this.currentSpeed + this.ACCELERATION < this.MAX_SPEED) {
-			this.currentSpeed += this.ACCELERATION;
-		} else {
-			this.currentSpeed = this.MAX_SPEED;
-		}
-		this.isAccelerating = true;
+		this.addForce(this.direction, this.acceleration);
 	}
 
 	reverse() {
-		if (this.currentSpeed - (this.ACCELERATION / 2) > -(this.MAX_SPEED / 2)) {
-			this.currentSpeed -= this.ACCELERATION;
-		} else {
-			this.currentSpeed = -this.MAX_SPEED / 2;
-		}
-		this.isDecelerating = true;
+		this.addForce(this.direction, - this.acceleration * 0.5);
 	}
 
 	brake() {
-		if (this.currentSpeed > this.BRAKE_FRICTION) this.currentSpeed -= this.BRAKE_FRICTION;
-		else if (this.currentSpeed < -this.BRAKE_FRICTION) this.currentSpeed += this.BRAKE_FRICTION;
-		else this.currentSpeed = 0;
+		this.addForce(this.force.angle, -this.drivingVector().magnitude * 0.1 );
+	}
+
+	// determine relative vector from general force to direction
+	drivingVector() {
+		let diff = Math.abs(this.direction - this.force.angle);
+		let driveMag = this.force.magnitude * Math.cos(getRad(diff)); // Magnitude in direction of vehicle facing
+		return new Vector(this.direction, driveMag);
+	}
+
+	perpendicularVector() {
+		let diff = this.direction - this.force.angle;
+		let perpMag = this.force.magnitude * Math.sin(getRad(Math.abs(diff))); // Magnitude in direction perpendicular from vehicle facing
+		return new Vector(this.direction + diff, perpMag);
+	}
+
+	maxSpeed() {
+		return this.acceleration / this.DRAG;
 	}
 
 	getTurnRadius() {
-		return this.MAX_SPEED / getRad(this.PIVOT_SPEED);
+		return this.MAX_SPEED / getRad(this.pivotSpeed);
 	};
 
 	getDistanceToGoal() {
