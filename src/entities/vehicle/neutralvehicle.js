@@ -1,20 +1,21 @@
 // NPC Vehicle object
 class NeutralVehicle extends Vehicle {
 	constructor(game, x, y, direction, width, height) {
-		super(game, x, y, direction, width, height);
 		// Constants
-		this.VERSION_COUNT = 1;
-		// Assign Object Variables
-		Object.assign(this, { game });
+		const VERSION_COUNT = 6;
+		const VERSION = randomInt(VERSION_COUNT);
 
-		this.version = randomInt(this.VERSION_COUNT);
+		// Animations
+		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npccars.png");
+		let idle = new Animator(spritesheet, width * VERSION, 0,
+			width, height, 1, 1, 1, direction, false, true);	// idle
+		
+		// Initialize
+        super(game, x, y, direction, width, height, idle);
+		// Assign Object Variables
+		Object.assign(this, { VERSION, VERSION_COUNT, idle });
 		
 		this.goalList = [];
-		
-		// Override Animations
-		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
-		this.idle = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// idle
     }
 
     update() {

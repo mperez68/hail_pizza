@@ -8,6 +8,7 @@ ASSET_MANAGER.queueDownload("./sprites/driver.png");
 ASSET_MANAGER.queueDownload("./sprites/drivercar.png");
 // NPC's
 ASSET_MANAGER.queueDownload("./sprites/npcs.png");
+ASSET_MANAGER.queueDownload("./sprites/npccars.png");
 // Background Tiles
 ASSET_MANAGER.queueDownload("./sprites/ground.png");
 ASSET_MANAGER.queueDownload("./sprites/road/00-00.png");

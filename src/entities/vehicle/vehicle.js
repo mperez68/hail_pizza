@@ -1,32 +1,21 @@
 // Vehicle Entity
 class Vehicle extends Entity {
-	constructor(game, x, y, direction, width, height) {
-		super(game, x, y, direction, 1, width, height,
-			new Animator(ASSET_MANAGER.getAsset("./sprites/drivercar.png"), 0, 0,
-			width, height, 1, 1, 1, direction, false, true));
+	constructor(game, x, y, direction, width, height, animation) {
 		// Constants
-		this.MAX_SPEED = 6;
-		this.ACCELERATION = 0.25;
-		this.PIVOT_SPEED = 3;
-		this.BRAKE_FRICTION = 0.5;
+		const MAX_SPEED = 10;
+		const ACCELERATION = 0.25;
+		const PIVOT_SPEED = 3;
+		const BRAKE_FRICTION = 0.5;
+		const FRICTION = ACCELERATION / 2;
+
+		super(game, x, y, direction, 1, width, height, animation);
+		Object.assign( this, { MAX_SPEED, ACCELERATION, PIVOT_SPEED, BRAKE_FRICTION, FRICTION } );
+
 		// Assign Object Variables
-		Object.assign(this, { game });
 		this.isAccelerating = false;
 		this.isDecelerating = false;
 		this.currentSpeed = 0;
-		
-		// Default Animations
-		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
-		this.idle = new Animator(spritesheet, 0, 0,
-			width, height, 1, 1, 1, direction, false, true);	// idle
-
-		// Override Constants
-		this.FRICTION = this.ACCELERATION / 2;
 	};
-
-	getTurnRadius() {
-		return this.MAX_SPEED / getRad(this.PIVOT_SPEED);
-	}
 
 	setup() {
 		this.isAccelerating = false;
@@ -34,7 +23,7 @@ class Vehicle extends Entity {
 
 		// Parent setup
 		super.setup();
-	}
+	};
 	
 	update() {
 		// Pathfinding
@@ -43,6 +32,22 @@ class Vehicle extends Entity {
 
 		// Parent update
 		super.update();
+	};
+
+	updateMovement() {
+		let xVector = (this.currentSpeed * Math.cos((Math.PI / 180) * this.direction));
+		let yVector = (this.currentSpeed * Math.sin((Math.PI / 180) * this.direction));
+
+		// Friction
+		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.FRICTION;
+		if (!this.isDecelerating && this.currentSpeed < 0) this.currentSpeed += this.FRICTION;
+
+		// Normalize near 0 values
+		if (Math.abs(this.currentSpeed) < this.FRICTION) this.currentSpeed = 0;
+
+		// Move based on speed
+		this.x += xVector;
+		this.y += yVector;
 	};
 	
 	updateBB(){
@@ -69,7 +74,7 @@ class Vehicle extends Entity {
 				//
 			}
 		});
-	}
+	};
 
 	pathfind(){
 		// Determine Distance/Angle
@@ -105,7 +110,7 @@ class Vehicle extends Entity {
 				this.accelerate();
 			}
 		}
-	}
+	};
 
 	right() {
 		// turning only happens when moving
@@ -141,21 +146,9 @@ class Vehicle extends Entity {
 		else this.currentSpeed = 0;
 	}
 
-	updateMovement() {
-		let xVector = (this.currentSpeed * Math.cos((Math.PI / 180) * this.direction));
-		let yVector = (this.currentSpeed * Math.sin((Math.PI / 180) * this.direction));
-
-		// Friction
-		if (!this.isAccelerating && this.currentSpeed > 0) this.currentSpeed -= this.FRICTION;
-		if (!this.isDecelerating && this.currentSpeed < 0) this.currentSpeed += this.FRICTION;
-
-		// Normalize near 0 values
-		if (Math.abs(this.currentSpeed) < this.FRICTION) this.currentSpeed = 0;
-
-		// Move based on speed
-		this.x += xVector;
-		this.y += yVector;
-	}
+	getTurnRadius() {
+		return this.MAX_SPEED / getRad(this.PIVOT_SPEED);
+	};
 
 	getDistanceToGoal() {
 		let d = 9999;

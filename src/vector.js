@@ -63,8 +63,4 @@ class Vector {
 }
 
 // Export for testing
-try{
-	module.exports = Vector;
-} catch (e) {
-	//Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.
-}
+try{ module.exports = Vector; } catch (e) { /*Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.*/ };

@@ -1,16 +1,23 @@
 // Generic Entity Stub.
 class Entity {
 	constructor(game, x, y, direction, scale, width, height, animation ) {
-		// Constants
-		this.FRICTION = 0.1;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation });
 		
-		// Initialize generic members
+		// Initialize private variables
 		this.hitPoints = 5;
-		this.invulnerable = 0;
-		this.isColliding = false;
-		this.isApproaching = false;
+		this.timers = new Map();
+		this.force = new Vector(0, 0);
+
+		if (this instanceof PlayerVehicle) {
+			this.addForce(180,25);
+			this.damage(1);
+			var that = this;
+			setTimeout(() => {that.addForce(0, 25)}, 200);
+			setTimeout(() => {that.addForce(90, 25)}, 300);
+			setTimeout(() => {that.addForce(270, 25)}, 400);
+			setTimeout(() => {that.addForce(315, 25)}, 600);
+		}
 		
 		this.updateBB();
 	};
@@ -23,7 +30,22 @@ class Entity {
 	
 	update() {
 		// Timers
-		if (this.invulnerable >= 0) this.invulnerable--;
+		for(const [key, val] of this.timers) {
+			this.timers.set(key, val - 1);	// decrement timer
+			if (this.timers.get(key) <= 0) {
+				this.timers.delete(key);	// Remove expended timers
+			}
+		}
+
+		// Forces
+		this.x += this.force.getHead().x;
+		this.y += this.force.getHead().y;
+		// Friction/Drag
+		if (this.force.magnitude > 1) {
+			this.force.magnitude--;
+		} else {
+			this.force.magnitude = 0;
+		}
 
 		// Equalize direction
 		while (this.direction < 0) this.direction += 360;
@@ -82,22 +104,19 @@ class Entity {
 	};
 
 	damage(dmg) {
-		if (this.invulnerable <= 0){
+		if (!this.timers.has("invulnerable")){
 			this.hitPoints -= dmg;
-			this.invulnerable = 10;
+			this.timers.set("invulnerable", 25);
 			return true;
 		}
 		return false;
 	};
 
 	addForce(a, d) {
-		// If input is valid, then calculate and push
-		if (a && d) {
-			//console.log("pushing distance " + d + " pixels @ " + a + " degrees");
-			this.x += (d * Math.cos((Math.PI / 180) * a));
-			this.y += (d * Math.sin((Math.PI / 180) * a));
-		}
+		this.force = Vector.sum( [new Vector(a, d), this.force] );
 	}
+
+	// TODO addSpin(a, d);
 	
 	draw(ctx) {
 		// Animate frame
@@ -111,6 +130,12 @@ class Entity {
 
 			if (this.isApproaching) this.nextBB.draw(ctx, this.game, "Blue");
 			else this.nextBB.draw(ctx, this.game, "Orange");
+
+			if (this.timers.has("invulnerable")) {
+				ctx.beginPath();
+				ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, 20, 0, 2 * Math.PI);
+				ctx.stroke();
+			}
 		}
 	};
 };
