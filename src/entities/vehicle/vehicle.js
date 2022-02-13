@@ -80,8 +80,9 @@ class Vehicle extends Entity {
 
 	//returns 1 if moving forward, -1 if moving backward
 	forwardVec() {
+		let compAngle = (this.force.angle - this.direction + 360) % 360
 		let result = 1;
-		//if (  ) result = -1; 	// TODO
+		if ( (compAngle < 270) && (compAngle > 90) ) result = -1;
 		return result;
 	}
 

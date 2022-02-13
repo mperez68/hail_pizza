@@ -35,21 +35,28 @@ class PlayerVehicle extends Vehicle {
 		} else if (this.game.forward) {
 			this.accelerate();
 			// Left OR Right, both pressed cancels out.
-			if (this.game.left) {
-				this.left();
-			}
-			if (this.game.right) {
-				this.right();
-			}
+			// if (this.game.left) {
+			// 	this.left();
+			// }
+			// if (this.game.right) {
+			// 	this.right();
+			// }
 		} else if (this.game.backward) {
 			this.reverse();
 			// Left OR Right, both pressed cancels out.
-			if (this.game.left) {
-				this.right();
-			}
-			if (this.game.right) {
-				this.left();
-			}
+			// if (this.game.left) {
+			// 	this.right();
+			// }
+			// if (this.game.right) {
+			// 	this.left();
+			// }
+		}
+		// Left OR Right, both pressed cancels out.
+		if (this.game.left) {
+			this.left();
+		}
+		if (this.game.right) {
+			this.right();
 		}
 	}
 
