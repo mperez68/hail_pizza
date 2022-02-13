@@ -89,7 +89,7 @@ class Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x - this.width / 2, this.y - this.width / 2, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+		this.BB = new BoundingBox(this.x, this.y, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
 											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
 												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
@@ -108,14 +108,14 @@ class Entity {
 		// if (d > 0) console.log(new Vector(a, d));
 		this.force = Vector.sum( [new Vector(a, d), this.force] );
 		if (d > 0) console.log(this.force);
-	}
+	};
 
 	// TODO addSpin(a, d);
 	
 	draw(ctx) {
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
-										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
+										this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
 		
 		// Debug box drawing
 		if (PARAMS.DEBUG) {
