@@ -13,24 +13,11 @@ class PlayerPed extends Pedestrian {
 										width, height, 12, 0.08, 1, direction, false, true);	// Walking
 		this.walkingBack = new Animator(spritesheet, 0, 0,
 										width, height, 12, 0.10, 1, direction, true, true);		// Walking Backwards
-        // Override Constants
-        this.RUN_SPEED = 4;
-        this.pivotSpeed = 3;
     }
-
-	setup() {
-		this.isWalking = false;
-
-		// parent setup
-		super.setup();
-	}
 
     update() {
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.getDistanceToGoal() < this.width) this.intent(null);
-
-		if (this.game.click != this.lastClick) this.intent(this.game.click);
-		this.lastClick = this.game.click;
 
 		// Check for keyboard input to determine movement.
         if (!this.goal) this.controls();
@@ -42,16 +29,16 @@ class PlayerPed extends Pedestrian {
 	controls() {
 		// Forward OR Backward, forward taking precedent.
 		if (this.game.forward) {
-			this.forward(1);
+			this.forward();
 		} else if (this.game.backward) {
-			this.backward(1);
+			this.backward();
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {
-			this.left(1);
+			this.left();
 		}
 		if (this.game.right) {
-			this.right(1);
+			this.right();
 		}
 	}
 

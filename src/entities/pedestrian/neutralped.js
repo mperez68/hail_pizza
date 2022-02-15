@@ -5,11 +5,9 @@ class NeutralPed extends Pedestrian {
 		// Constants
 		this.VERSION_COUNT = 2;
 		// Assign Object Variables
-		Object.assign(this, { game });
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
 
 		this.version = randomInt(this.VERSION_COUNT);
-		this.dead = false;
 
 		this.game.camera.dudeCount++;
 		
@@ -22,22 +20,11 @@ class NeutralPed extends Pedestrian {
 									width, height, 8, 0.10, 0, direction, true, true);	// Walking Backward
     }
 
-	setup() {
-		// Reset walking flag
-		this.isWalking = false;
-
-		// parent setup
-		super.setup();
-	}
-
     update() {
 		// Reactive decision making for intent
 		this.intent();
 		
 		if (this.dead) {
-			// Statistics
-			this.game.camera.dudeCount--;
-			this.game.camera.deathCount++;
 			// Create Corpse
 			this.game.addBackground(new Corpse(this.game, this.x, this.y,
 					this.direction, this.width, this.height, this.version))
@@ -55,9 +42,5 @@ class NeutralPed extends Pedestrian {
         if (this.getDistanceToGoal() <= this.width ) {
 			// TODO goal queue
 		}
-	}
-
-    draw(ctx) {
-		super.draw(ctx);
-    }
+	};
 };

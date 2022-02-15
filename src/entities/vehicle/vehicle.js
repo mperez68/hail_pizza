@@ -5,7 +5,7 @@ class Vehicle extends Entity {
 		super(game, x, y, direction, 1, width, height, animation);
 
 		// local variables
-		let acceleration = 2;
+		let acceleration = 3;
 		let pivotSpeed = 0.15;
 		Object.assign( this, { acceleration, pivotSpeed } );
 	};
@@ -27,11 +27,9 @@ class Vehicle extends Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x - (this.width / 2), this.y - (this.height / 2),
-											(3 * this.width) / 4, this.height / 2, this.direction);
-		this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
-											this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
-											(3 * this.width) / 4, this.height / 2, this.direction);
+		this.BB = new BoundingBox(this.x, this.y, (3 * this.width) / 4, this.height / 2, this.direction);
+		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y,
+												(3 * this.width) / 4, this.height / 2, this.direction);
 	};
 
 	pathfind(){
@@ -81,8 +79,8 @@ class Vehicle extends Entity {
 	//returns 1 if moving forward, -1 if moving backward
 	forwardVec() {
 		let compAngle = (this.force.angle - this.direction + 360) % 360
-		let result = 1;
-		if ( (compAngle < 270) && (compAngle > 90) ) result = -1;
+		let result = 1;	// Default is Forward
+		if ( (compAngle < 270) && (compAngle > 90) ) result = -1;	// Reverse case
 		return result;
 	}
 

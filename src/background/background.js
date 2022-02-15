@@ -15,6 +15,6 @@ class Background {
 
     draw(ctx) {
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
-										this.x - this.width / 2 - this.game.camera.x, this.y - this.height / 2 - this.game.camera.y, 1);
+										this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
     }
 }
