@@ -65,6 +65,7 @@ class SceneManager {
 	update() {
 		// TEST //
 		this.leftText = PARAMS.SCALE;
+		this.rightText = PARAMS.ZOOM_STEPS;
 		// END TEST //
 		if (this.focus) {
 			this.x = this.focus.x - this.game.surfaceWidth / (2 * PARAMS.SCALE);
@@ -74,8 +75,6 @@ class SceneManager {
 	
 	draw(ctx) {
 		// HUD //
-		
-		//
 
 		// DEBUG HUD //
 		if (PARAMS.DEBUG) {

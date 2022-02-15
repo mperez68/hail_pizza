@@ -41,6 +41,19 @@ class Animator {
        // Calculate Angle
 	   if (angle < 0 || angle >= 360) return;
 
+       // offsets
+       let xOffset = w / 2;
+       let yOffset = h / 2;
+       function s(input) { return input * PARAMS.SCALE; }
+       let drawX = s(x);
+       let drawY = s(y);
+
+       // Assume only one direction for this sprite I.E. background tiles
+       if (angle == null) {
+           ctx.drawImage(this.spritesheet, (drawX - xOffset), (drawY - yOffset), w, h);
+           return;
+       }
+
         if (!this.cache[Math.floor(angle)][frame]) {
            let radians = angle / 360 * 2 * Math.PI;
            let offscreenCanvas = document.createElement('canvas');
@@ -62,12 +75,6 @@ class Animator {
             // Save into cache
             this.cache[Math.floor(angle)][frame] = offscreenCanvas;
         }
-        var xOffset = w / 2;
-        var yOffset = h / 2;
-
-        function s(input) { return input * PARAMS.SCALE; }
-        let drawX = s(x);
-        let drawY = s(y);
 	   
 	   // Draw to Field
         ctx.drawImage(this.cache[Math.floor(angle)][frame], (drawX - xOffset), (drawY - yOffset));
