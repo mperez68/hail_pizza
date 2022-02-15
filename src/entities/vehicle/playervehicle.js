@@ -1,19 +1,15 @@
 // Player as a Vehicle object
 class PlayerVehicle extends Vehicle {
 	constructor(game, x, y, direction, width, height) {
-        super(game, x, y, direction, width, height);
-		// Assign Object Variables
-		Object.assign(this, { game });
-
-		// Override Constants
-		this.MAX_SPEED = 20;
-		//this.ACCELERATION = 0.5;
-		this.PIVOT_SPEED = 4;
-		
-		// Override Animations
+		// Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
-		this.idle = new Animator(spritesheet, 0, 0,
+		let idle = new Animator(spritesheet, 0, 0,
 			width, height, 1, 1, 1, direction, false, true);	// idle
+		
+		// Initialize
+        super(game, x, y, direction, width, height, idle);
+		// Assign Object Variables
+		Object.assign(this, { idle });
     }
 
     update() {
@@ -28,6 +24,7 @@ class PlayerVehicle extends Vehicle {
 		// Parent update
         super.update();
 
+		this.game.camera.leftText = "x: " + roundDecimals(this.x, 2) + " :: " + "y: " + roundDecimals(this.y, 2);
 		this.game.camera.centerText = this.hitPoints + "HP";
 	};
 
@@ -37,8 +34,22 @@ class PlayerVehicle extends Vehicle {
 			this.brake();
 		} else if (this.game.forward) {
 			this.accelerate();
+			// Left OR Right, both pressed cancels out.
+			// if (this.game.left) {
+			// 	this.left();
+			// }
+			// if (this.game.right) {
+			// 	this.right();
+			// }
 		} else if (this.game.backward) {
 			this.reverse();
+			// Left OR Right, both pressed cancels out.
+			// if (this.game.left) {
+			// 	this.right();
+			// }
+			// if (this.game.right) {
+			// 	this.left();
+			// }
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {

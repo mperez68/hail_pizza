@@ -77,6 +77,8 @@ describe('Vector', function() {
             assert.equal(this.vectors[i].magnitude, this.mags[i], "magnitude is not assigning correctly at index " + i)
             assert.equal(this.vectors[i].angle, this.angs[i], "angle is not assigning correctly at index " + i)
         }
+
+        assert.isTrue(new Vector(90, -10).equals(new Vector(270, 10)), "negative vector not adjusting correctly");
     })
 
     it ('should compare two vectors', function(){

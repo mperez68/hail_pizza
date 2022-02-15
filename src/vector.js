@@ -10,6 +10,11 @@ class Vector {
 	constructor(angle, magnitude) {
 		Object.assign(this, { angle, magnitude });
 		this.color = 'Blue';
+
+		if (magnitude < 0) {
+			this.angle = (this.angle + 180) % 360;
+			this.magnitude = Math.abs(this.magnitude);
+		}
 	}
 
     static sum(vectors) {
@@ -63,8 +68,4 @@ class Vector {
 }
 
 // Export for testing
-try{
-	module.exports = Vector;
-} catch (e) {
-	//Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.
-}
+try{ module.exports = Vector; } catch (e) { /*Suppress error BECAUSE module is not used in client BUT is required for Mocha unit testing.*/ };

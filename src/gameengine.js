@@ -138,12 +138,8 @@ class GameEngine {
     };
 
     addBackground(item) {
-		if (this.background.length <= this.ITEM_CAP) {
-			this.background.push(item);
-			return true;
-		}
-		console.log("Backgrounds at item cap: " + this.ITEM_CAP);
-		return false;
+		this.background.push(item);
+		return true;
     }
 
     addTerrain(item) {

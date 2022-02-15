@@ -7,7 +7,7 @@ class Pedestrian extends Entity {
 				width, height, 12, 0.2, 0, direction, false, true));
 		// Constants
 		this.RUN_SPEED = 3;
-		this.PIVOT_SPEED = 3;
+		this.pivotSpeed = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
 		this.isWalking = false;
@@ -24,7 +24,7 @@ class Pedestrian extends Entity {
 	};
 
 	getTurnRadius() {
-		return this.RUN_SPEED / getRad(this.PIVOT_SPEED);
+		return this.RUN_SPEED / getRad(this.pivotSpeed);
 	}
 
 	damage(dmg) {
@@ -76,7 +76,7 @@ class Pedestrian extends Entity {
 		// Align direction
 		if ( diff >= 0 && diff < 180 ) this.right(1);
 		if ( diff >= 180 && diff < 360 ) this.left(1);
-		if ( Math.abs(this.direction - a) <= 2 * this.PIVOT_SPEED ) this.direction = a;
+		if ( Math.abs(this.direction - a) <= 2 * this.pivotSpeed ) this.direction = a;
 		// Move closer
 		if ( (d < this.getTurnRadius()) && diff > 30 && diff < 330 ) {
 			this.backward(0.2);
@@ -100,11 +100,11 @@ class Pedestrian extends Entity {
 	}
 
 	left(scale) {
-		this.direction -= this.PIVOT_SPEED * scale;
+		this.direction -= this.pivotSpeed * scale;
 	}
 
 	right(scale) {
-		this.direction += this.PIVOT_SPEED * scale;
+		this.direction += this.pivotSpeed * scale;
 	}
 
 	getDistanceToGoal() {

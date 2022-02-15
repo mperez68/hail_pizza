@@ -25,19 +25,32 @@ class SceneManager {
 
 		this.game.addEntity(this.player);
 		
-		this.game.addEntity(new NeutralPed(this.game, this.game.surfaceWidth / 4, this.game.surfaceHeight / 4, 0, 19, 19));
+		let ped = new NeutralPed(this.game, this.game.surfaceWidth / 4, this.game.surfaceHeight / 4, 0, 19, 19);
+		this.game.addEntity(ped);
 
 		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
 		
-		this.game.addBackground(new Ground(this.game, 480, 384, 0));
+		let gridSize = 30;
+		for (let i = 0; i < gridSize; i++){
+			for (let j = 0; j < gridSize; j++){
+				this.game.addBackground(new Ground(this.game, PARAMS.GRID_WIDTH * i, PARAMS.GRID_HEIGHT * j, 0))
+			}
+		}
 
-		this.game.addBackground(new Road(this.game, 416, 384, 0));
+		// this.game.addBackground(new Ground(this.game, 480, 384, 0));
 
-		this.game.addTerrain(new Building(this.game, 544, 384, 0));
+		// this.game.addBackground(new Road(this.game, 416, 384, 0));
 
-		this.game.addEffects(new Mission(this.game, 598, 384, 0));
+		// this.game.addTerrain(new Building(this.game, 544, 384, 0));
 
-		this.game.addEffects(new Target(this.game, 598, 354, 0));
+		// this.game.addEffects(new Mission(this.game, 598, 384, 0));
+
+		// this.game.addEffects(new Target(this.game, 598, 354, 0));
+
+		// TEST //
+		setTimeout(() => {this.player.damage(1)}, 800);
+		setTimeout(() => {ped.addForce(0, 50)}, 500);
+		// END TEST //
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
@@ -49,20 +62,6 @@ class SceneManager {
 			this.x = this.player.x - this.game.surfaceWidth / 2;
 			this.y = this.player.y - this.game.surfaceHeight / 2;
 		}
-
-		// Add more dudes
-		// if ((randomInt(this.game.entities.length) / this.game.ITEM_CAP < 0.000001)) {
-		// 	let pt = this.respawns[this.lastRespawn];
-		// 	this.lastRespawn = (this.lastRespawn + 1) % this.respawns.length;
-			// this.game.addEntity(new NeutralPed(this.game, pt.x, pt.y, 0, 19, 19));
-			// this.game.addEntity(new NeutralVehicle(this.game, pt.x, pt.y, 0, 70, 64));
-		// }
-
-		// Reset
-		// if (this.game.space) {
-		// 	this.clearEntities();
-		// 	this.loadMap();
-		// }
 	};
 	
 	draw(ctx) {

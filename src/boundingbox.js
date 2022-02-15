@@ -32,33 +32,6 @@ class BoundingBox {
 		};
     };
 
-	draw(ctx, game, color) {
-			//Draw Outline
-			ctx.strokeStyle = 'Black';
-			if (color) ctx.strokeStyle = color;
-			for (var i = 0; i < this.points.length; i++) {
-				// Point
-				ctx.beginPath();
-				ctx.arc(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y, 7, 0, 2 * Math.PI);
-				ctx.stroke();
-				// Line
-				let j = (i-1 + 4) % 4;
-				ctx.beginPath();
-				ctx.moveTo(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y);
-				ctx.lineTo(this.points[j].x - game.camera.x, this.points[j].y - game.camera.y);
-				ctx.stroke();
-			}
-			// Letter Denotations for Points
-			ctx.strokeStyle = 'Black';
-			ctx.font = "12px Arial";
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.fillText("L", this.left.x - game.camera.x, this.left.y - game.camera.y);
-			ctx.fillText("T", this.top.x - game.camera.x, this.top.y - game.camera.y);
-			ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
-			ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
-	};
-
 	equals(oth) {
 		let result = true;
 		if (Math.abs(this.x - oth.x) > 0.001) result = false;
@@ -67,7 +40,7 @@ class BoundingBox {
 		if (Math.abs(this.height - oth.height) > 0.001) result = false;
 		if (Math.abs(this.direction - oth.direction) > 0.001) result = false;
 		return result;
-	}
+	};
 	
 	// Collision checking function
     collide(oth) {
@@ -85,7 +58,7 @@ class BoundingBox {
 	// Broad Detection
 	broadDetection(oth) {
 		return this.right.isRight(oth.left) && this.left.isLeft(oth.right) && this.top.isAbove(oth.bottom) && this.bottom.isBelow(oth.top);
-	}
+	};
 
 	// Narrow Detection
 	narrowDetection(oth) {
@@ -132,7 +105,34 @@ class BoundingBox {
 			// TODO check for thin objects where this is not always true
 			return true;
 		}
-	}
+	};
+
+	draw(ctx, game, color) {
+		//Draw Outline
+		ctx.strokeStyle = 'Black';
+		if (color) ctx.strokeStyle = color;
+		for (var i = 0; i < this.points.length; i++) {
+			// Point
+			ctx.beginPath();
+			ctx.arc(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y, 7, 0, 2 * Math.PI);
+			ctx.stroke();
+			// Line
+			let j = (i-1 + 4) % 4;
+			ctx.beginPath();
+			ctx.moveTo(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y);
+			ctx.lineTo(this.points[j].x - game.camera.x, this.points[j].y - game.camera.y);
+			ctx.stroke();
+		}
+		// Letter Denotations for Points
+		ctx.strokeStyle = 'Black';
+		ctx.font = "12px Arial";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillText("L", this.left.x - game.camera.x, this.left.y - game.camera.y);
+		ctx.fillText("T", this.top.x - game.camera.x, this.top.y - game.camera.y);
+		ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
+		ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
+	};
 };
 
 // Export for testing
