@@ -209,7 +209,8 @@ class GameEngine {
 			PARAMS.MUSIC = false;
 		}
 		if (document.getElementById("myIn1").value) {
-			//
+			let n = parseFloat(document.getElementById("myIn1").value);
+			if (n && n > 0) PARAMS.SCALE = n;
 		}
 		if (document.getElementById("myIn2").value) {
 			//

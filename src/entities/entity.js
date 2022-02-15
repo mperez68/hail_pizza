@@ -141,7 +141,7 @@ class Entity {
 	draw(ctx) {
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
-										this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
+										this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.SCALE);
 		
 		// Debug box drawing
 		if (PARAMS.DEBUG) {

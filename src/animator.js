@@ -13,6 +13,8 @@ class Animator {
     };
 
     drawFrame(tick, angle, ctx, x, y, scale) {
+        let w = this.width * scale;
+        let h = this.height * scale;
 
 		// Animation Tracking
         this.elapsedTime += tick;
@@ -35,29 +37,28 @@ class Animator {
            let radians = angle / 360 * 2 * Math.PI;
            let offscreenCanvas = document.createElement('canvas');
 
-            offscreenCanvas.width = this.width;
-            offscreenCanvas.height = this.height;
+            offscreenCanvas.width = w;
+            offscreenCanvas.height = h;
 			
             let offscreenCtx = offscreenCanvas.getContext('2d');
 
+            // Save/Turn/draw/Turn Back/Restore Block
             offscreenCtx.save();
-            offscreenCtx.translate(this.width / 2, this.height / 2);
+            offscreenCtx.translate(w / 2, h / 2);
             offscreenCtx.rotate(radians);
-            offscreenCtx.translate(-this.width / 2, -this.height / 2);
+            offscreenCtx.translate(-w / 2, -h / 2);
             offscreenCtx.drawImage(this.spritesheet,
-            this.xStart + frame * (this.width + this.framePadding), this.yStart, //source from sheet
-            this.width, this.height,
-            0, 0,
-            this.width * scale,
-            this.height * scale);
+            this.xStart + frame * (this.width + this.framePadding), this.yStart, this.width, this.height, 0, 0, w, h);
             offscreenCtx.restore();
+
+            // Save into cache
             this.cache[Math.floor(angle)][frame] = offscreenCanvas;
         }
-        var xOffset = this.width / 2;
-        var yOffset = this.height / 2;
+        var xOffset = w / 2;
+        var yOffset = h / 2;
 	   
 	   // Draw to Field
-        ctx.drawImage(this.cache[Math.floor(angle)][frame], x - xOffset, y - yOffset);
+        ctx.drawImage(this.cache[Math.floor(angle)][frame], (x - xOffset), (y - yOffset));
     };
 
     currentFrame() {

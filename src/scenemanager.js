@@ -22,6 +22,7 @@ class SceneManager {
 	loadMap() {
 		this.player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
 		// this.player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
+		this.focus = this.player;
 
 		this.game.addEntity(this.player);
 
@@ -48,7 +49,7 @@ class SceneManager {
 		this.game.addEffects(new Target(this.game, 598, 354, 0));
 
 		// TEST //
-		// setTimeout(() => {this.player.addForce(180,20)}, 1000);
+		
 		// END TEST //
 
 		this.leftText = "LEFT";
@@ -57,9 +58,12 @@ class SceneManager {
 	};
 	
 	update() {
-		if (this.player) {
-			this.x = this.player.x - this.game.surfaceWidth / 2;
-			this.y = this.player.y - this.game.surfaceHeight / 2;
+		// TEST //
+		this.leftText = PARAMS.SCALE;
+		// END TEST //
+		if (this.focus) {
+			this.x = (this.focus.x - this.game.surfaceWidth / 2);
+			this.y = (this.focus.y - this.game.surfaceHeight / 2);
 		}
 	};
 	
