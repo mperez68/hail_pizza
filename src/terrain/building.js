@@ -7,9 +7,4 @@ class Building extends Terrain {
 		// Assign Object Variables
         Object.assign(this, { game, version });
     };
-
-    draw(ctx) {
-        super.draw(ctx);
-        this.BB.draw(ctx, this.game, "Red");
-    }
 }

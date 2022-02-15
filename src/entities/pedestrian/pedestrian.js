@@ -6,7 +6,7 @@ class Pedestrian extends Entity {
 			new Animator(ASSET_MANAGER.getAsset("./sprites/npcs.png"), 0, height,
 				width, height, 12, 0.2, 0, direction, false, true));
 		// Constants
-		this.RUN_SPEED = 3;
+		this.RUN_SPEED = 1;
 		this.pivotSpeed = 3;
 		// Assign Object Variables
 		Object.assign(this, { game });
@@ -24,12 +24,12 @@ class Pedestrian extends Entity {
 
 	getTurnRadius() {
 		return this.RUN_SPEED / getRad(this.pivotSpeed);
-	}
+	};
 
 	damage(dmg) {
 		if (super.damage(dmg)) this.game.addBackground(new Splatter(this.game, this.x, this.y, this.direction, this.width, this.height, 0));
 		super.damage(dmg);
-	}
+	};
 
 	setup() {
 		this.walkingVector = 0;
@@ -66,39 +66,37 @@ class Pedestrian extends Entity {
 		}
 	};
 
-	forward(scale) {
+	forward() {
 		this.walkingVector = 1;
 
-		this.x += this.RUN_SPEED * Math.cos((Math.PI / 180) * this.direction) * scale;
-		this.y += this.RUN_SPEED * Math.sin((Math.PI / 180) * this.direction) * scale;
-	}
+		this.addForce(this.direction, this.RUN_SPEED);
+	};
 
-	backward(scale) {	
+	backward() {	
 		this.walkingVector = -0.5;
 
-		this.x -= (this.RUN_SPEED * Math.cos((Math.PI / 180) * this.direction) * scale) / 2;
-		this.y -= (this.RUN_SPEED * Math.sin((Math.PI / 180) * this.direction) * scale) / 2;
-	}
+		this.addForce(this.direction, -this.RUN_SPEED / 2);
+	};
 
-	left(scale) {
-		this.direction -= this.pivotSpeed * scale;
-	}
+	left() {
+		this.direction -= this.pivotSpeed;
+	};
 
-	right(scale) {
-		this.direction += this.pivotSpeed * scale;
-	}
+	right() {
+		this.direction += this.pivotSpeed;
+	};
 
 	getDistanceToGoal() {
 		let d = 9999;
 		if (this.goal) d = Point.distance(this, this.goal);
 		return d;
-	}
+	};
 
 	getAngleToGoal() {
 		let a = 0;
 		if (this.goal) a = Point.angle(this, this.goal);
 		return a;
-	}
+	};
 
 	draw(ctx) {
 		// Update animation

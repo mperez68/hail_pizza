@@ -24,8 +24,8 @@ class SceneManager {
 		// this.player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
 
 		this.game.addEntity(this.player);
-		
-		let ped = new NeutralPed(this.game, this.game.surfaceWidth / 4, this.game.surfaceHeight / 4, 0, 19, 19);
+
+		let ped = new NeutralPed(this.game, this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight / 2, 0, 19, 19);
 		this.game.addEntity(ped);
 
 		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
@@ -48,7 +48,7 @@ class SceneManager {
 		this.game.addEffects(new Target(this.game, 598, 354, 0));
 
 		// TEST //
-		//
+		// setTimeout(() => {this.player.addForce(180,20)}, 1000);
 		// END TEST //
 
 		this.leftText = "LEFT";

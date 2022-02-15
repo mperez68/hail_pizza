@@ -13,9 +13,6 @@ class PlayerPed extends Pedestrian {
 										width, height, 12, 0.08, 1, direction, false, true);	// Walking
 		this.walkingBack = new Animator(spritesheet, 0, 0,
 										width, height, 12, 0.10, 1, direction, true, true);		// Walking Backwards
-        // Override Constants
-        this.RUN_SPEED = 4;
-        this.pivotSpeed = 3;
     }
 
     update() {
@@ -32,16 +29,16 @@ class PlayerPed extends Pedestrian {
 	controls() {
 		// Forward OR Backward, forward taking precedent.
 		if (this.game.forward) {
-			this.forward(1);
+			this.forward();
 		} else if (this.game.backward) {
-			this.backward(1);
+			this.backward();
 		}
 		// Left OR Right, both pressed cancels out.
 		if (this.game.left) {
-			this.left(1);
+			this.left();
 		}
 		if (this.game.right) {
-			this.right(1);
+			this.right();
 		}
 	}
 
