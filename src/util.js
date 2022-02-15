@@ -50,5 +50,5 @@ const PARAMS = {
 	GRID_HEIGHT: 64,
 	VECTOR_SCALE: 5,
 	SCALE: 1,
-    ZOOM_STEPS: 16
+    ZOOM_STEPS: 32
 };

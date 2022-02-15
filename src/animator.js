@@ -10,6 +10,7 @@ class Animator {
     };
 
     resetCache() {
+        delete this.cache;
         this.cache = [];
 		for (var i = 0;i<360;i++){
 			this.cache[i] = [];
@@ -19,7 +20,7 @@ class Animator {
     drawFrame(tick, angle, ctx, x, y, scale) {
         let w = this.width * scale * PARAMS.SCALE;
         let h = this.height * scale * PARAMS.SCALE;
-        if (this.lastScale != PARAMS.SCALE) {
+        if (Math.abs(this.lastScale - PARAMS.SCALE) > 0.1) {
             this.resetCache();
             this.lastScale = PARAMS.SCALE;
         }

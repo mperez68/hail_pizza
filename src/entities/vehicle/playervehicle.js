@@ -18,6 +18,10 @@ class PlayerVehicle extends Vehicle {
 		
 		this.lastClick = this.game.click;
 
+		let s = Math.min(2, 8 / (this.force.magnitude + 1));
+		this.game.camera.centerText = s;
+		PARAMS.SCALE += (s- PARAMS.SCALE) / PARAMS.ZOOM_STEPS;
+
 		// Check for keyboard input to determine movement.
         this.controls();
 

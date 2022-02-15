@@ -16,11 +16,16 @@ class PlayerPed extends Pedestrian {
     }
 
     update() {
+		// Break intent if button pressed, otherwise check against goal
 		if (this.game.forward || this.game.backward || this.game.left || this.game.right) this.intent(null);
 		if (this.getDistanceToGoal() < this.width) this.intent(null);
 
 		// Check for keyboard input to determine movement.
         if (!this.goal) this.controls();
+
+		let s = Math.min(2, 8 / (this.force.magnitude + 1));
+		this.game.camera.centerText = s;
+		PARAMS.SCALE += (s- PARAMS.SCALE) / PARAMS.ZOOM_STEPS;
 
 		// Parent update
         super.update();
