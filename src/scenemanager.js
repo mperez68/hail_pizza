@@ -20,33 +20,38 @@ class SceneManager {
 	};
 	
 	loadMap() {
-		this.player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
+		let xOffset = this.game.surfaceWidth/2;
+		let yOffset = this.game.surfaceHeight/2;
+		this.player = new PlayerPed(this.game, xOffset, yOffset, 0, 19, 19);
+		//this.player = new PlayerPed(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 19, 19);
 		// this.player = new PlayerVehicle(this.game, this.game.surfaceWidth / 2, this.game.surfaceHeight / 2, 0, 70, 64);
 		this.focus = this.player;
 
 		this.game.addEntity(this.player);
 
-		let ped = new NeutralPed(this.game, this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight / 2, 0, 19, 19);
-		this.game.addEntity(ped);
+		this.game.addEntity(new NeutralPed(this.game, xOffset + 50, yOffset + 50, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, xOffset-50, yOffset + 50, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, xOffset + 50, yOffset-50, 0, 19, 19));
+		this.game.addEntity(new NeutralPed(this.game, xOffset-50, yOffset-50, 0, 19, 19));
 
-		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
+		// this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45, 70, 64));
 		
 		let gridSize = 30;
 		for (let i = 0; i < gridSize; i++){
 			for (let j = 0; j < gridSize; j++){
-				this.game.addBackground(new Ground(this.game, PARAMS.GRID_WIDTH * i, PARAMS.GRID_HEIGHT * j, 0))
+				this.game.addBackground(new Ground(this.game, PARAMS.GRID_WIDTH * (i - (gridSize / 2)), PARAMS.GRID_HEIGHT * (j - (gridSize / 2)), 0))
 			}
 		}
 
 		// this.game.addBackground(new Ground(this.game, 480, 384, 0));
 
-		this.game.addBackground(new Road(this.game, 416, 384, 0));
+		// this.game.addBackground(new Road(this.game, 416, 384, 0));
 
 		this.game.addTerrain(new Building(this.game, 544, 344, 0));
 
-		this.game.addEffects(new Mission(this.game, 598, 384, 0));
+		// this.game.addEffects(new Mission(this.game, 598, 384, 0));
 
-		this.game.addEffects(new Target(this.game, 598, 354, 0));
+		// this.game.addEffects(new Target(this.game, 598, 354, 0));
 
 		// TEST //
 		
@@ -62,8 +67,8 @@ class SceneManager {
 		this.leftText = PARAMS.SCALE;
 		// END TEST //
 		if (this.focus) {
-			this.x = (this.focus.x - this.game.surfaceWidth / 2);
-			this.y = (this.focus.y - this.game.surfaceHeight / 2);
+			this.x = this.focus.x - this.game.surfaceWidth / (2 * PARAMS.SCALE);
+			this.y = this.focus.y - this.game.surfaceHeight / (2 * PARAMS.SCALE);
 		}
 	};
 	

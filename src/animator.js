@@ -4,17 +4,25 @@ class Animator {
 
         this.elapsedTime = 0;
         this.totalTime = this.frameCount * this.frameDuration;
+        this.lastScale = PARAMS.SCALE;
 
+        this.resetCache();
+    };
+
+    resetCache() {
         this.cache = [];
 		for (var i = 0;i<360;i++){
 			this.cache[i] = [];
 		}
-
-    };
+    }
 
     drawFrame(tick, angle, ctx, x, y, scale) {
-        let w = this.width * scale;
-        let h = this.height * scale;
+        let w = this.width * scale * PARAMS.SCALE;
+        let h = this.height * scale * PARAMS.SCALE;
+        if (this.lastScale != PARAMS.SCALE) {
+            this.resetCache();
+            this.lastScale = PARAMS.SCALE;
+        }
 
 		// Animation Tracking
         this.elapsedTime += tick;
@@ -56,9 +64,13 @@ class Animator {
         }
         var xOffset = w / 2;
         var yOffset = h / 2;
+
+        function s(input) { return input * PARAMS.SCALE; }
+        let drawX = s(x);
+        let drawY = s(y);
 	   
 	   // Draw to Field
-        ctx.drawImage(this.cache[Math.floor(angle)][frame], (x - xOffset), (y - yOffset));
+        ctx.drawImage(this.cache[Math.floor(angle)][frame], (drawX - xOffset), (drawY - yOffset));
     };
 
     currentFrame() {

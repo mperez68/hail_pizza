@@ -7,7 +7,8 @@ class Entity {
 		const DRAG = 4;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation, DRAG });
-		this.collidingWith = []
+		this.scale = 1;
+		this.collidingWith = [];
 
 		
 		// Initialize private variables
@@ -112,9 +113,6 @@ class Entity {
 		this.BB = new BoundingBox(this.x, this.y, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y,
 												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		// this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
-		// 									this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
-		// 										(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
 	};
 
 	damage(dmg) {
@@ -141,7 +139,7 @@ class Entity {
 	draw(ctx) {
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
-										this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.SCALE);
+										this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
 		
 		// Debug box drawing
 		if (PARAMS.DEBUG) {

@@ -48,14 +48,15 @@ class Vector {
 		if (!(game instanceof GameEngine)) {
 			throw new Error("Null GameEngine Variable!");
 		}
+		function s(input) { return input * PARAMS.SCALE; }
 		if (PARAMS.DEBUG) {
-			let drawX = x + PARAMS.VECTOR_SCALE * this.magnitude * Math.cos(getRad(this.angle)) - game.camera.x;
-			let drawY = y + PARAMS.VECTOR_SCALE * this.magnitude * Math.sin(getRad(this.angle)) - game.camera.y;
+			let drawX = s(x + PARAMS.VECTOR_SCALE * this.magnitude * Math.cos(getRad(this.angle)) - game.camera.x);
+			let drawY = s(y + PARAMS.VECTOR_SCALE * this.magnitude * Math.sin(getRad(this.angle)) - game.camera.y);
 
 			ctx.strokeStyle = this.color;
 			// Draw Line
 			ctx.beginPath();
-			ctx.moveTo(x - game.camera.x, y - game.camera.y);
+			ctx.moveTo(s(x - game.camera.x), s(y - game.camera.y));
 			ctx.lineTo(drawX, drawY);
 			ctx.stroke();
 
