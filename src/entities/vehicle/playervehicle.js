@@ -1,6 +1,9 @@
 // Player as a Vehicle object
 class PlayerVehicle extends Vehicle {
-	constructor(game, x, y, direction, width, height) {
+	constructor(game, x, y, direction) {
+		// Variables
+		let width = 70;
+		let height = 64;
 		// Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 		let idle = new Animator(spritesheet, 0, 0,
@@ -19,13 +22,10 @@ class PlayerVehicle extends Vehicle {
 		this.lastClick = this.game.click;
 
 		// Check for keyboard input to determine movement.
-        this.controls();
+        if (this.game.camera.focus == this) this.controls();
 
 		// Parent update
         super.update();
-
-		this.game.camera.leftText = "x: " + roundDecimals(this.x, 2) + " :: " + "y: " + roundDecimals(this.y, 2);
-		this.game.camera.centerText = this.hitPoints + "HP";
 	};
 
 	controls() {

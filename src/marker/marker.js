@@ -27,7 +27,7 @@ class Marker {
 	};
 
     draw(ctx) {
-		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
+		this.animation.drawFrame(this.game.clockTick, null, ctx,
             this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
 
         // Debug box drawing

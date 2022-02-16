@@ -1,6 +1,9 @@
 // Player as a Pedestrian object
 class NeutralPed extends Pedestrian {
-	constructor(game, x, y, direction, width, height) {
+	constructor(game, x, y, direction) {
+		// Variables
+		let width = 19;
+		let height = width;
 		super(game, x, y, direction, width, height);
 		// Constants
 		this.VERSION_COUNT = 2;

@@ -126,16 +126,19 @@ class BoundingBox {
 		//Draw Outline
 		ctx.strokeStyle = 'Black';
 		if (color) ctx.strokeStyle = color;
+		function s(input) { return input * PARAMS.SCALE; }
 		for (var i = 0; i < this.points.length; i++) {
+			let drawX = s(this.points[i].x - game.camera.x);
+			let drawY = s(this.points[i].y - game.camera.y);
 			// Point
 			ctx.beginPath();
-			ctx.arc(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y, 7, 0, 2 * Math.PI);
+			ctx.arc(drawX, drawY, 7, 0, 2 * Math.PI);
 			ctx.stroke();
 			// Line
 			let j = (i-1 + 4) % 4;
 			ctx.beginPath();
-			ctx.moveTo(this.points[i].x - game.camera.x, this.points[i].y - game.camera.y);
-			ctx.lineTo(this.points[j].x - game.camera.x, this.points[j].y - game.camera.y);
+			ctx.moveTo(drawX, drawY);
+			ctx.lineTo(s(this.points[j].x - game.camera.x), s(this.points[j].y - game.camera.y));
 			ctx.stroke();
 		}
 		// Letter Denotations for Points
@@ -143,10 +146,10 @@ class BoundingBox {
 		ctx.font = "12px Arial";
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
-		ctx.fillText("L", this.left.x - game.camera.x, this.left.y - game.camera.y);
-		ctx.fillText("T", this.top.x - game.camera.x, this.top.y - game.camera.y);
-		ctx.fillText("R", this.right.x - game.camera.x, this.right.y - game.camera.y);
-		ctx.fillText("B", this.bottom.x - game.camera.x, this.bottom.y - game.camera.y);
+		ctx.fillText("L", s(this.left.x - game.camera.x), s(this.left.y - game.camera.y));
+		ctx.fillText("T", s(this.top.x - game.camera.x), s(this.top.y - game.camera.y));
+		ctx.fillText("R", s(this.right.x - game.camera.x), s(this.right.y - game.camera.y));
+		ctx.fillText("B", s(this.bottom.x - game.camera.x), s(this.bottom.y - game.camera.y));
 	};
 };
 

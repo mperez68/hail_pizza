@@ -7,7 +7,7 @@ class Entity {
 		const DRAG = 4;
 		// Parameters
 		Object.assign(this, { game, x, y, direction, scale, width, height, animation, DRAG });
-		this.collidingWith = []
+		this.collidingWith = [];
 
 		
 		// Initialize private variables
@@ -22,6 +22,7 @@ class Entity {
 		// reset flags
 		this.isApproaching = false;
 		this.isColliding = false;
+		this.noClip = false;
 	};
 	
 	update() {
@@ -40,7 +41,7 @@ class Entity {
 		this.addForce(this.force.angle, (-1 * this.force.magnitude * this.DRAG) / 20);
 
 		// Movement
-		if (!this.isApproaching){
+		if (!this.isApproaching || this.noClip){
 			this.x += this.force.getHead().x;
 			this.y += this.force.getHead().y;
 		}
@@ -61,10 +62,13 @@ class Entity {
 		this.game.terrain.forEach(function (terrain) {
 			// Action predictions
 			if (that != terrain && terrain.BB && that.nextBB.collide(terrain.BB)) {
+				// Flag Setting
 				that.isApproaching = true;
+				that.addForce(Point.angle(terrain, that), that.force.magnitude);	// TODO change to be relative angle to normal force, force equal to normal force + spring
 			}
 			// Collision cases
 			if (that != terrain && terrain.BB && that.BB.collide(terrain.BB)) {
+				// Flag Setting
 				that.isColliding = true;
 				terrain.isColliding = true;
 				that.move(Point.angle(terrain,that),1);
@@ -74,15 +78,29 @@ class Entity {
 		this.game.entities.forEach(function (entity) {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
-				that.isApproaching = true;
+				// Flag Setting
+				//that.isApproaching = true;
+				// if (that instanceof Vehicle && (entity instanceof Pedestrian || entity instanceof Vehicle)) {
+				// 	that.noClip = true;
+				// }
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
+				// Flag Setting
 				that.isColliding = true;
 				entity.isColliding = true;
 
+				// Vehicle Damage Cases
+				if (that instanceof Vehicle) {
+					let d = 1;//Math.floor(that.force.magnitude / that.maxSpeed());	// TODO tweak later
+					that.move(Point.angle(entity, that), 1);
+					that.addForce(Point.angle(entity, that), d);
+					entity.addForce(Point.angle(that, entity), 2);
+					entity.damage(d);
+				}
+
 				// Clipping Nudging
-				if(that instanceof Pedestrian){
+				if(that instanceof Pedestrian){	// TODO Change from value 1 to distance just outside of collision
 					if (entity instanceof Vehicle) {
 						that.move(Point.angle(entity,that),1);
 					} else if (entity instanceof Pedestrian) {
@@ -96,12 +114,14 @@ class Entity {
 		this.game.effects.forEach(function (effect) {
 			// Action predictions
 			if (that != effect && effect.BB && that.nextBB.collide(effect.BB)) {
+				// Flag Setting
 				//that.isApproaching = true;
 			}
 			// Collision cases
 			if (that != effect && effect.BB && that.BB.collide(effect.BB)) {
 				effect.removeFromWorld = true;
-				// buff this character
+				// TODO buff this character
+				// Flag Setting
 				// that.isColliding = true;
 				// effect.isColliding = true;
 			}
@@ -109,12 +129,10 @@ class Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x, this.y, (3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y,
-												(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
-		// this.nextBB = new BoundingBox(this.BB.x + ((3 * this.width) / 4 * Math.cos((Math.PI / 180) * this.direction)),
-		// 									this.BB.y + ((3 * this.height) / 4 * Math.sin((Math.PI / 180) * this.direction)),
-		// 										(3 * this.width) / 4, (3 * this.height) / 4, this.direction);
+		let w = this.width * (0.75) * this.scale;
+		let h = this.height * (0.75) * this.scale;
+		this.BB = new BoundingBox(this.x, this.y, w, h, this.direction);
+		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y, w, h, this.direction);
 	};
 
 	damage(dmg) {
@@ -141,7 +159,7 @@ class Entity {
 	draw(ctx) {
 		// Animate frame
 		this.animation.drawFrame(this.game.clockTick, this.direction, ctx,
-										this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
+										this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
 		
 		// Debug box drawing
 		if (PARAMS.DEBUG) {
@@ -153,7 +171,7 @@ class Entity {
 
 			if (this.timers.has("invulnerable")) {
 				ctx.beginPath();
-				ctx.arc(this.x - this.game.camera.x, this.y - this.game.camera.y, 20, 0, 2 * Math.PI);
+				ctx.arc((this.x - this.game.camera.x) * PARAMS.SCALE, (this.y - this.game.camera.y) * PARAMS.SCALE, 20, 0, 2 * Math.PI);
 				ctx.stroke();
 			}
 

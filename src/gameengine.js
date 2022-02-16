@@ -209,10 +209,15 @@ class GameEngine {
 			PARAMS.MUSIC = false;
 		}
 		if (document.getElementById("myIn1").value) {
-			//
+			let n = parseFloat(document.getElementById("myIn1").value);
+			if (n && n > 0 && (n != PARAMS.SCALE)) {
+				//PARAMS.SCALE += (n - PARAMS.SCALE) / PARAMS.ZOOM_STEPS;
+				//PARAMS.SCALE = roundDecimals(PARAMS.SCALE, 3);
+			}
 		}
 		if (document.getElementById("myIn2").value) {
-			//
+			let m = parseInt(document.getElementById("myIn2").value);
+			//if (m && m > 0) PARAMS.ZOOM_STEPS = m;
 		}
 		if (document.getElementById("myIn3").value) {
 			//

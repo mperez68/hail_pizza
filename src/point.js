@@ -90,7 +90,7 @@ class Point {
 		if (PARAMS.DEBUG) {
 			ctx.strokeStyle = this.color;
 			ctx.beginPath();
-			ctx.arc(this.x - game.camera.x, this.y - game.camera.y, 6, 0, 2 * Math.PI);
+			ctx.arc((this.x - game.camera.x), (this.y - game.camera.y), 6, 0, 2 * Math.PI);
 			ctx.stroke();
 		}
 		this.isDrawn = true;
