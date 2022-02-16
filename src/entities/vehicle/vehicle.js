@@ -2,7 +2,7 @@
 class Vehicle extends Entity {
 	constructor(game, x, y, direction, width, height, animation) {
 
-		super(game, x, y, direction, 1, width, height, animation);
+		super(game, x, y, direction, 1.5, width, height, animation);
 
 		// local variables
 		let acceleration = 3;
@@ -27,9 +27,10 @@ class Vehicle extends Entity {
 	};
 	
 	updateBB(){
-		this.BB = new BoundingBox(this.x, this.y, (3 * this.width) / 4, this.height / 2, this.direction);
-		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y,
-												(3 * this.width) / 4, this.height / 2, this.direction);
+		let w = this.width * (0.75) * this.scale;
+		let h = this.height * (0.5) * this.scale;
+		this.BB = new BoundingBox(this.x, this.y, w, h, this.direction);
+		this.nextBB = new BoundingBox(this.BB.x + this.force.getHead().x, this.BB.y + this.force.getHead().y, w, h, this.direction);
 	};
 
 	pathfind(){

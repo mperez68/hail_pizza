@@ -24,7 +24,7 @@ function getDeg(rad) {
 };
 
 // Rounds a number to a given a number of decimal points
-function roundDecimals(num, dec) {
+function round(num, dec) {
 	return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
 };
 

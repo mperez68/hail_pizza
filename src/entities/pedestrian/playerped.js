@@ -1,6 +1,9 @@
 // Player as a Pedestrian object
 class PlayerPed extends Pedestrian {
-	constructor(game, x, y, direction, width, height) {
+	constructor(game, x, y, direction) {
+		// Variables
+		let width = 19;
+		let height = width;
 		super(game, x, y, direction, width, height);
 		// Assign Object Variables
 		Object.assign(this, { game });
@@ -21,11 +24,7 @@ class PlayerPed extends Pedestrian {
 		if (this.getDistanceToGoal() < this.width) this.intent(null);
 
 		// Check for keyboard input to determine movement.
-        if (!this.goal) this.controls();
-
-		let s = Math.min(2, 8 / (this.force.magnitude + 1));
-		this.game.camera.centerText = s;
-		PARAMS.SCALE += (s- PARAMS.SCALE) / PARAMS.ZOOM_STEPS;
+        if (!this.goal && this.game.camera.focus == this) this.controls();
 
 		// Parent update
         super.update();

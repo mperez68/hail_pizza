@@ -1,6 +1,9 @@
 // NPC Vehicle object
 class NeutralVehicle extends Vehicle {
-	constructor(game, x, y, direction, width, height) {
+	constructor(game, x, y, direction) {
+		// variables
+		let width = 70;
+		let height = 64;
 		// Constants
 		const VERSION_COUNT = 6;
 		const VERSION = randomInt(VERSION_COUNT);
