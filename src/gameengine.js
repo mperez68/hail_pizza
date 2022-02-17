@@ -143,12 +143,8 @@ class GameEngine {
     }
 
     addTerrain(item) {
-		if (this.terrain.length <= this.ITEM_CAP) {
-        	this.terrain.push(item);
-			return true;
-		}
-		console.log("Terrains at item cap: " + this.ITEM_CAP);
-		return false;
+		this.terrain.push(item);
+		return true;
     };
 
     addEntity(item) {

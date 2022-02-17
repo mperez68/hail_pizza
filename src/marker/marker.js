@@ -15,19 +15,14 @@ class Marker {
     update() {
         //
 		this.updateBB();
-		this.updateCollision();
     }
-
-	updateCollision() {
-		//
-	};
 	
 	updateBB(){
 		this.BB = new BoundingBox(this.x, this.y, this.width, this.height, this.direction);
 	};
 
     draw(ctx) {
-		this.animation.drawFrame(this.game.clockTick, null, ctx,
+		this.animation.drawFrame(this.game.clockTick, 0, ctx,
             this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
 
         // Debug box drawing

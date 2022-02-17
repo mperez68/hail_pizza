@@ -34,30 +34,27 @@ class PlayerVehicle extends Vehicle {
 			this.brake();
 		} else if (this.game.forward) {
 			this.accelerate();
-			// Left OR Right, both pressed cancels out.
-			// if (this.game.left) {
-			// 	this.left();
-			// }
-			// if (this.game.right) {
-			// 	this.right();
-			// }
 		} else if (this.game.backward) {
 			this.reverse();
-			// Left OR Right, both pressed cancels out.
-			// if (this.game.left) {
-			// 	this.right();
-			// }
-			// if (this.game.right) {
-			// 	this.left();
-			// }
 		}
-		// Left OR Right, both pressed cancels out.
+		// Left XOR Right, both pressed cancels out.
 		if (this.game.left) {
 			this.left();
 		}
 		if (this.game.right) {
 			this.right();
 		}
+		if (this.game.keyE && !this.timers.has("Switch")) {
+			// create playerPed, set focus
+			let p = new PlayerPed(this.game,
+				this.x + (Math.cos(getRad(this.direction + 270)) * this.width * 0.55),
+				this.y + (Math.sin(getRad(this.direction + 270)) * this.width * 0.55),
+				this.direction)	// TODO animate
+			this.game.addEntity(p);
+			this.game.camera.focus = p;
+			p.timers.set("Switch", 50);
+		}
+
 	}
 
 	intent(point) {

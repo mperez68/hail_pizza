@@ -19,6 +19,8 @@ class Vehicle extends Entity {
 	};
 	
 	update() {
+		this.z = Math.min(this.game.camera.defaultScale, 1 - this.force.magnitude / (4 * this.maxSpeed()));
+
 		// Pathfinding
 		if (this.goal) this.pathfind();
 
@@ -70,11 +72,11 @@ class Vehicle extends Entity {
 	};
 
 	right() {
-		this.direction += this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / this.maxSpeed());
+		this.direction += this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / (this.acceleration / this.DRAG));	// TODO tweak for better feel
 	}
 
 	left() {
-		this.direction -= this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / this.maxSpeed());
+		this.direction -= this.forwardVec() * this.pivotSpeed * (this.drivingVector().magnitude / (this.acceleration / this.DRAG)); // TODO tweak for better feel
 	}
 
 	//returns 1 if moving forward, -1 if moving backward
@@ -111,7 +113,7 @@ class Vehicle extends Entity {
 	}
 
 	maxSpeed() {
-		return this.acceleration / this.DRAG;
+		return this.acceleration * this.DRAG;
 	}
 
 	getTurnRadius() {

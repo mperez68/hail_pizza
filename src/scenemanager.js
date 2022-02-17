@@ -2,21 +2,25 @@ class SceneManager {
 	constructor(game) {
 		Object.assign(this, { game });
 		this.game.camera = this;
-		this.defaultScale = 1.5;
+		this.defaultScale = 1;
 		this.x = 0;
 		this.y = 0;
+		this.lvl = 1;
 
 		this.leftText = "LEFT";
 		this.centerText = "CENTER";
 		this.rightText = "RIGHT";
 		
-		this.loadMap(levels[1]);
+		this.loadMap(levels[this.lvl]);
 	};
 	
 	loadMap(level) {
+		this.clearMap();
 		let g = this.game; // Reduces verbosity
-		// Require level object to have exactly one playerCar object and at least one exit marker
-		// TODO
+		// Require level object to have exactly one playerCar object or defaults to splash screen
+		if (!level.player) {
+			level = levels[0];
+		}
 
 		// Build map from level object
 		// Background
@@ -82,31 +86,44 @@ class SceneManager {
 			g.addEffects(new Mission(g, level.sqs[i].x * PARAMS.GRID_HEIGHT, level.sqs[i].y * PARAMS.GRID_HEIGHT, level.sqs[i].v));
 		}
 			// End Point
-		g.addEffects(new Target(g, level.end.x * PARAMS.GRID_HEIGHT, level.end.y * PARAMS.GRID_HEIGHT));
+		if (level.end) {
+			g.addEffects(new Target(g, level.end.x * PARAMS.GRID_HEIGHT, level.end.y * PARAMS.GRID_HEIGHT));
+		}
 
-		// TEMP, REMOVE LATER
-		this.playerPed = new PlayerPed(this.game, 0, 0, 0);
-		this.game.addEntity(this.playerPed);
-		this.focus = this.playerCar;
+		// Focus for camera
+		if (level.focus) {
+			console.log(level.focus);
+			this.focus = level.focus;
+		} else {
+			this.focus = this.playerCar;
+		}
 	};
+
+	nextLevel() {
+		this.lvl++;
+		this.loadMap(levels[this.lvl]);
+	}
 	
 	update() {
 		// TEST //
-		if (this.game.keyE && this.focus instanceof PlayerPed && !this.focus.timers.has("Switch")) {	// TODO require proximity, animate entering/exiting
-			this.focus = this.playerCar;
-			this.focus.timers.set("Switch", 50);
-		} else if (this.game.keyE && this.focus instanceof PlayerVehicle && !this.focus.timers.has("Switch")) {
-			this.focus = this.playerPed;
-			this.focus.timers.set("Switch", 50);
-		}
+		// if (this.game.keyE && this.focus instanceof PlayerVehicle && !this.focus.timers.has("Switch")) {
+		// 	this.focus = this.playerPed;
+		// 	this.focus.timers.set("Switch", 50);
+		// } else if (this.game.keyE && this.focus instanceof PlayerPed && !this.focus.timers.has("Switch")) {	// TODO require proximity, animate entering/exiting
+		// 	this.focus.removeFromWorld = true;
+		// 	this.playerPed = null;
+		// 	this.focus = this.playerCar;
+		// 	this.focus.timers.set("Switch", 50);
+		// }
 		this.leftText = round(PARAMS.SCALE,1);
 		// END TEST //
+		
 		if (this.focus) {
 			this.x = this.focus.x - this.game.surfaceWidth / (2 * PARAMS.SCALE);
 			this.y = this.focus.y - this.game.surfaceHeight / (2 * PARAMS.SCALE);
 
-			let s = Math.min(this.defaultScale, Math.pow(this.defaultScale, 5) / (this.focus.force.magnitude + 1));
-			PARAMS.SCALE += (s- PARAMS.SCALE) / PARAMS.ZOOM_STEPS;
+			let s = (this.focus.z - PARAMS.SCALE) / PARAMS.ZOOM_STEPS;//Math.min(this.defaultScale, Math.pow(this.defaultScale, 5) / (this.focus.force.magnitude + 1));
+			PARAMS.SCALE += s;
 		} else {
 			this.x = 0;
 			this.y = 0;
@@ -150,10 +167,12 @@ class SceneManager {
 		}
 	};
 	
-	clearEntities() {
+	clearMap() {
         this.game.background = [];
         this.game.terrain = [];
         this.game.entities = [];
         this.game.effects = [];
+		this.focus = null;
+		this.playerCar = null;
     };
 }

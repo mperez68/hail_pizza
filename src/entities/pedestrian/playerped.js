@@ -7,6 +7,7 @@ class PlayerPed extends Pedestrian {
 		super(game, x, y, direction, width, height);
 		// Assign Object Variables
 		Object.assign(this, { game });
+		this.enterDistance = 100;
 
 		// Override walking/standing animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/driver.png");
@@ -43,6 +44,12 @@ class PlayerPed extends Pedestrian {
 		}
 		if (this.game.right) {
 			this.right();
+		}
+		if (this.game.keyE && !this.timers.has("Switch") && (Point.distance(this, this.game.camera.playerCar) < this.enterDistance)) {
+			// create playerPed, set focus	// TODO animate, pathfind to door before entering
+			this.removeFromWorld = true;
+			this.game.camera.focus = this.game.camera.playerCar;
+			this.game.camera.playerCar.timers.set("Switch", 50);
 		}
 	}
 

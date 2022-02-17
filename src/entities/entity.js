@@ -16,6 +16,7 @@ class Entity {
 		this.force = new Vector(0, 0);
 		
 		this.updateBB();
+		this.z = 1;
 	};
 
 	setup() {
@@ -91,7 +92,7 @@ class Entity {
 
 				// Vehicle Damage Cases
 				if (that instanceof Vehicle) {
-					let d = Math.floor(that.force.magnitude / that.maxSpeed());	// TODO tweak later
+					let d = Math.floor(that.force.magnitude);	// TODO tweak later
 					that.addForce(Point.angle(entity, that), d / 2);
 					entity.addForce(Point.angle(that, entity), d);
 					entity.damage(d);
@@ -117,8 +118,10 @@ class Entity {
 			}
 			// Collision cases
 			if (that != effect && effect.BB && that.BB.collide(effect.BB)) {
-				effect.removeFromWorld = true;
-				// TODO buff this character
+				if (that instanceof PlayerVehicle) {
+					//that.game.camera.nextLevel();
+					effect.removeFromWorld = true;
+				}
 				// Flag Setting
 				// that.isColliding = true;
 				// effect.isColliding = true;
