@@ -2,6 +2,7 @@ class Animator {
     constructor(spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, angleStart, reverse, loop) {
         Object.assign(this, { spritesheet, xStart, yStart, height, width, frameCount, frameDuration, framePadding, angleStart, reverse, loop });
 
+        this.redrawThreshold = 0.1;
         this.elapsedTime = 0;
         this.totalTime = this.frameCount * this.frameDuration;
         this.lastScale = PARAMS.SCALE;
@@ -20,7 +21,7 @@ class Animator {
     drawFrame(tick, angle, ctx, x, y, scale) {
         let w = this.width * scale * PARAMS.SCALE;
         let h = this.height * scale * PARAMS.SCALE;
-        if (Math.abs(this.lastScale - PARAMS.SCALE) > 0.1) {
+        if (Math.abs(this.lastScale - PARAMS.SCALE) > this.redrawThreshold) {
             this.resetCache();
             this.lastScale = PARAMS.SCALE;
         }
