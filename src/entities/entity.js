@@ -119,7 +119,7 @@ class Entity {
 			// Collision cases
 			if (that != effect && effect.BB && that.BB.collide(effect.BB)) {
 				if (that instanceof PlayerVehicle) {
-					//that.game.camera.nextLevel();
+					that.game.camera.nextLevel();
 					effect.removeFromWorld = true;
 				}
 				// Flag Setting
