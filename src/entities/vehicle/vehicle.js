@@ -1,7 +1,7 @@
 // Vehicle Entity
 class Vehicle extends Entity {
 	constructor(game, x, y, direction, width, height, animation) {
-
+		animation.redrawThreshold = 0.005;
 		super(game, x, y, direction, 1.5, width, height, animation);
 
 		// local variables

@@ -3,7 +3,7 @@ class PlayerVehicle extends Vehicle {
 	constructor(game, x, y, direction) {
 		// Variables
 		let width = 70;
-		let height = 64;
+		let height = width;
 		// Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/drivercar.png");
 		let idle = new Animator(spritesheet, 0, 0,

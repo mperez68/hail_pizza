@@ -3,14 +3,14 @@ class NeutralVehicle extends Vehicle {
 	constructor(game, x, y, direction) {
 		// variables
 		let width = 70;
-		let height = 64;
+		let height = width;
 		// Constants
 		const VERSION_COUNT = 6;
 		const VERSION = randomInt(VERSION_COUNT);
 
 		// Animations
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npccars.png");
-		let idle = new Animator(spritesheet, width * VERSION, 0,
+		let idle = new Animator(spritesheet, 0, height * VERSION,
 			width, height, 1, 1, 1, direction, false, true);	// idle
 		
 		// Initialize

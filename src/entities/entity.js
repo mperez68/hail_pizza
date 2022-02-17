@@ -79,10 +79,9 @@ class Entity {
 			// Action predictions
 			if (that != entity && entity.BB && that.nextBB.collide(entity.BB)) {
 				// Flag Setting
-				//that.isApproaching = true;
-				// if (that instanceof Vehicle && (entity instanceof Pedestrian || entity instanceof Vehicle)) {
-				// 	that.noClip = true;
-				// }
+				if (that instanceof Pedestrian && !(entity instanceof Pedestrian)) {
+					that.isApproaching = true;
+				}
 			}
 			// Collision cases
 			if (that != entity && entity.BB && that.BB.collide(entity.BB)) {
@@ -92,10 +91,9 @@ class Entity {
 
 				// Vehicle Damage Cases
 				if (that instanceof Vehicle) {
-					let d = 1;//Math.floor(that.force.magnitude / that.maxSpeed());	// TODO tweak later
-					that.move(Point.angle(entity, that), 1);
-					that.addForce(Point.angle(entity, that), d);
-					entity.addForce(Point.angle(that, entity), 2);
+					let d = Math.floor(that.force.magnitude / that.maxSpeed());	// TODO tweak later
+					that.addForce(Point.angle(entity, that), d / 2);
+					entity.addForce(Point.angle(that, entity), d);
 					entity.damage(d);
 				}
 
@@ -136,7 +134,7 @@ class Entity {
 	};
 
 	damage(dmg) {
-		if (!this.timers.has("invulnerable")){
+		if (!this.timers.has("invulnerable") && dmg > 0){
 			this.hitPoints -= dmg;
 			this.timers.set("invulnerable", 25);
 			return true;
