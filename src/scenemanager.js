@@ -10,48 +10,84 @@ class SceneManager {
 		this.centerText = "CENTER";
 		this.rightText = "RIGHT";
 		
-		this.loadMap(null);
+		this.loadMap(levels[1]);
 	};
 	
 	loadMap(level) {
-		this.playerPed = new PlayerPed(this.game, 0, 0, 0);
-		this.playerCar = new PlayerVehicle(this.game, 200, 0, 0);
-		this.focus = this.playerPed;
+		let g = this.game; // Reduces verbosity
+		// Require level object to have exactly one playerCar object and at least one exit marker
+		// TODO
 
-		this.game.addEntity(this.playerPed);
-		this.game.addEntity(this.playerCar);
-
-		this.game.addEntity(new NeutralPed(this.game,  + 50,  + 50, 45));
-		this.game.addEntity(new NeutralPed(this.game, -50,  + 50, 135));
-		this.game.addEntity(new NeutralPed(this.game,  + 50, -50, 315));
-		this.game.addEntity(new NeutralPed(this.game, -50, -50, 225));
-
-		this.game.addEntity(new NeutralVehicle(this.game, this.game.surfaceWidth * (3 / 4), this.game.surfaceHeight * (1 / 2), 45));
-		
-		// Default map
-		if (level == null) {
-			let gridSize = 30;
-			for (let i = 0; i < gridSize; i++){
-				for (let j = 0; j < gridSize; j++){
-					if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) this.game.addTerrain(new Building(this.game, PARAMS.GRID_WIDTH * (i - (gridSize / 2)), PARAMS.GRID_HEIGHT * (j - (gridSize / 2)), 0));
-					else this.game.addBackground(new Ground(this.game, PARAMS.GRID_WIDTH * (i - (gridSize / 2)), PARAMS.GRID_HEIGHT * (j - (gridSize / 2)), 0));
+		// Build map from level object
+		// Background
+			// Ground
+		for (let i = 0; i < level.grd.length; i++) {
+			for (let x = level.grd[i].xs; x <= level.grd[i].xe; x++){
+				for (let y = level.grd[i].ys; y <= level.grd[i].ye; y++){
+					g.addBackground(new Ground(g, x * PARAMS.GRID_HEIGHT, y * PARAMS.GRID_HEIGHT, 0));	// TODO assign version based on surrounding tiles
+					// TODO add tiles to 2d array representation for reference
 				}
 			}
-		} else {
-			// TODO
 		}
+			// Road
+		for (let i = 0; i < level.road.length; i++) {
+			for (let x = level.road[i].xs; x <= level.road[i].xe; x++){
+				for (let y = level.road[i].ys; y <= level.road[i].ye; y++){
+					g.addBackground(new Road(g, x * PARAMS.GRID_HEIGHT, y * PARAMS.GRID_HEIGHT, 0));	// TODO assign version based on surrounding tiles
+					// TODO add tiles to 2d array representation for reference
+				}
+			}
+		}
+		// Entities
+			// Player
+		this.playerCar = new PlayerVehicle(g, level.player.x * PARAMS.GRID_HEIGHT, level.player.y * PARAMS.GRID_HEIGHT, level.player.a);
+		g.addEntity(this.playerCar);
+			// NPC Pedestrians
+		for (let i = 0; i < level.peds.length; i++) {
+			g.addEntity(new NeutralPed(g, level.peds[i].x * PARAMS.GRID_HEIGHT, level.peds[i].y * PARAMS.GRID_HEIGHT, level.peds[i].a));
+		}
+			// NPC Vehicles
+		for (let i = 0; i < level.vehs.length; i++) {
+			g.addEntity(new NeutralVehicle(g, level.vehs[i].x * PARAMS.GRID_HEIGHT, level.vehs[i].y * PARAMS.GRID_HEIGHT, level.vehs[i].a));
+		}
+			// Hostile Pedestrians
+		for (let i = 0; i < level.zmbs.length; i++) {
+			console.log("Zombie:");
+			console.log(level.zmbs[i]);
+			//g.addEntity(new HostilePed(g, level.zmbs[i].x * PARAMS.GRID_HEIGHT, level.zmbs[i].y * PARAMS.GRID_HEIGHT, level.zmbs[i].a));
+		}
+			// Hostile Vehicles
+		for (let i = 0; i < level.pigs.length; i++) {
+			console.log("Pig:");
+			console.log(level.pigs[i]);
+			//g.addEntity(new HostileVehicle(g, level.pigs[i].x * PARAMS.GRID_HEIGHT, level.pigs[i].y * PARAMS.GRID_HEIGHT, level.pigs[i].a));
+		}
+		// Terrain
+			// Buildings
+		for (let i = 0; i < level.bldg.length; i++) {
+			for (let x = level.bldg[i].xs; x <= level.bldg[i].xe; x++){
+				for (let y = level.bldg[i].ys; y <= level.bldg[i].ye; y++){
+					g.addTerrain(new Building(g, x * PARAMS.GRID_HEIGHT, y * PARAMS.GRID_HEIGHT, 0));	// TODO assign version based on surrounding tiles
+					// TODO add tiles to 2d array representation for reference
+				}
+			}
+		}
+		// Markers
+			// Buffs
+		for (let i = 0; i < level.buffs.length; i++) {
+			g.addEffects(new Mission(g, level.buffs[i].x * PARAMS.GRID_HEIGHT, level.buffs[i].y * PARAMS.GRID_HEIGHT, level.buffs[i].v));
+		}
+			// Sidequests
+		for (let i = 0; i < level.sqs.length; i++) {
+			g.addEffects(new Mission(g, level.sqs[i].x * PARAMS.GRID_HEIGHT, level.sqs[i].y * PARAMS.GRID_HEIGHT, level.sqs[i].v));
+		}
+			// End Point
+		g.addEffects(new Target(g, level.end.x * PARAMS.GRID_HEIGHT, level.end.y * PARAMS.GRID_HEIGHT));
 
-		// this.game.addBackground(new Ground(this.game, 480, 384, 0));
-
-		// this.game.addBackground(new Road(this.game, 416, 384, 0));
-
-		// this.game.addEffects(new Mission(this.game, 598, 384, 0));
-
-		// this.game.addEffects(new Target(this.game, 598, 354, 0));
-
-		// TEST //
-		
-		// END TEST //
+		// TEMP, REMOVE LATER
+		this.playerPed = new PlayerPed(this.game, 0, 0, 0);
+		this.game.addEntity(this.playerPed);
+		this.focus = this.playerCar;
 	};
 	
 	update() {

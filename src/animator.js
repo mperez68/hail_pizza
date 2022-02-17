@@ -1,5 +1,5 @@
 class Animator {
-    constructor(spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, angleStart, reverse, loop) {
+    constructor(spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, angleStart, reverse, loop) {   // TODO remove angleStart in all instances, dead var
         Object.assign(this, { spritesheet, xStart, yStart, height, width, frameCount, frameDuration, framePadding, angleStart, reverse, loop });
 
         this.redrawThreshold = 0.1;

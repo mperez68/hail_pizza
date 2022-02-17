@@ -11,8 +11,6 @@ class NeutralPed extends Pedestrian {
 		let spritesheet = ASSET_MANAGER.getAsset("./sprites/npcs.png");
 
 		this.version = randomInt(this.VERSION_COUNT);
-
-		this.game.camera.dudeCount++;
 		
 		// Override walking/standing animations
 		this.standing = new Animator(spritesheet, 0, height * this.version,
